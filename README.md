@@ -23,5 +23,5 @@ b. Upload the corresponding war file which is located inside target folder in a 
 
 c. Edit config_generic.properties (for generic RDF model usage) or config_diachron.properties file (for DIACHRON model usage) from Config folder. This file contains Virtuoso credentials information plus the following properties:
 -i)'Dataset_URIs' which denotes namedgraphs associated with the corresponding dataset versions within virtuoso
--ii)'Simple_Changes_Folder' denotes the folder which contains the SPARQL update queries for the detection of Simple Changes
+-ii)'Simple_Changes_Folder' denotes the folder which contains the SPARQL update queries for the detection of Simple Changes. This is an essestial step that requires from user to set the actual full file path of this folder, which is by default inside the webapp folder.
 -iii)'Simple_Changes' denotes the list of considered Simple Changes to be detected
