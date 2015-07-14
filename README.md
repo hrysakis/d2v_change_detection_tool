@@ -25,3 +25,7 @@ c. Edit config_generic.properties (for generic RDF model usage) or config_diachr
 -i)'Dataset_URIs' which denotes namedgraphs associated with the corresponding dataset versions within virtuoso
 -ii)'Simple_Changes_Folder' denotes the folder which contains the SPARQL update queries for the detection of Simple Changes. This is an essestial step that requires from user to set the actual full file path of this folder, which is by default inside the webapp folder.
 -iii)'Simple_Changes' denotes the list of considered Simple Changes to be detected
+
+#DEMO VIDEO
+
+You can found a demo video showing the basic functionalities. This video is located in the src/main/webapp/video_files/demo_video.mp4 or you can download it from here: (https://raw.githubusercontent.com/hrysakis/d2v_change_detection_tool/master/src/main/webapp/video_files/demo_video.mp4)
