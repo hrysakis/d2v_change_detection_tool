@@ -1,12 +1,11 @@
 
-
 # SHORT DESCRIPTION:
+
 D2V is a flexible and powerful tool for defining, representing and detecting custom changes between datasets versions. We treat changes as first-class citizens, in a way that supports different modes of navigation on the deltas between any pair of versions, as well as the visualization of the evolution history of a given dataset.
 D2V is a tool for assisting users in managing, querying and visualizing the evolution history of dynamic RDF datasets. Specifically, our goal is to provide an adequate user interface, allowing the management (creation, edit, delete) of complex changes, as well as the visualization of the contents of the ontology of changes, to enable the visual analysis of dataset dynamics. The tool can support users with a shared or dedicated personal space. To help first-time users, personal accounts can come as totally blank (no changes defined) or with some predefined changes for guidance. 
 
 # USED TECHNOLOGIES:
-D2V is a cross-platform application implemented on top of open-source
-infrastructures and technologies. These technologies, such as Resource DescriptionFramework (RDF), facilitate and ensure all the appropriate management operations on semantic web data, during a change detection process.
+D2V is a cross-platform application implemented on top of open-sourceinfrastructures and technologies. These technologies, such as Resource DescriptionFramework (RDF), facilitate and ensure all the appropriate management operations on semantic web data, during a change detection process.
 
 It was implemented in Java programming language, the user interface was developed using
 HTML/CSS technologies in combination with JQuery and Java Servlets which were implemented for the communication with the RDF store. For the visualization of results, we used the Google Charts Library which is an open library that aims to create customizable charts which are rendered using HTML5/SVG to provide cross-browser compatibility. Google Charts Library also comes with an API that supports many types of charts and operations upon them.
@@ -16,7 +15,13 @@ D2V stores all change definitions and the detected changes in an ontology of cha
 
 # INSTALLATION:
 
-a. Install and setup Virtuoso Store. (If you want to use the installed one, skip this step)
+a. Install and setup Virtuoso Store (If you want to use the installed one which has been already configured,skip this step).
 Create the internal named graph http://datasets to store the meta-data for both the datasets and the change detections. This named graph contains information about all assigned dataset URIs and their corresponding versions. You should create the appropriate dataset URI and one named graph per version. For instance, consider the EFO datasets. It holds that the dataset URI is http://www.ebi.ac.uk/efo/ and we can find the triples:
 -http://www.ebi.ac.uk/efo/ rdfs:member http://www.diachron-fp7.eu/resource/recordset/efo/2.34     -http://www.ebi.ac.uk/efo/ rdfs:member http://www.diachron-fp7.eu/resource/recordset/efo/2.35 
 
+b. 
+
+c. Edit config_generic.properties (for generic RDF model usage) or config_diachron.properties file (for DIACHRON model usage) from Config folder. This file contains Virtuoso credentials information plus the following properties:
+--i)'Dataset_URIs' which denotes namedgraphs associated with the corresponding dataset versions within virtuoso
+--ii)'Simple_Changes_Folder' denotes the folder which contains the SPARQL update queries for the detection of Simple Changes
+--iii)'Simple_Changes' denotes the list of considered Simple Changes to be detected
