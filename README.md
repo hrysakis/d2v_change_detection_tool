@@ -14,4 +14,9 @@ HTML/CSS technologies in combination with JQuery and Java Servlets which were im
 D2V stores all change definitions and the detected changes in an ontology of changes that is hosted in a Virtuoso Triplestore. In fact, the change definitions are stored in the schema level whereas the detected changes are stored in the instance level of the ontology. All queries are encoded in SPARQL; a query language which has become a standard and one of the key technologies for the semantic web.
 
 
-# DEPLOYMENT /INSTALLATION:
+# INSTALLATION:
+
+a. Install and setup Virtuoso Store. (If you want to use the installed one, skip this step)
+Create the internal named graph http://datasets to store the meta-data for both the datasets and the change detections. This named graph contains information about all assigned dataset URIs and their corresponding versions. You should create the appropriate dataset URI and one named graph per version. For instance, consider the EFO datasets. It holds that the dataset URI is http://www.ebi.ac.uk/efo/ and we can find the triples:
+-http://www.ebi.ac.uk/efo/ rdfs:member http://www.diachron-fp7.eu/resource/recordset/efo/2.34     -http://www.ebi.ac.uk/efo/ rdfs:member http://www.diachron-fp7.eu/resource/recordset/efo/2.35 
+
