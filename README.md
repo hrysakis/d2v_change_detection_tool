@@ -28,4 +28,4 @@ c. Edit config_generic.properties (for generic RDF model usage) or config_diachr
 
 #DEMO VIDEO
 
-You can found a demo video showing the basic functionalities. This video is located in the src/main/webapp/video_files/demo_video.mp4 or you can download it from here: (https://raw.githubusercontent.com/hrysakis/d2v_change_detection_tool/master/src/main/webapp/video_files/demo_video.mp4)
+You can found a demo video showing the basic functionalities. You can view it by open the video.html file which is located in src/main/webapp/ folder.
