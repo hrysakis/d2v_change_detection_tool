@@ -1,0 +1,69 @@
+{
+  "Complex_Change": "Rename Idea",
+  "Priority": 1.0,
+  "Complex_Change_Parameters": [
+    {
+      "old_filename": ""
+	},
+	{
+      "new_filename": ""
+	},
+	{
+	  "encoding": ""
+    }
+  ],
+  "Simple_Changes": [
+	{
+      "Simple_Change": "ADD_PROPERTY_INSTANCE",
+      "Simple_Change_Uri": "1:ADD_PROPERTY_INSTANCE",
+      "Is_Optional": false,
+      "Selection_Filter": ["1:ADD_PROPERTY_INSTANCE:-property = <http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_content_md5>"],
+      "Mapping_Filter": "",
+      "Join_Filter": ""
+    },
+	{
+      "Simple_Change": "DELETE_PROPERTY_INSTANCE",
+      "Simple_Change_Uri": "2:DELETE_PROPERTY_INSTANCE",
+      "Is_Optional": false,
+      "Selection_Filter": ["2:DELETE_PROPERTY_INSTANCE:-property = <http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_content_md5>"],
+      "Mapping_Filter": "",
+      "Join_Filter": ["2:DELETE_PROPERTY_INSTANCE:-object = 1:ADD_PROPERTY_INSTANCE:-object"]
+    },
+	{
+      "Simple_Change": "ADD_TYPE_TO_INDIVIDUAL",
+      "Simple_Change_Uri": "3:ADD_TYPE_TO_INDIVIDUAL",
+      "Is_Optional": false,
+      "Selection_Filter": ["3:ADD_TYPE_TO_INDIVIDUAL:-type = <http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/Idea>"],
+      "Mapping_Filter": "",
+      "Join_Filter": ["3:ADD_TYPE_TO_INDIVIDUAL:-individual = 1:ADD_PROPERTY_INSTANCE:-subject"]
+    },
+	{
+      "Simple_Change": "DELETE_TYPE_FROM_INDIVIDUAL",
+      "Simple_Change_Uri": "4:DELETE_TYPE_FROM_INDIVIDUAL",
+      "Is_Optional": false,
+      "Selection_Filter": ["4:DELETE_TYPE_FROM_INDIVIDUAL:-type = <http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/Idea>"],
+      "Mapping_Filter": "",
+      "Join_Filter": ["4:DELETE_TYPE_FROM_INDIVIDUAL:-individual = 2:DELETE_PROPERTY_INSTANCE:-subject"]
+    }
+  ],
+  "Version_Filters" : [
+	{
+      "Subject" : "1:ADD_PROPERTY_INSTANCE:-subject",
+      "Predicate" : "<http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_title>",
+      "Object" : "new_filename",
+      "Presence" : "EXISTS_IN_V2"
+    },
+	{
+      "Subject" : "1:ADD_PROPERTY_INSTANCE:-subject",
+      "Predicate" : "<http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_encoding_type>",
+      "Object" : "encoding",
+      "Presence" : "EXISTS_IN_V2"
+    },
+	{
+      "Subject" : "2:DELETE_PROPERTY_INSTANCE:-subject",
+      "Predicate" : "<http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_title>",
+      "Object" : "old_filename",
+      "Presence" : "EXISTS_IN_V1"
+    }
+  ]
+}

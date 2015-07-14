@@ -1,0 +1,34 @@
+INSERT INTO <changesOntology> {
+?api a co:Add_Property_Instance;
+    co:api_p1 ?a;
+    co:api_p2 ?p;
+    co:api_p3 ?b;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v2> { 
+?r diachron:subject ?a;
+   diachron:hasRecordAttribute ?ratt.
+?ratt diachron:predicate ?p;
+      diachron:object ?b.
+FILTER(?p!=rdfs:subClassOf && ?p!=rdfs:subPropertyOf && ?p!=rdf:type && ?p!=rdfs:comment && 
+?p!=rdfs:label && ?p!=rdfs:domain && ?p!=rdfs:range)  
+}
+FILTER NOT EXISTS { GRAPH <v1> {
+?r diachron:hasRecordAttribute ?ratt.
+?ratt diachron:predicate ?p;
+      diachron:object ?b.
+FILTER(?p!=rdfs:subClassOf && ?p!=rdfs:subPropertyOf && ?p!=rdf:type && ?p!=rdfs:comment && 
+?p!=rdfs:label && ?p!=rdfs:domain && ?p!=rdfs:range)  
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat(str(?a), str(?p), str(?b), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://api/',SHA1(?url))) AS ?api).
+}
+
+

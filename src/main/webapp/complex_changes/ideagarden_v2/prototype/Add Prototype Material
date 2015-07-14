@@ -1,0 +1,68 @@
+{
+  "Complex_Change": "Add Prototype Material",
+  "Priority": 200.0,
+  "Complex_Change_Parameters": [
+    {
+      "filename": "2:ADD_PROPERTY_INSTANCE:-object"
+	},
+	{
+	  "encoding": "3:ADD_PROPERTY_INSTANCE:-object"
+    },
+	{
+	  "type": "4:ADD_PROPERTY_INSTANCE:-object"
+    },
+	{
+	  "physical_prototype_title": "4:ADD_PROPERTY_INSTANCE:-object"
+    }
+  ],
+  "Simple_Changes": [
+    {
+      "Simple_Change": "ADD_TYPE_TO_INDIVIDUAL",
+      "Simple_Change_Uri": "1:ADD_TYPE_TO_INDIVIDUAL",
+      "Is_Optional": false,
+      "Selection_Filter": ["1:ADD_TYPE_TO_INDIVIDUAL:-type = <http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/Prototype_Material>"],
+      "Mapping_Filter": "",
+      "Join_Filter": ""
+    },
+	{
+      "Simple_Change": "ADD_PROPERTY_INSTANCE",
+      "Simple_Change_Uri": "2:ADD_PROPERTY_INSTANCE",
+      "Is_Optional": false,
+      "Selection_Filter": ["2:ADD_PROPERTY_INSTANCE:-property = <http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_title>"],
+      "Mapping_Filter": "",
+      "Join_Filter": ["2:ADD_PROPERTY_INSTANCE:-subject = 1:ADD_TYPE_TO_INDIVIDUAL:-individual"]
+    },
+	{
+      "Simple_Change": "ADD_PROPERTY_INSTANCE",
+      "Simple_Change_Uri": "3:ADD_PROPERTY_INSTANCE",
+      "Is_Optional": false,
+      "Selection_Filter": ["3:ADD_PROPERTY_INSTANCE:-property = <http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_encoding_type>"],
+      "Mapping_Filter": "",
+      "Join_Filter": ["3:ADD_PROPERTY_INSTANCE:-subject = 1:ADD_TYPE_TO_INDIVIDUAL:-individual"]
+    },
+	{
+      "Simple_Change": "ADD_PROPERTY_INSTANCE",
+      "Simple_Change_Uri": "4:ADD_PROPERTY_INSTANCE",
+      "Is_Optional": false,
+      "Selection_Filter": ["4:ADD_PROPERTY_INSTANCE:-property = <http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_type>"],
+      "Mapping_Filter": "",
+      "Join_Filter": ["4:ADD_PROPERTY_INSTANCE:-subject = 1:ADD_TYPE_TO_INDIVIDUAL:-individual"]
+    },
+	{
+      "Simple_Change": "ADD_PROPERTY_INSTANCE",
+      "Simple_Change_Uri": "5:ADD_PROPERTY_INSTANCE",
+      "Is_Optional": false,
+      "Selection_Filter": ["5:ADD_PROPERTY_INSTANCE:-property = <http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/about>"],
+      "Mapping_Filter": "",
+      "Join_Filter": ["5:ADD_PROPERTY_INSTANCE:-subject = 1:ADD_TYPE_TO_INDIVIDUAL:-individual"]
+    }
+  ],
+  "Version_Filters" : [
+	{
+      "Subject" : "5:ADD_PROPERTY_INSTANCE:-object",
+      "Predicate" : "<http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_title>",
+      "Object" : "physical_prototype_title",
+      "Presence" : "EXISTS_IN_V2"
+    }
+  ]
+}

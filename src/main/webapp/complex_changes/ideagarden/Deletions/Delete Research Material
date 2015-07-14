@@ -1,0 +1,40 @@
+{
+  "Complex_Change": "Delete Research Material",
+  "Priority": 12.0,
+  "Complex_Change_Parameters": [
+    {
+      "filename": "2:DELETE_PROPERTY_INSTANCE:-object"
+	},
+	{
+	  "encoding": "3:DELETE_PROPERTY_INSTANCE:-object"
+    }
+  ],
+  "Simple_Changes": [
+    {
+      "Simple_Change": "DELETE_TYPE_FROM_INDIVIDUAL",
+      "Simple_Change_Uri": "1:DELETE_TYPE_FROM_INDIVIDUAL",
+      "Is_Optional": false,
+      "Selection_Filter": ["1:DELETE_TYPE_FROM_INDIVIDUAL:-type = <http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/Asset>"],
+      "Mapping_Filter": "",
+      "Join_Filter": ""
+    },
+	{
+      "Simple_Change": "DELETE_PROPERTY_INSTANCE",
+      "Simple_Change_Uri": "2:DELETE_PROPERTY_INSTANCE",
+      "Is_Optional": false,
+      "Selection_Filter": ["2:DELETE_PROPERTY_INSTANCE:-property = <http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_title>"],
+      "Mapping_Filter": "",
+      "Join_Filter": ["2:DELETE_PROPERTY_INSTANCE:-subject = 1:DELETE_TYPE_FROM_INDIVIDUAL:-individual"]
+    },
+	{
+      "Simple_Change": "DELETE_PROPERTY_INSTANCE",
+      "Simple_Change_Uri": "3:DELETE_PROPERTY_INSTANCE",
+      "Is_Optional": false,
+      "Selection_Filter": ["3:DELETE_PROPERTY_INSTANCE:-property = <http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_encoding_type>"],
+      "Mapping_Filter": "",
+      "Join_Filter": ["3:DELETE_PROPERTY_INSTANCE:-subject = 1:DELETE_TYPE_FROM_INDIVIDUAL:-individual"]
+    }
+  ],
+  "Version_Filters" : [
+  ]
+}

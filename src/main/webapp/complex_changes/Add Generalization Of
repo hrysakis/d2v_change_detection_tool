@@ -1,0 +1,20 @@
+{
+  "Complex_Change": "[cc_name]",
+  "Priority": [cc_priority],
+  "Complex_Change_Parameters": [
+	{
+      "superclass": "1:ADD_SUPERCLASS:-superclass"
+    }
+  ],
+  "Simple_Changes": [
+    {
+      "Simple_Change": "ADD_SUPERCLASS",
+      "Simple_Change_Uri": "1:ADD_SUPERCLASS",
+      "Is_Optional": false,
+      "Selection_Filter": "1:ADD_SUPERCLASS:-subclass = [select_filter]",
+      "Mapping_Filter": "",
+      "Join_Filter": "",
+      "Version_Filter": ""
+    }
+  ]
+}

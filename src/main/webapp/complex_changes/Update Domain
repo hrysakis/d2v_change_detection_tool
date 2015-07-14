@@ -1,0 +1,35 @@
+{
+  "Complex_Change": "[cc_name]",
+  "Priority": [cc_priority],
+  "Complex_Change_Parameters": [
+    {
+      "property": "1:ADD_DOMAIN:-property"
+    },
+    {
+      "old_domain": "1:DELETE_DOMAIN:-domain"
+    },
+    {
+      "new_domain": "1:ADD_DOMAIN:-domain"
+    }
+  ],
+  "Simple_Changes": [
+    {
+      "Simple_Change": "ADD_DOMAIN",
+      "Simple_Change_Uri": "1:ADD_DOMAIN",
+      "Is_Optional": false,
+      "Selection_Filter": "1:ADD_DOMAIN:-property = [select_filter]",
+      "Mapping_Filter": "",
+      "Join_Filter": "",
+      "Version_Filter": ""
+    },
+	{
+      "Simple_Change": "DELETE_DOMAIN",
+      "Simple_Change_Uri": "2:DELETE_DOMAIN",
+      "Is_Optional": false,
+      "Selection_Filter": "",
+      "Mapping_Filter": "",
+      "Join_Filter": "2:DELETE_DOMAIN:-property = 1:ADD_DOMAIN:-property",
+      "Version_Filter": ""
+    }
+  ]
+}

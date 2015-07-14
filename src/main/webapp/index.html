@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>Login options</title>
+    
+    
+    
+    
+<link rel="stylesheet" href="css/login.css">
+   <link href="css/mainstyle.css" rel="stylesheet" type="text/css"> 
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css">
+<script src="js/d2v.js"></script>
+<script src="js/generic.js"></script>
+<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    
+    
+    
+  </head>
+
+  <body>
+
+<div id="loginmsg"></div>
+<div class="container">
+
+  <div id="login-form">
+
+    <h3>Login options</h3>
+
+    <fieldset>
+
+      <form method="post">
+    <p class="radiotext">
+        <input type="radio" name="useroptions" value="guest" class="loginopt" checked>
+        <span>
+            Login as a <b>guest user</b> with predefined complex changes in shared space.</span>
+        </p>
+   <br>
+      <p class="radiotext">
+        <input type="radio" name="useroptions" value="user" class="loginopt">
+Login as a <b>registered user</b> with personal alias and space with predefined complex changes.</p>
+      <br>
+      <p class="radiotext">
+        <input type="radio" name="useroptions" value="user-clean" class="loginopt">
+        Login as a <b>registered user</b> with personal alias and totally clean space.</p>
+      <br>
+        <div id="user_text"></div>
+ 
+        <input type="button" value="Login" onclick="checkUser($('#username').val(),$('input[name=useroptions]:checked').val());">
+
+       
+
+      </form>
+
+    </fieldset>
+
+  </div> <!-- end login-form -->
+
+</div>
+    
+   <script type="text/javascript"> 
+        $('.loginopt').click(function() { 
+        var radio_option = $(this).val();
+        //alert($(this).val());
+        if (radio_option !== 'guest'){
+        var html_user ="<input type=\"text\" id=\"username\" name=\"username\" placeholder=\"enter alias\"> \n" ;
+            $("#user_text").html(html_user);
+        }
+        else{
+             $("#user_text").html('');
+        }
+        }
+       );
+    </script>
+    
+    <!-- Start of StatCounter Code for Dreamweaver -->
+<script type="text/javascript">
+var sc_project=10416403; 
+var sc_invisible=1; 
+var sc_security="8af7adc9"; 
+var scJsHost = (("https:" == document.location.protocol) ?
+"https://secure." : "http://www.");
+document.write("<sc"+"ript type='text/javascript' src='" +
+scJsHost+
+"statcounter.com/counter/counter.js'></"+"script>");
+</script>
+<noscript><div class="statcounter"><a title="shopify
+analytics ecommerce tracking"
+href="http://statcounter.com/shopify/" target="_blank"><img
+class="statcounter"
+src="http://c.statcounter.com/10416403/0/8af7adc9/1/"
+alt="shopify analytics ecommerce
+tracking"></a></div></noscript>
+<!-- End of StatCounter Code for Dreamweaver -->
+    
+  </body>
+</html>

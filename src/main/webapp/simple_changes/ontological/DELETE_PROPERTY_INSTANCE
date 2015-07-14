@@ -1,0 +1,27 @@
+INSERT INTO <changesOntology> {
+?dpi a co:Delete_Property_Instance;
+    co:dpi_p1 ?a;
+    co:dpi_p2 ?p;
+    co:dpi_p3 ?b;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v1> { 
+?a ?p ?b.
+FILTER(?p!=rdfs:subClassOf && ?p!=rdfs:subPropertyOf && ?p!=rdf:type && ?p!=rdfs:comment && 
+?p!=rdfs:label && ?p!=rdfs:domain && ?p!=rdfs:range)  
+}
+FILTER NOT EXISTS { GRAPH <v2> {
+?a ?p ?b.
+FILTER(?p!=rdfs:subClassOf && ?p!=rdfs:subPropertyOf && ?p!=rdf:type && ?p!=rdfs:comment && 
+?p!=rdfs:label && ?p!=rdfs:domain && ?p!=rdfs:range)  
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat(str(?a), str(?p), str(?b), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://dpi/',SHA1(?url))) AS ?dpi).
+}

@@ -1,0 +1,31 @@
+INSERT INTO <changesOntology> {
+?dtfi a co:Delete_Type_From_Individual;
+      co:dtfi_p1 ?a;
+      co:dtfi_p2 ?b;
+      co:old_version ?v1;
+      co:new_version ?v2.
+}
+WHERE {
+GRAPH <v1> { 
+?r diachron:subject ?a;
+   diachron:hasRecordAttribute ?ratt.
+?ratt diachron:predicate rdf:type;
+      diachron:object ?b.
+FILTER (?b != owl:Class && ?b != owl:Property && ?b != owl:Resource).
+FILTER (?b != rdf:Class && ?b != rdfs:Property && ?b != rdfs:Resource).
+}
+FILTER NOT EXISTS { GRAPH <v2> {
+?r diachron:hasRecordAttribute ?ratt.
+?ratt diachron:predicate rdf:type;
+      diachron:object ?b.
+FILTER (?b != owl:Class && ?b != owl:Property && ?b != owl:Resource).
+FILTER (?b != rdf:Class && ?b != rdfs:Property && ?b != rdfs:Resource).
+}
+}
+#
+BIND(concat(str(?a), str(?b), str(?v1), str(?v2)) as ?url) .
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+#
+BIND(IRI(CONCAT('http://dtfi/',SHA1(?url))) AS ?dtfi).
+}

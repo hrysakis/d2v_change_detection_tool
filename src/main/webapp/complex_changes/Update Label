@@ -1,0 +1,35 @@
+{
+  "Complex_Change": "[cc_name]",
+  "Priority": [cc_priority],
+  "Complex_Change_Parameters": [
+    {
+      "entity": "1:ADD_LABEL:-subject"
+    },
+    {
+      "old_label": "2:DELETE_LABEL:-label"
+    },
+    {
+      "new_label": "1:ADD_LABEL:-label"
+    }
+  ],
+  "Simple_Changes": [
+    {
+      "Simple_Change": "ADD_LABEL",
+      "Simple_Change_Uri": "1:ADD_LABEL",
+      "Is_Optional": false,
+      "Selection_Filter": "1:ADD_LABEL:-subject=[select_filter]",
+      "Mapping_Filter": "",
+      "Join_Filter": "",
+      "Version_Filter": ""
+    },
+    {
+      "Simple_Change": "DELETE_LABEL",
+      "Simple_Change_Uri": "2:DELETE_LABEL",
+      "Is_Optional": false,
+      "Selection_Filter": "",
+      "Mapping_Filter": "",
+      "Join_Filter": "2:DELETE_LABEL:-subject=1:ADD_LABEL:-subject",
+      "Version_Filter": ""
+    }
+  ]
+}

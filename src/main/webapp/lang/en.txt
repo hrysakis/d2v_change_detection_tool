@@ -1,0 +1,2 @@
+http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_size=SIZE
+http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/ongoing_at=ONGOING AT

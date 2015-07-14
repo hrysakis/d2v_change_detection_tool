@@ -1,0 +1,20 @@
+{
+  "Complex_Change": "[cc_name]",
+  "Priority": [cc_priority],
+  "Complex_Change_Parameters": [
+    {
+      "object": "1:ADD_TYPE_TO_INDIVIDUAL:-individual"
+    }
+  ],
+  "Simple_Changes": [
+    {
+      "Simple_Change": "ADD_TYPE_TO_INDIVIDUAL",
+      "Simple_Change_Uri": "1:ADD_TYPE_TO_INDIVIDUAL",
+      "Is_Optional": false,
+      "Selection_Filter": "1:ADD_TYPE_TO_INDIVIDUAL:-type = [select_filter]",
+      "Mapping_Filter": "",
+      "Join_Filter": "",
+      "Version_Filter": ""
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+INSERT INTO <changesOntology> {
+?dsc a co:Delete_Superclass;
+     co:dsc_p1 ?a;
+     co:dsc_p2 ?b;
+     co:old_version ?v1;
+     co:new_version ?v2.
+}
+WHERE {
+GRAPH <v1> { 
+?a rdfs:subClassOf ?b.
+}
+FILTER NOT EXISTS { GRAPH <v2> {
+?a rdfs:subClassOf ?b.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat(str(?a), str(?b), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://dsc/',SHA1(?url))) AS ?dsc).
+}

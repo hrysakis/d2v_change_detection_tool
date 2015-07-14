@@ -1,0 +1,35 @@
+{
+  "Complex_Change": "[cc_name]",
+  "Priority": [cc_priority],
+  "Complex_Change_Parameters": [
+    {
+      "property": "1:ADD_RANGE:-property"
+    },
+    {
+      "old_range": "1:DELETE_RANGE:-range"
+    },
+    {
+      "new_range": "1:ADD_RANGE:-range"
+    }
+  ],
+  "Simple_Changes": [
+    {
+      "Simple_Change": "ADD_RANGE",
+      "Simple_Change_Uri": "1:ADD_RANGE",
+      "Is_Optional": false,
+      "Selection_Filter": "1:ADD_RANGE:-property = [select_filter]",
+      "Mapping_Filter": "",
+      "Join_Filter": "",
+      "Version_Filter": ""
+    },
+    {
+      "Simple_Change": "DELETE_RANGE",
+      "Simple_Change_Uri": "2:DELETE_RANGE",
+      "Is_Optional": false,
+      "Selection_Filter": "",
+      "Mapping_Filter": "",
+      "Join_Filter": "2:DELETE_RANGE:-property = 1:ADD_RANGE:-property",
+      "Version_Filter": ""
+    }
+  ]
+}

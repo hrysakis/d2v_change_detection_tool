@@ -1,0 +1,51 @@
+{
+  "Complex_Change": "Delete Creator/Student",
+  "Priority": 107.0,
+  "Complex_Change_Parameters": [
+    {
+      "project_title": ""
+	},
+	{
+      "creator_student": ""
+	},
+	{
+      "matriculation_date": ""
+	}
+  ],
+  "Simple_Changes": [
+	{
+      "Simple_Change": "DELETE_PROPERTY_INSTANCE",
+      "Simple_Change_Uri": "1:DELETE_PROPERTY_INSTANCE",
+      "Is_Optional": false,
+      "Selection_Filter": ["1:DELETE_PROPERTY_INSTANCE:-property = <http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_creator_student>"],
+      "Mapping_Filter": "",
+      "Join_Filter": ""
+    }
+  ],
+  "Version_Filters" : [
+	{
+      "Subject" : "1:DELETE_PROPERTY_INSTANCE:-subject",
+      "Predicate" : "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+      "Object" : "<http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/Project>",
+      "Presence" : "EXISTS_IN_V1"
+    },
+	{
+      "Subject" : "1:DELETE_PROPERTY_INSTANCE:-subject",
+      "Predicate" : "<http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_title>",
+      "Object" : "project_title",
+      "Presence" : "EXISTS_IN_V1"
+    },
+    {
+      "Subject" : "1:DELETE_PROPERTY_INSTANCE:-object",
+      "Predicate" : "<http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_title>",
+      "Object" : "creator_student",
+      "Presence" : "EXISTS_IN_V1"
+    },
+	{
+      "Subject" : "1:DELETE_PROPERTY_INSTANCE:-object",
+      "Predicate" : "<http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_matriculation_year>",
+      "Object" : "matriculation_date",
+      "Presence" : "EXISTS_IN_V1"
+    },
+  ]
+}

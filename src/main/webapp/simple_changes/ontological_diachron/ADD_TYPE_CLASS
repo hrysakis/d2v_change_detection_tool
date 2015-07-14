@@ -1,0 +1,24 @@
+INSERT INTO <changesOntology> {
+?atc a co:Add_Type_Class;
+    co:atc_p1 ?a;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v2> { 
+?r diachron:subject ?a;
+   diachron:hasRecordAttribute ?ratt.
+?ratt diachron:predicate rdf:type;
+      diachron:object owl:Class.
+}
+FILTER NOT EXISTS { GRAPH <v1> {
+?r diachron:subject ?a.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat(str(?a), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://atc/',SHA1(?url))) AS ?atc).
+}

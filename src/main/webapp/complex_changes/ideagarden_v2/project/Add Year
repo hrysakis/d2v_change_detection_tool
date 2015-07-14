@@ -1,0 +1,36 @@
+{
+  "Complex_Change": "Add Year",
+  "Priority": 116.0,
+  "Complex_Change_Parameters": [
+    {
+      "project_title": ""
+	},
+	{
+      "year": "1:ADD_PROPERTY_INSTANCE:-object"
+	}
+  ],
+  "Simple_Changes": [
+	{
+      "Simple_Change": "ADD_PROPERTY_INSTANCE",
+      "Simple_Change_Uri": "1:ADD_PROPERTY_INSTANCE",
+      "Is_Optional": false,
+      "Selection_Filter": ["1:ADD_PROPERTY_INSTANCE:-property = <http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/on_going_at>"],
+      "Mapping_Filter": "",
+      "Join_Filter": ""
+    }
+  ],
+  "Version_Filters" : [
+	{
+      "Subject" : "1:ADD_PROPERTY_INSTANCE:-subject",
+      "Predicate" : "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+      "Object" : "<http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/Project>",
+      "Presence" : "EXISTS_IN_V2"
+    },
+	{
+      "Subject" : "1:ADD_PROPERTY_INSTANCE:-subject",
+      "Predicate" : "<http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_title>",
+      "Object" : "project_title",
+      "Presence" : "EXISTS_IN_V2"
+    }
+  ]
+}

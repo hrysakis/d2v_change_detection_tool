@@ -1,0 +1,58 @@
+V2.6
+Code wipe out
+Documentation on code extended
+Properties files are now located in "config" folder
+=================================================
+V2.5
+Configurable adding of users based in properties file (Dataset_URIs)
+New libs updated within a few backend signatures
+Minor appearance changes
+=================================================
+V2.4
+Description field added as optional at define complex change (advanced)
+User option in each menu marked with yellow discriminating current selection
+=================================================
+V2.3
+Menu buttons changed
+Tracker included
+(ISWC-Demo-Version)
+================================================
+V2.2
+User support with empty or predefined workspace
+================================================
+V2.1
+Beta User support 
+Visualization first menu changed
+Various charts optimizations
+================================================
+V2.0_Beta
+New Vision Functionalities:
+{Group-by, Select chart type, live analysis on each selected user criteria}
+Visualization iframe auto-resized
+================================================
+V1.5
+Extended filters on Charts (Beta)
+Pie charts are 3D
+Column charts replaced by Bar charts
+================================================
+V1.4
+ColumnChart replaced by BarChart for the evolution of datasets
+Version labels depicted on the v-axis
+checkWrongVersionRange() detects wrong pair of versions for visualization
+Backend libraries updated
+Minor bugs fixed
+================================================
+V1.3
+Bug-fix for term evolution that contain special characters (+ or #)
+Bug-fix for table results in the case of custom compare versions
+================================================
+V1.2 (Athens Diachron)
+Optimization Feature: prevent live detection when data already exist (for sequential versions)
+================================================
+V1.1
+Bug fix on visualization results due to versions ordering
+Complex change definition with only join filters is now supported
+================================================
+V1.0
+Stable release, presented in DIACHRON (EMBL) and IDEAGARDEN (forth)
+Map label mechanism is now supported for table results elements

@@ -1,0 +1,35 @@
+{
+  "Complex_Change": "[cc_name]",
+  "Priority": [cc_priority],
+  "Complex_Change_Parameters": [
+    {
+      "entity": "1:ADD_COMMENT:-subject"
+    },
+    {
+      "old_comment": "2:DELETE_COMMENT:-comment"
+    },
+    {
+      "new_comment": "1:ADD_COMMENT:-comment"
+    }
+  ],
+  "Simple_Changes": [
+    {
+      "Simple_Change": "ADD_COMMENT",
+      "Simple_Change_Uri": "1:ADD_COMMENT",
+      "Is_Optional": false,
+      "Selection_Filter": "1:ADD_COMMENT:-subject = [select_filter]",
+      "Mapping_Filter": "",
+      "Join_Filter": "",
+      "Version_Filter": ""
+    },
+    {
+      "Simple_Change": "DELETE_COMMENT",
+      "Simple_Change_Uri": "2:DELETE_COMMENT",
+      "Is_Optional": false,
+      "Selection_Filter": "",
+      "Mapping_Filter": "",
+      "Join_Filter": "2:DELETE_COMMENT:-subject = 1:ADD_COMMENT:-subject",
+      "Version_Filter": ""
+    }
+  ]
+}

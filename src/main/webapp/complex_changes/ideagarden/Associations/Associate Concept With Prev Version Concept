@@ -1,0 +1,84 @@
+{
+  "Complex_Change": "Associate Concept With Prev Version Concept",
+  "Priority": 28.0,
+  "Complex_Change_Parameters": [
+	{
+      "filename": ""
+	},
+	{
+      "encoding": ""
+	},
+	{
+      "type": ""
+	},
+	{
+      "ass_filename": ""
+	},
+	{
+      "ass_encoding": ""
+	},
+	{
+      "ass_type": ""
+	}
+  ],
+  "Simple_Changes": [
+    {
+      "Simple_Change": "ADD_PROPERTY_INSTANCE",
+      "Simple_Change_Uri": "1:ADD_PROPERTY_INSTANCE",
+      "Is_Optional": false,
+      "Selection_Filter": ["1:ADD_PROPERTY_INSTANCE:-property = <http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/is_version_of>"],
+      "Mapping_Filter": "",
+      "Join_Filter": ""
+    }
+  ],
+  "Version_Filters" : [
+    {
+      "Subject" : "1:ADD_PROPERTY_INSTANCE:-subject",
+      "Predicate" : "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+      "Object" : "<http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/Pre_Model>",
+      "Presence" : "EXISTS_IN_V2"
+    },
+    {
+      "Subject" : "1:ADD_PROPERTY_INSTANCE:-subject",
+      "Predicate" : "<http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_title>",
+      "Object" : "filename",
+      "Presence" : "EXISTS_IN_V2"
+    },
+    {
+      "Subject" : "1:ADD_PROPERTY_INSTANCE:-subject",
+      "Predicate" : "<http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_encoding_type>",
+      "Object" : "encoding",
+      "Presence" : "EXISTS_IN_V2"
+    },
+	{
+      "Subject" : "1:ADD_PROPERTY_INSTANCE:-subject",
+      "Predicate" : "<http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_type>",
+      "Object" : "type",
+      "Presence" : "EXISTS_IN_V2"
+    },
+	{
+      "Subject" : "1:ADD_PROPERTY_INSTANCE:-object",
+      "Predicate" : "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+      "Object" : "<http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/Pre_Model>",
+      "Presence" : "EXISTS_IN_V2"
+    },
+	{
+      "Subject" : "1:ADD_PROPERTY_INSTANCE:-object",
+      "Predicate" : "<http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_title>",
+      "Object" : "ass_filename",
+      "Presence" : "EXISTS_IN_V2"
+    },
+    {
+      "Subject" : "1:ADD_PROPERTY_INSTANCE:-object",
+      "Predicate" : "<http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_encoding_type>",
+      "Object" : "ass_encoding",
+      "Presence" : "EXISTS_IN_V2"
+    },
+	{
+      "Subject" : "1:ADD_PROPERTY_INSTANCE:-object",
+      "Predicate" : "<http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_type>",
+      "Object" : "ass_type",
+      "Presence" : "EXISTS_IN_V2"
+    }
+  ]
+}

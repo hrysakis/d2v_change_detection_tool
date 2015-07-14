@@ -1,0 +1,45 @@
+ {
+  "Complex_Change": "Associate Prototype With Alt Prototype",
+  "Priority": 205.0,
+  "Complex_Change_Parameters": [
+	{
+      "prototype_title": ""
+	},
+	{
+      "prototype_type": ""
+	},
+	{
+	  "ass_prototype_title":""
+	}
+  ],
+  "Simple_Changes": [
+    {
+      "Simple_Change": "ADD_PROPERTY_INSTANCE",
+      "Simple_Change_Uri": "1:ADD_PROPERTY_INSTANCE",
+      "Is_Optional": false,
+      "Selection_Filter": ["1:ADD_PROPERTY_INSTANCE:-property = <http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/is_alternative>"],
+      "Mapping_Filter": "",
+      "Join_Filter": ""
+    }
+  ],
+  "Version_Filters" : [
+    {
+      "Subject" : "1:ADD_PROPERTY_INSTANCE:-subject",
+      "Predicate" : "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+      "Object" : "prototype_type",
+      "Presence" : "EXISTS_IN_V2"
+    },
+    {
+      "Subject" : "1:ADD_PROPERTY_INSTANCE:-subject",
+      "Predicate" : "<http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_title>",
+      "Object" : "prototype_title",
+      "Presence" : "EXISTS_IN_V2"
+    },
+	{
+      "Subject" : "1:ADD_PROPERTY_INSTANCE:-object",
+      "Predicate" : "<http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_title>",
+      "Object" : "ass_prototype_title",
+      "Presence" : "EXISTS_IN_V2"
+    }
+  ]
+}
