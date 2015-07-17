@@ -1,8 +1,6 @@
 INSERT INTO <changesOntology> {
 ?atp a co:Add_Type_Property;
-    co:atp_p1 ?a;
-    co:old_version ?v1;
-    co:new_version ?v2.
+    co:atp_p1 ?a.
 }
 WHERE {
 GRAPH <v2> { 

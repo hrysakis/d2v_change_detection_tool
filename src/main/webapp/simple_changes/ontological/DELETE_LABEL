@@ -1,9 +1,7 @@
 INSERT INTO <changesOntology> {
 ?dl a co:Delete_Label;
     co:dl_p1 ?a;
-    co:dl_p2 ?b;
-    co:old_version ?v1;
-    co:new_version ?v2.
+    co:dl_p2 ?b.
 }
 WHERE {
 GRAPH <v1> { ?a rdfs:label ?b }

@@ -1,9 +1,7 @@
 INSERT INTO <changesOntology> {
 ?asp a co:Add_Superproperty;
      co:asp_p1 ?a;
-     co:asp_p2 ?b;
-     co:old_version ?v1;
-     co:new_version ?v2.
+     co:asp_p2 ?b.
 }
 WHERE {
 GRAPH <v2> { 

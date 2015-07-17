@@ -1,15 +1,13 @@
 INSERT INTO <changesOntology> {
 ?atc a co:Add_Type_Class;
-    co:atc_p1 ?a;
-    co:old_version ?v1;
-    co:new_version ?v2.
+    co:atc_p1 ?a.
 }
 WHERE {
 GRAPH <v2> { 
 ?r diachron:subject ?a;
    diachron:hasRecordAttribute ?ratt.
-?ratt diachron:predicate rdf:type;
-      diachron:object owl:Class.
+?ratt diachron:predicate rdf:type.
+{?ratt diachron:object owl:Class.} UNION {?ratt diachron:object rdfs:Class.}.
 }
 FILTER NOT EXISTS { GRAPH <v1> {
 ?r diachron:subject ?a.

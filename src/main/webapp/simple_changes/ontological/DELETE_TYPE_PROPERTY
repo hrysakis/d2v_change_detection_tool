@@ -1,8 +1,6 @@
 INSERT INTO <changesOntology> {
 ?dtp a co:Delete_Type_Property;
-    co:dtp_p1 ?a;
-    co:old_version ?v1;
-    co:new_version ?v2.
+    co:dtp_p1 ?a.
 }
 WHERE {
 GRAPH <v1> { 
