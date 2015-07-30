@@ -1,0 +1,28 @@
+INSERT INTO <changesOntology> {
+?advto a co:Add_Dimension_Value_To_Observation;
+    co:addDimVToOb_p1 ?o;
+	co:addDimVToOb_p2 ?d;
+	co:addDimVToOb_p3 ?v;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v2> { 
+?d a diachron:DimensionProperty.
+?o diachron:hasRecordAttribute ?ratt.
+?ratt diachron:predicate ?d;
+	  diachron:object ?v.
+}
+FILTER NOT EXISTS { GRAPH <v1> { 
+?o diachron:hasRecordAttribute ?ratt.
+?ratt diachron:predicate ?d;
+	  diachron:object ?v.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("addDimVToOb",str(?o), str(?d), str(?v), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://addDimVToOb/',SHA1(?url))) AS ?advto).
+}

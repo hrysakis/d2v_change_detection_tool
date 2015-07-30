@@ -1,0 +1,19 @@
+INSERT INTO <changesOntology> {
+?aa a co:Add_Attribute;
+    co:addAtt_p1 ?att.
+}
+WHERE {
+GRAPH <v2> { 
+?att a diachron:AttributeProperty.
+}
+FILTER NOT EXISTS { GRAPH <v1> {
+?att a diachron:AttributeProperty.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("addAtt", str(?att), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://addAtt/',SHA1(?url))) AS ?aa).
+}

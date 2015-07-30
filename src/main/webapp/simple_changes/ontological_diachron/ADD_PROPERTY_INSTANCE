@@ -2,9 +2,7 @@ INSERT INTO <changesOntology> {
 ?api a co:Add_Property_Instance;
     co:api_p1 ?a;
     co:api_p2 ?p;
-    co:api_p3 ?b;
-    co:old_version ?v1;
-    co:new_version ?v2.
+    co:api_p3 ?b.
 }
 WHERE {
 GRAPH <v2> { 

@@ -44,7 +44,7 @@
           </select>
                   <br><br>
               <input class="ChangeButton" type="button" value="Change dataset" onclick="changeDataset();">
-               <!--input class="OptionsButton" type="button" value="Options" onclick="showDatasetOptions();"-->
+              <div id="dsoptions"></div>
               </td></tr> 
 <tr>
     <td class="clickable clickbuttons1" onclick="buildCCTypeMenu(this)"><a href="#"><div class="menu">Define complex change</div><img class="menu_img" src="images/add.png" width="27" height="27" /></a></td></tr>  
@@ -67,7 +67,7 @@
     <a class="logo_idea" href="http://idea-garden.org/" target="_blank"><img src="images/ideagarden.png" width="100"></a> 
 
 
-    <br><br><p class="powered"> <a href="#" onclick="showCredits()"> <img src="images/copyright.png" width="30" height="30">Copyright</a>,<a href="changeLOG.txt" target="_blank"> V2.6, </a><a href="http://www.ics.forth.gr" target="_blank">FORTH-ICS</a> </p>
+    <br><br><p class="powered"> <a href="#" onclick="showCredits()"> <img src="images/copyright.png" width="30" height="30">Copyright</a>,<a href="changeLOG.txt" target="_blank"> V2.8, </a><a href="http://www.ics.forth.gr" target="_blank">FORTH-ICS</a> </p>
 </div>   
     
 
@@ -85,6 +85,8 @@
     
     <script type="text/javascript">
      getDatasetsCombo('sel_dataset');
+     
+     
      <%String username=request.getParameter("username");
      %>
      var username="<%=username%>"; 
@@ -98,6 +100,8 @@
     var loginoption = getURLParameters("loginoption");
      checkLogin(username,loginoption, false);
     });*/
+    
+    checkDatasetOptions();
     </script>  
     
     <!-- Start of StatCounter Code for Dreamweaver -->

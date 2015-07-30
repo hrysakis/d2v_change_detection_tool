@@ -1,0 +1,19 @@
+INSERT INTO <changesOntology> {
+?di a co:Delete_Instance;
+    co:delInst_p1 ?i.
+}
+WHERE {
+GRAPH <v1> { 
+?i a diachron:CodeListTerm.
+}
+FILTER NOT EXISTS { GRAPH <v2> { 
+?i a diachron:CodeListTerm.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("delInst", str(?i), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://delInst/',SHA1(?url))) AS ?di).
+}

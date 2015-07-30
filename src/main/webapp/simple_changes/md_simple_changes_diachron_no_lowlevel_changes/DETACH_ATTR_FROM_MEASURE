@@ -1,0 +1,29 @@
+INSERT INTO <changesOntology> {
+?dafm a co:Detach_Attr_From_Measure;
+    co:detAttFromMeas_p1 ?m;
+	co:dafm_p2 ?a;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v1> { 
+?m a diachron:MeasureProperty.  
+?m diachron:hasAttribute ?a.
+}
+FILTER NOT EXISTS { GRAPH <v2> {
+?m diachron:hasAttribute ?a.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("detAttFromMeas",str(?m), str(?a), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://detAttFromMeas/',SHA1(?url))) AS ?dafm).
+}
+
+#DELETE WHERE {
+#GRAPH <deletedLowLevelChanges> { 
+#?m diachron:hasAttribute ?a.
+#}
+#}

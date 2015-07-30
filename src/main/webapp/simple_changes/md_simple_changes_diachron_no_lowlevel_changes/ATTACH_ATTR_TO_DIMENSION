@@ -1,0 +1,23 @@
+INSERT INTO <changesOntology> {
+?aatd a co:Attach_Attr_To_Dimension;
+    co:attAttToDim_p1 ?d;
+	co:attAttToDim_p2 ?a;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v2> { 
+?d a diachron:DimensionProperty. 
+?d diachron:hasAttribute ?a.
+}
+FILTER NOT EXISTS { GRAPH <v1> {
+?d diachron:hasAttribute ?a.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("attAttToDim",str(?d), str(?a), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://attAttToDim/',SHA1(?url))) AS ?aatd).
+}

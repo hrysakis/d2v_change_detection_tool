@@ -1,0 +1,25 @@
+INSERT INTO <changesOntology> {
+?dga a co:Delete_Generic_Attribute;
+    co:delGenAtt_p1 ?x;
+	co:delGenAtt_p2 ?att.
+}
+WHERE {
+GRAPH <v1> { 
+FILTER NOT EXISTS { 
+{?x rdf:type diachron:DimensionProperty.}
+UNION 
+{?x rdf:type diachron:MeasureProperty.}
+}
+?x diachron:hasAttribute ?att.
+}
+FILTER NOT EXISTS { GRAPH <v2> { 
+?x diachron:hasAttribute ?att.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("delGenAtt", str(?a), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://delGenAtt/',SHA1(?url))) AS ?dga).
+}

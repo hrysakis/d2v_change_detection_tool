@@ -1,0 +1,14 @@
+query=SELECT ?var1 WHERE { \n\
+GRAPH <v2> {  \n\
+?var1 a qb:MeasureProperty. \n\
+} \n\
+FILTER NOT EXISTS { GRAPH <v1> { \n\
+?var1 a qb:MeasureProperty. \n\
+}\n\
+}\n\
+}
+
+type=a <http://www.diachron-fp7.eu/changes/Add_Measure>
+var1=<http://www.diachron-fp7.eu/changes/addMeas_p1>
+
+type_var1=URI

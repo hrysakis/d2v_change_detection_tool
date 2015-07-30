@@ -1,0 +1,20 @@
+INSERT INTO <changesOntology> {
+?adtft a co:Attach_Dimension_To_FT;
+    co:attDimToFT_p1 ?d;
+	co:attDimToFT_p2 ?ft.
+}
+WHERE {
+GRAPH <v2> { 
+?ft diachron:hasDimension ?d.
+}
+FILTER NOT EXISTS { GRAPH <v1> { 
+?ft diachron:hasDimension ?d.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("attDimToFT",str(?d), str(?ft), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://attDimToFT/',SHA1(?url))) AS ?adtft).
+}

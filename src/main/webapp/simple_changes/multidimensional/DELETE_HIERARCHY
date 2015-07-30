@@ -1,0 +1,19 @@
+INSERT INTO <changesOntology> {
+?dh a co:Delete_Hierarchy;
+    co:delH_p1 ?h.
+}
+WHERE {
+GRAPH <v1> { 
+?h a diachron:Hierarchy.
+}
+FILTER NOT EXISTS { GRAPH <v2> {
+?h a diachron:Hierarchy.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("delH", str(?h), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://delH/',SHA1(?url))) AS ?dh).
+}

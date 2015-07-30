@@ -22,7 +22,7 @@ $(document).ready(function() {
             $("#percent").html('100%');
         },
         complete: function(response) {
-            $("#message").html("<font color='blue'>Your file has been uploaded!</font>");
+            $("#message").html("<font color='blue'>Your file has been uploaded! Click 'Add' to proceed.</font>");
         },
         error: function() {
             $("#message").html("<font color='red'> ERROR: unable to upload files</font>");

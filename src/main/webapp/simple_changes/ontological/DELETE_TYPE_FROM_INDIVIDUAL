@@ -1,20 +1,18 @@
 INSERT INTO <changesOntology> {
 ?dtfi a co:Delete_Type_From_Individual;
       co:dtfi_p1 ?a;
-      co:dtfi_p2 ?b;
-      co:old_version ?v1;
-      co:new_version ?v2.
+      co:dtfi_p2 ?b.
 }
 WHERE {
 GRAPH <v1> { 
 ?a rdf:type ?b.
 FILTER (?b != owl:Class && ?b != owl:Property && ?b != owl:Resource).
-FILTER (?b != rdf:Class && ?b != rdfs:Property && ?b != rdfs:Resource).
+FILTER (?b != rdfs:Class && ?b != rdf:Property && ?b != rdfs:Resource).
 }
 FILTER NOT EXISTS { GRAPH <v2> {
 ?a rdf:type ?b.
 FILTER (?b != owl:Class && ?b != owl:Property && ?b != owl:Resource).
-FILTER (?b != rdf:Class && ?b != rdfs:Property && ?b != rdfs:Resource).
+FILTER (?b != rdfs:Class && ?b != rdf:Property && ?b != rdfs:Resource).
 }
 }
 #

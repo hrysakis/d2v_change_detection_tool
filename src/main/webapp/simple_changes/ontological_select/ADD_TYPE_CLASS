@@ -1,0 +1,14 @@
+query=SELECT ?var1 WHERE { \n\
+GRAPH <v2> { \n\
+{ ?var1 rdf:type rdf:Class. } UNION { ?var1 rdf:type owl:Class. } \n\
+}\n\
+FILTER NOT EXISTS { GRAPH <v1> {\n\
+{ ?var1 rdf:type rdf:Class. } UNION { ?var1 rdf:type owl:Class. } \n\
+}\n\
+}\n\
+}\n\
+
+type=a <http://www.diachron-fp7.eu/changes/Add_Type_Class>
+var1=<http://www.diachron-fp7.eu/changes/atc_p1>
+
+type_var1=URI

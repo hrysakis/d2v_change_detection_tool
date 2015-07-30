@@ -1,9 +1,7 @@
 INSERT INTO <changesOntology> {
 ?atti a co:Add_Type_To_Individual;
       co:atti_p1 ?a;
-      co:atti_p2 ?b;
-      co:old_version ?v1;
-      co:new_version ?v2.
+      co:atti_p2 ?b.
 }
 WHERE {
 GRAPH <v2> { 
@@ -12,14 +10,14 @@ GRAPH <v2> {
 ?ratt diachron:predicate rdf:type;
       diachron:object ?b.
 FILTER (?b != owl:Class && ?b != owl:Property && ?b != owl:Resource).
-FILTER (?b != rdf:Class && ?b != rdfs:Property && ?b != rdfs:Resource).
+FILTER (?b != rdfs:Class && ?b != rdf:Property && ?b != rdfs:Resource).
 }
 FILTER NOT EXISTS { GRAPH <v1> {
 ?r diachron:hasRecordAttribute ?ratt.
 ?ratt diachron:predicate rdf:type;
       diachron:object ?b.
 FILTER (?b != owl:Class && ?b != owl:Property && ?b != owl:Resource).
-FILTER (?b != rdf:Class && ?b != rdfs:Property && ?b != rdfs:Resource).
+FILTER (?b != rdfs:Class && ?b != rdf:Property && ?b != rdfs:Resource).
 }
 }
 #

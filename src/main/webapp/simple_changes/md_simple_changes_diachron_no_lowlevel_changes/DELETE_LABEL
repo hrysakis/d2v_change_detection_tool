@@ -1,0 +1,26 @@
+INSERT INTO <changesOntology> {
+?dl a co:Delete_Label;
+    co:delLab_p1 ?s;
+	co:delLab_p2 ?p;
+	co:delLab_p3 ?o;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v1> {
+{?p rdfs:subClassOf rdfs:label} 
+UNION 
+{filter (?p = rdfs:label).} 
+?s ?p ?o
+}
+FILTER NOT EXISTS { GRAPH <v2> {
+?s ?p ?o
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("delLab", str(?s), str(?p), str(?o), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://delLab/',SHA1(?url))) AS ?dl).
+}

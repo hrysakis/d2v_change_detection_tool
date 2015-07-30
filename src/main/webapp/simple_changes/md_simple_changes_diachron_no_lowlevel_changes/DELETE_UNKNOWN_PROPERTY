@@ -1,0 +1,49 @@
+INSERT INTO <changesOntology> {
+?dup a co:Delete_Unknown_Property;
+    co:delUnProp_p1 ?s;
+	co:delUnProp_p2 ?p;
+	co:delUnProp_p3 ?o;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v1> {
+{FILTER NOT EXISTS {?p rdfs:subClassOf rdfs:label}}
+UNION 
+{FILTER (?p != rdfs:label).} 
+?s ?p ?o.
+FILTER NOT EXISTS {?p rdfs:subClassOf rdfs:label}.
+FILTER (?p != rdfs:label).
+FILTER (?p != diachron:hasAttribute).
+FILTER (?p != diachron:hasRecordAttribute). 
+FILTER (?p != diachron:subject).
+FILTER (?p != diachron:predicate).
+FILTER (?p != diachron:object).
+FILTER (?p != diachron:hasCodelist).
+FILTER (?p != diachron:hasHierarchy).
+FILTER (?p != diachron:inScheme).
+FILTER (?p != diachron:hasParent).
+FILTER (?p != diachron:hasDimension).
+FILTER (?p != diachron:hasMeasure).      
+FILTER (?p != diachron:isRelevantTo). 
+FILTER (?p != rdf:type || diachron:DimensionProperty).
+FILTER (?p != rdf:type || diachron:Observation).
+FILTER (?p != rdf:type || diachron:RecordAttribute).
+FILTER (?p != rdf:type || diachron:Codelist).
+FILTER (?p != rdf:type || diachron:Hierarchy).
+FILTER (?p != rdf:type || diachron:CodeListTerm).
+FILTER (?p != rdf:type || diachron:MeasureProperty).
+FILTER (?p != rdf:type || diachron:FactTable).
+FILTER (?p != rdf:type || diachron:AttributeProperty).
+}
+FILTER NOT EXISTS { GRAPH <v2> {
+?s ?p ?o.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("delUnProp", str(?s), str(?p), str(?o), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://addUnProp/',SHA1(?url))) AS ?dup).
+}

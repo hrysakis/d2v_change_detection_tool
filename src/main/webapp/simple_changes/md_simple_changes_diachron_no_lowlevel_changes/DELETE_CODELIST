@@ -1,0 +1,21 @@
+INSERT INTO <changesOntology> {
+?dc a co:Delete_Codelist;
+    co:delClist_p1 ?c;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v1> { 
+?c a diachron:CodeList.
+}
+FILTER NOT EXISTS { GRAPH <v2> {
+?c a diachron:CodeList.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("delClist", str(?c), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://delClist/',SHA1(?url))) AS ?dc).
+}

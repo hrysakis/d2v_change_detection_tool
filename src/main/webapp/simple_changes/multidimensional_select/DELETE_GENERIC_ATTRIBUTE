@@ -1,0 +1,23 @@
+query=SELECT ?var1 ?var2 WHERE { \n\
+GRAPH <v1> {  \n\
+FILTER NOT EXISTS { \n\
+{?var1 rdf:type qb:DimensionProperty.} \n\
+UNION  \n\
+{?var1 rdf:type qb:MeasureProperty.} \n\
+UNION \n\
+{?var1 rdf:type qb:CodedProperty.} \n\
+} \n\
+?var1 qb:attribute ?var2. \n\
+} \n\
+FILTER NOT EXISTS { GRAPH <v2> { \n\
+?var1 qb:attribute ?var2. \n\
+}\n\
+}\n\
+}
+
+type=a <http://www.diachron-fp7.eu/changes/Delete_Generic_Attribute>
+var1=<http://www.diachron-fp7.eu/changes/delGenAtt_p1>
+var2=<http://www.diachron-fp7.eu/changes/delGenAtt_p2>
+
+type_var1=URI
+type_var2=URI

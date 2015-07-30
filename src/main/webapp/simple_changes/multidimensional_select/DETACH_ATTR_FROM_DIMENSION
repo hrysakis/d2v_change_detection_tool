@@ -1,0 +1,42 @@
+query=SELECT ?var1 ?var2 WHERE { \n\
+GRAPH <v1> {  \n\
+?var1 a qb:DimensionProperty. \n\
+?var1 qb:attribute ?var2. \n\
+} \n\
+FILTER NOT EXISTS { GRAPH <v2> { \n\
+?var1 qb:attribute ?var2. \n\
+}\n\
+}\n\
+}
+
+
+type=a <http://www.diachron-fp7.eu/changes/Detach_Attr_From_Dimension>
+var1=<http://www.diachron-fp7.eu/changes/detachAttFromDim_p1>
+var2=<http://www.diachron-fp7.eu/changes/detachAttFromDim_p1>
+
+type_var1=URI
+type_var2=URI
+
+INSERT INTO <changesOntology> {
+?dafd a co:Detach_Attr_From_Dimension;
+    co:detachAttFromDim_p1 ?d;
+	co:detachAttFromDim_p2 ?a;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v1> { 
+?d a qb:DimensionProperty. 
+?d qb:attribute ?a
+}
+FILTER NOT EXISTS { GRAPH <v2> {
+?d qb:attribute ?a.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("detachAttFromDim", str(?d), str(?a), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://detachAttFromDim/',SHA1(?url))) AS ?dafd).
+}

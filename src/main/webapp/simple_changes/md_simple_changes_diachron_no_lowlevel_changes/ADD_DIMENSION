@@ -1,0 +1,21 @@
+INSERT INTO <changesOntology> {
+?ad a co:Add_Dimension;
+    co:addDim_p1 ?d;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v2> { 
+?d a diachron:DimensionProperty.
+}
+FILTER NOT EXISTS { GRAPH <v1> {
+?d a diachron:DimensionProperty.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("addDim", str(?d), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://addDim/',SHA1(?url))) AS ?ad).
+}

@@ -1,0 +1,20 @@
+INSERT INTO <changesOntology> {
+?dhfd a co:Detach_Hierarchy_From_Dimension;
+    co:detHierFromDim_p1 ?d;
+	co:detHierFromDim_p2 ?h.
+}
+WHERE {
+GRAPH <v1> { 
+?d diachron:hasHierarchy ?h.
+}
+FILTER NOT EXISTS { GRAPH <v2> { 
+?d diachron:hasHierarchy ?h.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("detHierFromDim",str(?d), str(?h), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://detHierFromDim/',SHA1(?url))) AS ?dhfd).
+}

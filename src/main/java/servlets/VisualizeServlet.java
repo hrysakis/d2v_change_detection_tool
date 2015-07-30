@@ -28,8 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import store.QueryUtils;
 import org.diachron.detection.utils.DatasetsManager;
 import org.diachron.detection.repositories.JDBCVirtuosoRep;
-import org.openrdf.query.MalformedQueryException;
-import org.openrdf.query.QueryEvaluationException;
 
 /**
  * This servlet used to create the data structures required for the basic

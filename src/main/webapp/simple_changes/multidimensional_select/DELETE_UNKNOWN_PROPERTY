@@ -1,0 +1,40 @@
+query=SELECT ?var1 ?var2 ?var3 WHERE { \n\
+GRAPH <v1> { \n\
+{FILTER NOT EXISTS {?var2 rdfs:subPropertyOf rdfs:label}} \n\
+UNION \n\
+{FILTER (?var2 != rdfs:label).} \n\
+?var1 ?var2 ?var3. \n\
+FILTER (?var2 != rdfs:label). \n\
+FILTER (?var2 != rdfs:range). \n\
+FILTER (?var2 != skos:inScheme). \n\
+FILTER (?var2 != skos:broaderTransitive). \n\
+FILTER (?var2 != qb:codeList). \n\
+FILTER (?var2 != qb:component). \n\
+FILTER (?var2 != qb:dimension). \n\
+FILTER (?var2 != qb:measure). \n\
+FILTER (?var2 != qb:attribute). \n\
+FILTER (?var2 != qb:dataSet). \n\
+FILTER (?var2 != qb:structure). \n\
+FILTER (?var2 != rdf:type || skos:Concept). \n\
+FILTER (?var2 != rdf:type || skos:ConceptScheme). \n\
+FILTER (?var2 != rdf:type || qb:AttributeProperty). \n\
+FILTER (?var2 != rdf:type || qb:CodedProperty). \n\
+FILTER (?var2 != rdf:type || qb:DimensionProperty). \n\
+FILTER (?var2 != rdf:type || qb:DataStructureDefinition). \n\
+FILTER (?var2 != rdf:type || qb:HierarchicalCodeList). \n\
+FILTER (?var2 != rdf:type || qb:Observation). \n\
+} \n\
+FILTER NOT EXISTS { GRAPH <v2> { \n\
+?var1 ?var2 ?var3. \n\
+}\n\
+}\n\
+}
+
+type=a <http://www.diachron-fp7.eu/changes/Delete_Unknown_Property>
+var1=<http://www.diachron-fp7.eu/changes/delUnProp_p1>
+var1=<http://www.diachron-fp7.eu/changes/delUnProp_p2>
+var1=<http://www.diachron-fp7.eu/changes/delUnProp_p3>
+
+type_var1=URI
+type_var2=URI,LITERAL
+type_var3=URI,LITERAL

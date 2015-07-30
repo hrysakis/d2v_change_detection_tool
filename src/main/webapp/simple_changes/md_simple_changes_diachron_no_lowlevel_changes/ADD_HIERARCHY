@@ -1,0 +1,21 @@
+INSERT INTO <changesOntology> {
+?ah a co:Add_Hierarchy;
+    co:addH_p1 ?h;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v2> { 
+?h a diachron:Hierarchy.
+}
+FILTER NOT EXISTS { GRAPH <v1> {
+?h a diachron:Hierarchy.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("addH", str(?h), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://addH/',SHA1(?url))) AS ?ah).
+}

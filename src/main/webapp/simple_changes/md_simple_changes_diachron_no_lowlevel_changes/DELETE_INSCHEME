@@ -1,0 +1,27 @@
+INSERT INTO <changesOntology> {
+?dis a co:Delete_inScheme;
+    co:delInSch_p1 ?x;
+	co:delInSch_p2 ?s;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v1> { 
+FILTER NOT EXISTS { 
+{?s rdf:type diachron:Codelist.}
+UNION 
+{?s rdf:type diachron:Hierarchy.}
+}
+?x diachron:inScheme ?s.
+}
+FILTER NOT EXISTS { GRAPH <v2> {
+?x diachron:inScheme ?s.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("delInSch",str(?x), str(?s), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://delInSch/',SHA1(?url))) AS ?dis).
+}

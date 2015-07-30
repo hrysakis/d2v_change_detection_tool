@@ -1,9 +1,7 @@
 INSERT INTO <changesOntology> {
 ?dsp a co:Delete_Superproperty;
      co:dsp_p1 ?a;
-     co:dsp_p2 ?b;
-     co:old_version ?v1;
-     co:new_version ?v2.
+     co:dsp_p2 ?b.
 }
 WHERE {
 GRAPH <v1> { 

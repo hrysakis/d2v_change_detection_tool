@@ -1,0 +1,33 @@
+query=SELECT ?var1 ?var2 ?var3 WHERE { \n\
+GRAPH <v2> { \n\
+FILTER NOT EXISTS { \n\
+{?var2 rdf:type qb:DimensionProperty.} \n\
+UNION \n\
+{?var2 rdf:type qb:MeasureProperty.} \n\
+} \n\
+} \n\
+GRAPH <v2> { \n\
+?var1 qb:dataSet ?ds. \n\
+?ds qb:structure ?ft. \n\
+?ft qb:component ?cs. \n\
+?cs qb:componentProperty ?var2. \n\
+?var2 rdfs:range ?var3. \n\
+} \n\
+FILTER NOT EXISTS { GRAPH <v1> { \n\
+?var1 qb:dataSet ?ds. \n\
+?ds qb:structure ?ft. \n\
+?ft qb:component ?cs. \n\
+?cs qb:componentProperty ?var2. \n\
+?var2 rdfs:range ?var3. \n\
+}\n\
+}\n\
+}
+
+type=a <http://www.diachron-fp7.eu/changes/Add_Generic_Value_To_Observation>
+var1=<http://www.diachron-fp7.eu/changes/addGenVToOb_p1>
+var1=<http://www.diachron-fp7.eu/changes/addGenVToOb_p2>
+var1=<http://www.diachron-fp7.eu/changes/addGenVToOb_p3>
+
+type_var1=URI
+type_var2=URI
+type_var3=URI

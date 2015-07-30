@@ -1,0 +1,21 @@
+INSERT INTO <changesOntology> {
+?dmfft a co:Detach_Measure_From_FT;
+    co:detMeasToFT_p1 ?m;
+	co:detMeasToFT_p2 ?ft;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v1> { 
+?ft diachron:hasMeasure ?m.
+}
+FILTER NOT EXISTS { GRAPH <v2> { 
+?ft diachron:hasMeasure ?m.
+}
+}
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("detMeasToFT",str(?m), str(?ft), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://detMeasToFT/',SHA1(?url))) AS ?dmfft).
+}

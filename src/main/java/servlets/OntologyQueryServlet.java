@@ -40,7 +40,7 @@ public class OntologyQueryServlet extends HttpServlet {
 
     public static String configPath = "";
     public static String contextPath = "";
-    private int limitPerChange = 5;
+    private int limitPerChange = 100000; //JCH:big limit to retrieve them all
 
     /**
      * Processes query requests for both HTTP <code>GET</code> and
@@ -136,7 +136,23 @@ public class OntologyQueryServlet extends HttpServlet {
                 dmgr1 = null;
             }
 
-        } else if (query_type != null && query_type.equals("dataseturi")) {
+        } 
+
+        
+        else  if (query_type != null && query_type.equals("dsoptions")) {
+            // checks for existing properties at config file
+            
+          String ds_files_folder = OntologyQueryServlet.getPropertyFromFile(configPath, "Dataset_Files_Folder");
+          String ds_default_schema = OntologyQueryServlet.getPropertyFromFile(configPath, "Dataset_Default_Schema");
+          if (ds_files_folder != null && ds_default_schema != null){
+              out.print("enabled");
+          }
+          else{
+              out.print("disabled");
+          }
+        
+        }
+        else if (query_type != null && query_type.equals("dataseturi")) {
             String selected_dataset_uri = "";
             String dlabel = request.getParameter("dslabel");
             try {
@@ -869,17 +885,18 @@ public class OntologyQueryServlet extends HttpServlet {
         return tempOntology;
     }
 
-    private List getVersions(DatasetsManager dmgr) {
+    private static List getVersions(DatasetsManager dmgr) {
         Map versions_map = null;
         versions_map = dmgr.fetchDatasetVersions();
-        dmgr.terminate();
+        
+        //dmgr.terminate();
         List versions = new ArrayList(versions_map.keySet()); //YR new
         return versions;
     }
 
     //Douleuei otan exw evolution apo ola ta versions
     private String getVersionByIndex(DatasetsManager dmgr, int index) {
-        List versions = this.getVersions(dmgr);
+        List versions = OntologyQueryServlet.getVersions(dmgr);
         return (String) versions.get(index);
     }
 
@@ -905,14 +922,21 @@ public class OntologyQueryServlet extends HttpServlet {
     }
 
     /**
-     * Returns the last number of a version for selected dataset URI
+     * Returns the next number of a version to be created for selected dataset URI
      *
      * @param dmgr the DatasetsManager object that has set the dataset URI
      * @return the last number of a version for the selected dataset URI
      */
-    public int getLastVersionNumber(DatasetsManager dmgr) {
-        List versions = this.getVersions(dmgr);
-        int lastno = Integer.parseInt((String) versions.get(versions.size() - 1));
+    public static int getNextVersionNumber(DatasetsManager dmgr) {
+        List versions = OntologyQueryServlet.getVersions(dmgr);
+        int lastno = 1;
+        if (!versions.isEmpty()){
+        
+            String version = (String)versions.get(versions.size()-1);
+            String versionNO = version.substring(version.lastIndexOf("/")+1);
+            lastno = Integer.parseInt(versionNO);
+            lastno++;
+        }
         return lastno;
     }
 

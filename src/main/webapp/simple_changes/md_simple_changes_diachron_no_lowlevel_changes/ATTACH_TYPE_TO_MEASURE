@@ -1,0 +1,29 @@
+INSERT INTO <changesOntology> {
+?attm a co:Attach_Type_To_Measure;
+    co:attTypeToMeas_p1 ?m;
+	co:attTypeToMeas_p2 ?t;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v2> { 
+?m a diachron:MeasureProperty.
+?m rdfs:range ?t.
+}
+FILTER NOT EXISTS { GRAPH <v1> {
+?m rdfs:range ?t.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("attTypeToMeas",str(?m), str(?t), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://attTypeToMeas/',SHA1(?url))) AS ?attm).
+}
+
+#DELETE WHERE {
+#GRAPH <addedLowLevelChanges> { 
+#?m rdfs:range ?t.
+#}
+#}

@@ -1,0 +1,20 @@
+INSERT INTO <changesOntology> {
+?aotft a co:Attach_Observation_To_FT;
+    co:attObToFT_p1 ?o;
+	co:attObToFT_p2 ?ft.
+}
+WHERE {
+GRAPH <v2> { 
+?o diachron:subject ?ft.
+}
+FILTER NOT EXISTS { GRAPH <v1> {
+?o diachron:subject ?ft.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("attObToFT",str(?o), str(?ft), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://attObToFT/',SHA1(?url))) AS ?aotft).
+}

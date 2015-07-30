@@ -750,11 +750,7 @@ function includeUploadScripts() {
 
 function retrieveDatasetOptions(value) {
 
-
-
-
-
-    var up_str = includeUploadScripts();
+ var up_str = includeUploadScripts();
     var html_str = "";
     var html_ds = " <p>Choose dataset*:</p><select name=\"choose_dataset\" id=\"choose_dataset\">\n" + " </select>";
 
@@ -783,7 +779,7 @@ function retrieveDatasetOptions(value) {
         html_str = "<br>\n" +
                 "<p>Enter dataset label*</p><input name=\"dlabel\" id=\"dlabel\" type=\"text\"/>" + "<br><br>" +
                 upload_str +
-                "<input type=\"button\" class=\"Button\" value=\"Add\" onclick=\"addDataset('choose_dataset');\">\n";
+                "<input type=\"button\" class=\"Button\" value=\"Add\" onclick=\"addDataset(true);\">\n";
         $('#dsmore').html(html_str + up_str);
 
     }
@@ -795,14 +791,15 @@ function retrieveDatasetOptions(value) {
                 upload_str +
                 // "<p>Load dataset version from disk:</p><input name=\"browse\" id=\"filebrowse\" type=\"file\"/>" +
 
-                "<input type=\"button\" class=\"Button\" value=\"Add\" onclick=\"alert($('#filebrowse').val())\">\n";
+               /// "<input type=\"button\" class=\"Button\" value=\"Add\" onclick=\"alert($('#filebrowse').val())\">\n";
+                "<input type=\"button\" class=\"Button\" value=\"Add\" onclick=\"addDataset(false);\">\n";
         getDatasetsCombo('choose_dataset');
         $('#dsmore').html(html_str + up_str);
     }
 
     else if (value === 'del') {
         html_str = "<br>\n" + html_ds + "<br><br>\n" +
-                "<input type=\"button\" class=\"Button\" value=\"OK\" onclick=\"delDataset())\">\n";
+                "<input type=\"button\" class=\"Button\" value=\"OK\" onclick=\"delDataset();\">\n";
         getDatasetsCombo('choose_dataset');
         $('#dsmore').html(html_str);
     }
@@ -820,31 +817,117 @@ function retrieveDatasetOptions(value) {
 
 }
 
-function addDataset() {
-    var dlabel = $('#dlabel').val();
-    var dvlabel = $('#dvlabel').val();
-    var message = "The new dataset with label " + dlabel + " has just been added.";
-    // startAction(true,"actions");
-
-    $.get('ActionServlet', {action: "ds_add", dslabel: dlabel, dvlabel: dvlabel}).done(function(responseText) {
+function delVersionDataset(){
+   var nowchangesontology = $('#choose_dataset').val();
+   var nowdatasetURI = getDatasetURI(nowchangesontology); 
+   var message = "The selected dataset version has been erased from the selected dataset.";
+   var versionURI = $('input[name=version]:radio:checked').val();
+   var msg = 'Please a select a version via a specified radio button, in order this version to be deleted';
+  
+   if (versionURI === undefined || versionURI === 'undefined' ){
+       showDialog('dialogmsg', msg);
+   }
+   else{
+   startAction(true,"actions");
+   
+   $.get('ActionServlet', {action: "ds_delversion", versionURI:versionURI, selectedDatasetURI:nowdatasetURI}).done(function(responseText) {
         if (responseText === "success")
         {
+            finishAction();
             displayMessage(message);
+            
         }
 
         else {
             showDialog('dialogmsg', "<p>" + responseText + "</p>"); //error-alert on response
+            finishAction();
         }
-        finishAction();
+        
+
+    });
+   }
+}
+
+function delDataset(){
+    var nowchangesontology = $('#choose_dataset').val();
+    var nowdatasetURI = getDatasetURI(nowchangesontology);
+    //alert('DEL DATASET::'+nowdatasetURI);
+    
+    var nowchangesontology = $('#choose_dataset').val();
+    var nowdatasetURI = getDatasetURI(nowchangesontology);
+    
+    var message = "The selected dataset and all its assigned version(s) has been just erased.";
+    startAction(true,"actions");
+
+
+    $.get('ActionServlet', {action: "ds_del",  selectedDatasetURI:nowdatasetURI }).done(function(responseText) {
+        if (responseText === "success")
+        {
+            finishAction();
+            displayMessage(message);
+            getDatasetsCombo('sel_dataset');
+            enableDatasetOption('sel_dataset');
+            
+        }
+
+        else {
+            showDialog('dialogmsg', "<p>" + responseText + "</p>"); //error-alert on response
+             finishAction();
+        }
+       
+
+    });
+    
+}
+
+function addDataset(newdataset) {
+    var action = '';
+    var dlabel = $('#dlabel').val();
+    var dvlabel = $('#dvlabel').val();
+    var versionfile = $('#myfile').val();
+    
+    if (newdataset){
+        action = "ds_add";
+    }
+    else{
+        action = "ds_addversion";
+        dlabel = dvlabel;
+    }
+    
+    var nowchangesontology = $('#choose_dataset').val();
+    var nowdatasetURI = getDatasetURI(nowchangesontology);
+    
+    var message = "The new dataset with label " + dlabel + " has just been added.";
+
+    startAction(true,"actions");
+    var intuser = getURLParameters("intenrnaluser");
+
+    $.get('ActionServlet', {action: action, dslabel: dlabel, dvlabel: dvlabel, versionFilename:versionfile, intuser:intuser, selectedDatasetURI:nowdatasetURI}).done(function(responseText) {
+        if (responseText === "success")
+        {
+            finishAction();
+            displayMessage(message);
+            getDatasetsCombo('sel_dataset');
+            enableDatasetOption('sel_dataset');
+            
+        }
+
+        else {
+            finishAction();
+            showDialog('dialogmsg', "<p>" + responseText + "</p>"); //error-alert on response
+        }
+        
 
     });
 }
 
 function fetchDSVersions() {
-    var OKButton = "<br>\n" + "<input type=\"button\" class=\"Button\" value=\"OK\" onclick=\"delVersionDataset())\">\n";
-    var changesontology = $('choose_dataset').val();
+    var OKButton = "<br>\n" + "<input type=\"button\" class=\"Button\" value=\"OK\" onclick=\"delVersionDataset();\">\n";
+    var changesontology = $('#choose_dataset').val();
+    
     var datasetURI = getDatasetURI(changesontology);
     $.get('OntologyQueryServlet', {qtype: 'versions', datasetversions: datasetURI, dataset: changesontology, valuestype: "radio"}, function(responseText) {
+ 
         $('#dsversions').html(responseText);
         $('#dsversions').append(OKButton);
     });
@@ -1234,6 +1317,11 @@ function resetTables() {
 
 }
 
+function enableDatasetOption(){
+    $('#sel_dataset').prop('disabled', false);
+}
+
+
 function disableDatasetOption() {
 
     $('#sel_dataset').prop('disabled', true);
@@ -1289,7 +1377,7 @@ function checkDataset() {
 
 
 function getDatasetURI(changesontology) { //New version, does not requires query to store
-    var dataseturi = "---";
+    var dataseturi = "n/a";
     if (changesontology !== undefined && changesontology !== "undefined") { //when comes from vis
         dataseturi = changesontology.replace("/changes", " ").trim();
         //alert('dataseturi>>' +dataseturi+"<<");
@@ -2066,4 +2154,17 @@ function getDatasetsCombo(divID) {//sel_dataset
         // $("#" + divID).val($("#" + divID+" option:eq(1)").val());
         //$('#sel_dataset').prop('disabled', true);
     });
+}
+
+//checks if datasets options should be enabled via the "Options" button
+function checkDatasetOptions(){
+    var options_button = "<input class=\"OptionsButton\" type=\"button\" value=\"Options\" onclick=\"showDatasetOptions();\">";
+     $.get('OntologyQueryServlet', {qtype: 'dsoptions'}, function(responseText) {
+        //alert(responseText);
+        if (responseText === 'enabled'){
+            $('#dsoptions').html(options_button);
+        }
+       
+    });
+    
 }

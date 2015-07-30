@@ -1,0 +1,19 @@
+INSERT INTO <changesOntology> {
+?am a co:Add_Measure;
+    co:addMeas_p1 ?m.
+}
+WHERE {
+GRAPH <v2> { 
+?m a diachron:MeasureProperty.
+}
+FILTER NOT EXISTS { GRAPH <v1> {
+?m a diachron:MeasureProperty.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("addMeas", str(?m), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://addMeas/',SHA1(?url))) AS ?am).
+}

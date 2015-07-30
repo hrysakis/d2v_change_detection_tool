@@ -1,0 +1,21 @@
+INSERT INTO <changesOntology> {
+?adtd a co:Attach_Datatype_To_Dimension;
+    co:attDtypeToDim_p1 ?d;
+	co:attDtypeToDim_p2 ?t.
+}
+WHERE {
+GRAPH <v2> { 
+?d a diachron:DimensionProperty.
+?d rdfs:range ?t.
+}
+FILTER NOT EXISTS { GRAPH <v1> {
+?d rdfs:range ?t.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("attDtypeToDim", str(?d), str(?t), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://attDtypeToDim/',SHA1(?url))) AS ?adtd).
+}

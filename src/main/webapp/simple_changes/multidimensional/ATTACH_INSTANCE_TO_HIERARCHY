@@ -1,0 +1,21 @@
+INSERT INTO <changesOntology> {
+?aith a co:Attach_Instance_To_Hierarchy;
+    co:attInstToHier_p1 ?h;
+	co:attInstToHier_p2 ?i.
+}
+WHERE {
+GRAPH <v2> { 
+?h a diachron:Hierarchy.
+?i diachron:inScheme ?h.
+}
+FILTER NOT EXISTS { GRAPH <v1> {
+?i diachron:inScheme ?c.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("attInstToHier",str(?h), str(?i), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://attInstToHier/',SHA1(?url))) AS ?aith).
+}

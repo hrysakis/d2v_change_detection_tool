@@ -1,0 +1,11 @@
+query=SELECT ?var1 ?var2 WHERE { \n\
+GRAPH <v2> { ?var1 rdfs:label ?var2 }. \n\
+FILTER NOT EXISTS { GRAPH <v1> { ?var1 rdfs:label ?var2 } } \n\
+}
+
+type=a <http://www.diachron-fp7.eu/changes/Add_Label>
+var1=<http://www.diachron-fp7.eu/changes/al_p1>
+var2=<http://www.diachron-fp7.eu/changes/al_p2>
+
+type_var1=URI
+type_var2=LITERAL

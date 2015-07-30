@@ -1,9 +1,7 @@
 INSERT INTO <changesOntology> {
 ?dr a co:Delete_Range;
     co:dr_p1 ?a;
-    co:dr_p2 ?b;
-    co:old_version ?v1;
-    co:new_version ?v2.
+    co:dr_p2 ?b.
 }
 WHERE {
 GRAPH <v1> { 

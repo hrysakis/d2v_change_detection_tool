@@ -1,0 +1,22 @@
+INSERT INTO <changesOntology> {
+?dr a co:Delete_Relevancy;
+    co:delRel_p1 ?x;
+	co:delRel_p2 ?y;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v1> { 
+?x diachron:isRelevantTo ?y
+}
+FILTER NOT EXISTS { GRAPH <v2> { 
+?x diachron:isRelevantTo ?y
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("delRel", str(?x), str(?y), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://delRel/',SHA1(?url))) AS ?dr).
+}
