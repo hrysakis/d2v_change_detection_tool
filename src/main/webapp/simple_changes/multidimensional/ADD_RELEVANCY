@@ -1,0 +1,26 @@
+INSERT INTO <changesOntology> {
+?ar a co:Add_Relevancy;
+    co:addRel_p1 ?x;
+	co:addRel_p2 ?y.
+}
+WHERE {
+GRAPH <v2> { 
+?x diachron:isRelevantTo ?y
+}
+FILTER NOT EXISTS { GRAPH <v1> { 
+?x diachron:isRelevantTo ?y
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("addRel", str(?x), str(?y), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://addRel/',SHA1(?url))) AS ?ar).
+}
+
+#DELETE WHERE {
+#GRAPH <addedLowLevelChanges> { 
+#?x diachron:isRelevantTo ?y
+#}
+#}

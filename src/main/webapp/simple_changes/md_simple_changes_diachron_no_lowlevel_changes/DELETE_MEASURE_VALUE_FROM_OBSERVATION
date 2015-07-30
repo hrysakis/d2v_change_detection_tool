@@ -1,0 +1,28 @@
+INSERT INTO <changesOntology> {
+?dmvfo a co:Delete_Measure_Value_From_Observation;
+    co:delMeasVFromOb_p1 ?o;
+	co:delMeasVFromOb_p2 ?m;
+	co:delMeasVFromOb_p3 ?v;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v1> { 
+?m a diachron:MeasureProperty.
+?o diachron:hasRecordAttribute ?ratt.
+?ratt diachron:predicate ?m;
+	  diachron:object ?v.
+}
+FILTER NOT EXISTS { GRAPH <v2> {
+?o diachron:hasRecordAttribute ?ratt.
+?ratt diachron:predicate ?m;
+	  diachron:object ?v.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("delMeasVFromOb",str(?o), str(?m), str(?v), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://delMeasVFromOb/',SHA1(?url))) AS ?dmvfo).
+}

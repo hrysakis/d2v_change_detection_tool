@@ -1,0 +1,23 @@
+INSERT INTO <changesOntology> {
+?difh a co:Detach_Instance_From_Hierarchy;
+    co:detInstFromHier_p1 ?h;
+	co:detInstFromHier_p2 ?i;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v1> { 
+?h a diachron:Hierarchy.
+?i diachron:inScheme ?h.
+}
+FILTER NOT EXISTS { GRAPH <v2> {
+?i diachron:inScheme ?c.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("detInstFromHier",str(?h), str(?i), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://detInstFromHier/',SHA1(?url))) AS ?difh).
+}

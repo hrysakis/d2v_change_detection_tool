@@ -1,0 +1,23 @@
+INSERT INTO <changesOntology> {
+?dafd a co:Detach_Attr_From_Dimension;
+    co:detachAttFromDim_p1 ?d;
+	co:detachAttFromDim_p2 ?a;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v1> { 
+?d a diachron:DimensionProperty. 
+?d diachron:hasAttribute ?a.
+}
+FILTER NOT EXISTS { GRAPH <v2> {
+?d diachron:hasAttribute ?a.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("detachAttFromDim", str(?d), str(?a), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://detachAttFromDim/',SHA1(?url))) AS ?dafd).
+}

@@ -1,0 +1,19 @@
+INSERT INTO <changesOntology> {
+?dd a co:Delete_Dimension;
+    co:delDim_p1 ?d.
+}
+WHERE {
+GRAPH <v1> { 
+?d a diachron:DimensionProperty.
+}
+FILTER NOT EXISTS { GRAPH <v2> {
+?d a diachron:DimensionProperty.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("delDim", str(?d), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://delDim/',SHA1(?url))) AS ?dd).
+}

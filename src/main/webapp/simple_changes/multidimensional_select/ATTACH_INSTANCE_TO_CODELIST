@@ -1,0 +1,17 @@
+query=SELECT ?var1 ?var2 WHERE { \n\
+GRAPH <v2> {  \n\
+?var1 a skos:ConceptScheme. \n\
+?var2 skos:inScheme ?var1. \n\
+} \n\
+FILTER NOT EXISTS { GRAPH <v1> { \n\
+?var2 skos:inScheme ?var1. \n\
+}\n\
+}\n\
+}
+
+type=a <http://www.diachron-fp7.eu/changes/Attach_Instance_To_Codelist>
+var1=<http://www.diachron-fp7.eu/changes/attInstToClist_p1>
+var2=<http://www.diachron-fp7.eu/changes/attInstToClist_p2>
+
+type_var1=URI
+type_var2=URI

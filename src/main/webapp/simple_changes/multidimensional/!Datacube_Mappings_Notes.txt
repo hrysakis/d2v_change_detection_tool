@@ -1,0 +1,34 @@
+P| diachron:inScheme -> skos:inScheme 
+C| diachron:FactTable ->  qb:DataStructureDefinition
+C| diachron:CodeListTerm -> skos:Concept
+P| diachron:hasParent -> skos:broaderTransitive
+P| diachron:hasHierarchy -> qb:codeList
+C| diachron:CodeList -> skos:ConceptScheme
+C| diachron:Hierarchy -> qb:HierarchicalCodeList if it is not skos:ConceptScheme
+
+
+Examples:
+diachron:hasDimension ->  qb:component [qb:dimension ?dimension]
+or:
+
+qb:DataStructureDefinition qb:component ?x.
+?x qb:dimension ?dimension.
+----------------------------------------------------------------
+
+diachron:hasMeasure -> qb:component [qb:measure ?measure]
+or:
+qb:DataStructureDefinition qb:component ?x
+?x qb:measure ?measure
+
+
+diachron:hasAttribute -> qb:component [qb:attribute ?attribute]
+qb:DataStructureDefinition qb:component ?x
+?x qb:attribute ?attribute
+
+
+================================================================================================
+
+
+dimension value (values)?
+?cs qb:dimension ?d.
+?d rdfs:range ?v.

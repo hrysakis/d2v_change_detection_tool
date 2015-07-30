@@ -1,0 +1,25 @@
+INSERT INTO <changesOntology> {
+?ais a co:Add_inScheme;
+    co:addInSch_p1 ?x;
+	co:addInSch_p2 ?s.
+}
+WHERE {
+GRAPH <v2> { 
+FILTER NOT EXISTS { 
+{?s rdf:type diachron:Codelist.}
+UNION 
+{?s rdf:type diachron:Hierarchy.}
+}
+?x diachron:inScheme ?s.
+}
+FILTER NOT EXISTS { GRAPH <v1> {
+?x diachron:inScheme ?s.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("addInSch",str(?x), str(?s), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://addInSch/',SHA1(?url))) AS ?ais).
+}

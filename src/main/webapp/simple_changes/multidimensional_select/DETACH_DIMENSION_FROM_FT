@@ -1,0 +1,18 @@
+query=SELECT ?var1 ?var2 WHERE { \n\
+GRAPH <v1> {  \n\
+?var1 qb:component ?cs. \n\
+?cs qb:dimension ?var2. \n\
+} \n\
+FILTER NOT EXISTS { GRAPH <v2> { \n\
+?var1 qb:component ?cs. \n\
+?cs qb:dimension ?var2. \n\
+}\n\
+}\n\
+}
+
+type=a <http://www.diachron-fp7.eu/changes/Detach_Dimension_From_FT>
+var1=<http://www.diachron-fp7.eu/changes/ddfft_p1>
+var2=<http://www.diachron-fp7.eu/changes/ddfft_p2>
+
+type_var1=URI
+type_var2=URI

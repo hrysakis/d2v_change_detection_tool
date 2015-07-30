@@ -1,0 +1,21 @@
+INSERT INTO <changesOntology> {
+?aft a co:Add_Fact_Table;
+    co:addFT_p1 ?f;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v2> { 
+?f a diachron:FactTable.
+}
+FILTER NOT EXISTS { GRAPH <v1> {
+?f a diachron:FactTable.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("addFT", str(?f), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://addFT/',SHA1(?url))) AS ?aft).
+}

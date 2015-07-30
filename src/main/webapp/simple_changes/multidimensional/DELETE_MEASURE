@@ -1,0 +1,19 @@
+INSERT INTO <changesOntology> {
+?dm a co:Delete_Measure;
+    co:delMeas_p1 ?m.
+}
+WHERE {
+GRAPH <v1> { 
+?m a diachron:MeasureProperty.
+}
+FILTER NOT EXISTS { GRAPH <v2> {
+?m a diachron:MeasureProperty.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("delMeas", str(?m), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://delMeas/',SHA1(?url))) AS ?dm).
+}

@@ -1,0 +1,25 @@
+INSERT INTO <changesOntology> {
+?aga a co:Add_Generic_Attribute;
+    co:addGenAtt_p1 ?x;
+	co:addGenAtt_p2 ?att.
+}
+WHERE {
+GRAPH <v2> { 
+FILTER NOT EXISTS { 
+{?x rdf:type diachron:DimensionProperty.}
+UNION 
+{?x rdf:type diachron:MeasureProperty.}
+}
+?x diachron:hasAttribute ?att.
+}
+FILTER NOT EXISTS { GRAPH <v1> { 
+?x diachron:hasAttribute ?att.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("addGenAtt", str(?x), str(?att), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://addGenAtt/',SHA1(?url))) AS ?aga).
+}

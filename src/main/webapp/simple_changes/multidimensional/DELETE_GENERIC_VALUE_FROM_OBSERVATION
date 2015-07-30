@@ -1,0 +1,32 @@
+INSERT INTO <changesOntology> {
+?dgvfo a co:Delete_Generic_Value_From_Observation;
+    co:addGenVFromOb_p1 ?o;
+	co:addGenVFromOb_p2 ?p;
+	co:addGenVFromOb_p3 ?v.
+}
+WHERE {
+GRAPH <v1> { 
+FILTER NOT EXISTS { 
+{?p rdf:type diachron:DimensionProperty.}
+UNION 
+{?p rdf:type diachron:MeasureProperty.}
+}
+}
+GRAPH <v1> {
+?o diachron:hasRecordAttribute ?ratt.
+?ratt diachron:predicate ?p;
+	  diachron:object ?v.
+}
+FILTER NOT EXISTS { GRAPH <v2> { 
+?o diachron:hasRecordAttribute ?ratt.
+?ratt diachron:predicate ?p;
+	  diachron:object ?v.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("addGenVFromOb",str(?o), str(?p), str(?v), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://addGenVFromOb/',SHA1(?url))) AS ?dgvfo).
+}

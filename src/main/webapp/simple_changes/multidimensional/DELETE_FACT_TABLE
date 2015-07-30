@@ -1,0 +1,19 @@
+INSERT INTO <changesOntology> {
+?dft a co:Delete_Fact_Table;
+    co:delFT_p1 ?f.
+}
+WHERE {
+GRAPH <v1> { 
+?f a diachron:FactTable.
+}
+FILTER NOT EXISTS { GRAPH <v2> {
+?f a diachron:FactTable.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("delFT", str(?f), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://delFT/',SHA1(?url))) AS ?dft).
+}

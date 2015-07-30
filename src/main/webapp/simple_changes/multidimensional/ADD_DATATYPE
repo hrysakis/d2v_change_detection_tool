@@ -1,0 +1,25 @@
+INSERT INTO <changesOntology> {
+?ad a co:Add_Datatype;
+    co:addDtype_p1 ?x;
+	co:addDtype_p2 ?t.
+}
+WHERE {
+GRAPH <v2> { 
+?x rdfs:range ?t.
+FILTER NOT EXISTS { 
+{?x rdf:type diachron:DimensionProperty.}
+UNION 
+{?x rdf:type diachron:MeasureProperty.}
+}
+}
+FILTER NOT EXISTS { GRAPH <v1> {
+?x rdfs:range ?t.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("addDtype",str(?x), str(?t), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://addDtype/',SHA1(?url))) AS ?ad).
+}

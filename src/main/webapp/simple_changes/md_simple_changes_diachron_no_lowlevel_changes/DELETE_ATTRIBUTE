@@ -1,0 +1,21 @@
+INSERT INTO <changesOntology> {
+?da a co:Delete_Attribute;
+	co:delAtt_p1 ?att;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v1> { 
+?att a diachron:AttributeProperty.
+}
+FILTER NOT EXISTS { GRAPH <v2> {
+?att a diachron:AttributeProperty.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("delAtt", str(?a), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://delAtt/',SHA1(?url))) AS ?da).
+}

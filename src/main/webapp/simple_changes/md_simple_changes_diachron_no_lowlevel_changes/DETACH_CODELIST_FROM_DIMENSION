@@ -1,0 +1,22 @@
+INSERT INTO <changesOntology> {
+?dcfd a co:Detach_Codelist_From_Dimension;
+    co:detClistFromDim_p1 ?d;
+	co:detClistFromDim_p2 ?c;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v1> { 
+?d diachron:codelist ?c.
+}
+FILTER NOT EXISTS { GRAPH <v2> { 
+?d diachron:codelist ?c.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("detClistFromDim",str(?d), str(?c), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://detClistFromDim/',SHA1(?url))) AS ?dcfd).
+}

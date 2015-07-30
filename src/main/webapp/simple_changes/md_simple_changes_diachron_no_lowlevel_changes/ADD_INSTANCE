@@ -1,0 +1,21 @@
+INSERT INTO <changesOntology> {
+?ai a co:Add_Instace;
+    co:addInst_p1 ?i;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v2> { 
+?i a diachron:CodeListTerm.
+}
+FILTER NOT EXISTS { GRAPH <v1> { 
+?i a diachron:CodeListTerm.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("addInst", str(?i), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://addInst/',SHA1(?url))) AS ?ai).
+}

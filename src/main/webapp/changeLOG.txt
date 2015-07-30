@@ -1,3 +1,10 @@
+V2.8
+Manage datasets functionality added. (Available for specific configuration)
+LIBS Updated and reduced
+=============================================================
+V2.7
+Reorganization of packages (disable changedetectiondemo.jar)
+=================================================
 V2.6
 Code wipe out
 Documentation on code extended

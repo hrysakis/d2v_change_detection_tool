@@ -239,6 +239,7 @@ table tr:hover td{
     width: 45px;
     border:1px #7c7c7c solid;
     text-align:center;
+    padding: 0;
     font:10px arial,sans-serif;
 
 }
@@ -357,6 +358,9 @@ table tr:hover td{
 /*
 Various other elements style
 ------------------------------------------------------------------ */
+#dsoptions{
+    display: inline;
+}
 .fillmarktd {
     background: #ffffe5 !important;
 }

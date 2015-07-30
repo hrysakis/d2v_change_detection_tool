@@ -1,0 +1,20 @@
+8INSERT INTO <changesOntology> {
+?aitp a co:Add_Instance_To_Parent;
+    co:addInstToPar_p1 ?i;
+	co:addInstToPar_p2 ?p.
+}
+WHERE {
+GRAPH <v2> { 
+?i diachron:hasParent ?p.
+}
+FILTER NOT EXISTS { GRAPH <v1> { 
+?i diachron:hasParent ?p.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("addInstToPar",str(?i), str(?p), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://addInstToPar/',SHA1(?url))) AS ?aitp).
+}

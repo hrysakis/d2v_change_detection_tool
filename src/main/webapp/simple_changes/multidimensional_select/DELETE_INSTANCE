@@ -1,0 +1,14 @@
+query=SELECT ?var1 WHERE { \n\
+GRAPH <v1> {  \n\
+?var1 a skos:Concept. \n\
+} \n\
+FILTER NOT EXISTS { GRAPH <v2> { \n\
+?var1 a skos:Concept. \n\
+}\n\
+}\n\
+}\n\
+
+type=a <http://www.diachron-fp7.eu/changes/Delete_Instance>
+var1=<http://www.diachron-fp7.eu/changes/delInst_p>
+
+type_var1=URI

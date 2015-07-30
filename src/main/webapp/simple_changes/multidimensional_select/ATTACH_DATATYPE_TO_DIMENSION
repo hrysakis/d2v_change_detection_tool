@@ -1,0 +1,17 @@
+query=SELECT ?var1 ?var2 WHERE { \n\
+GRAPH <v2> { \n\
+?var1 a qb:DimensionProperty. \n\
+?var1 rdfs:range ?var2. \n\
+} \n\
+FILTER NOT EXISTS { GRAPH <v1> { \n\
+?var1 rdfs:range ?var2. \n\
+}\n\
+}\n\
+}
+
+type=a <http://www.diachron-fp7.eu/changes/Attach_Datatype_To_Dimension>
+var1=<http://www.diachron-fp7.eu/changes/attDtypeToDim_p1>
+var2=<http://www.diachron-fp7.eu/changes/attDtypeToDim_p2>
+
+type_var1=URI
+type_var2=URI

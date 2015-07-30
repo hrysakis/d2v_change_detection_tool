@@ -1,0 +1,24 @@
+INSERT INTO <changesOntology> {
+?ddfft a co:Detach_Dimension_From_FT;
+    co:ddfft_p1 ?d;
+	co:ddfft_p2 ?ft;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <deletedLowLevelChanges> { 
+?ft diachron:hasDimension ?d.
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("ddfft",str(?d), str(?ft), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://ddfft/',SHA1(?url))) AS ?ddfft).
+}
+
+#DELETE WHERE {
+#GRAPH <deletedLowLevelChanges> { 
+#?ft diachron:hasDimension ?d.
+#}
+#}

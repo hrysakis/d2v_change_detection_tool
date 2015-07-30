@@ -1,0 +1,21 @@
+INSERT INTO <changesOntology> {
+?dtfm a co:Detach_Type_From_Measure;
+    co:detTypeFromMeas_p1 ?m;
+	co:detTypeFromMeas_p2 ?t.
+}
+WHERE {
+GRAPH <v1> { 
+?m a diachron:MeasureProperty.
+?m rdfs:range ?t.
+}
+FILTER NOT EXISTS { GRAPH <v2> {
+?m rdfs:range ?t.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("detTypeFromMeas",str(?m), str(?t), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://detTypeFromMeas/',SHA1(?url))) AS ?dtfm).
+}

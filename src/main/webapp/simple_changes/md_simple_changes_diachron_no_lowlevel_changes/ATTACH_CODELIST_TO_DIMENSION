@@ -1,0 +1,22 @@
+INSERT INTO <changesOntology> {
+?actd a co:Attach_Codelist_To_Dimension;
+    co:attClistToDim_p1 ?d;
+	co:attClistToDim_p2 ?c;
+    co:old_version ?v1;
+    co:new_version ?v2.
+}
+WHERE {
+GRAPH <v2> { 
+?d diachron:codelist ?c.
+}
+FILTER NOT EXISTS { GRAPH <v1> { 
+?d diachron:codelist ?c.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("attClistToDim",str(?d), str(?c), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://attClistToDim/',SHA1(?url))) AS ?actd).
+}
