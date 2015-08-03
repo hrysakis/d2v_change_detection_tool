@@ -16,8 +16,12 @@ D2V stores all change definitions and the detected changes in an ontology of cha
 # INSTALLATION:
 
 a. Install and setup Virtuoso Store (If you want to use the installed one which has been already configured,skip this step).
-Create the internal named graph http://datasets to store the meta-data for both the datasets and the change detections. This named graph contains information about all assigned dataset URIs and their corresponding versions. You should create the appropriate dataset URI and one named graph per version. For instance, consider the EFO datasets. It holds that the dataset URI is http://www.ebi.ac.uk/efo/ and we can find the triples:
+
+In general the management of datasets within Virtuoso includes the creation of one or more dataset URIs, the loading of default RDF schema(s) and the uploading  of at least two versions assigned to each datasetURI. Thus first you have to create the internal named graph http://datasets to store the meta-data for both the datasets and the change detections. This named graph contains information about all assigned dataset URIs and their corresponding versions. Secondly, you should create the appropriate dataset URI and import a default schema assinged to it and located in datasetURI/changes/schema. Finally, you need to create one named graph per version and upload the version contents to it.
+For instance, consider the EFO datasets. It holds that the dataset URI is http://www.ebi.ac.uk/efo/ and we can find the triples:
 -http://www.ebi.ac.uk/efo/ rdfs:member http://www.diachron-fp7.eu/resource/recordset/efo/2.34     -http://www.ebi.ac.uk/efo/ rdfs:member http://www.diachron-fp7.eu/resource/recordset/efo/2.35 
+
+Note that the datasetURI should have the form datasetURI/guest to formulate that it is assinged to the default guest user. D2V can support multiple users; each own could have it's own datasetURI i.e http://www.ebi.ac.uk/efo/user1, http://www.ebi.ac.uk/efo/user2 etc.
 
 b. Upload the corresponding war file which is located inside target folder in a webserver (Tomcat, Glassfish, etc)
 
