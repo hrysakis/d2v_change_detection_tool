@@ -1,16 +1,13 @@
 /*
- *@author: Yannis Roussakis, Ioannis Chrysakis
+ *@author: Yannis Roussakis
  */
 package store;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.Properties;
 import org.diachron.detection.repositories.JDBCVirtuosoRep;
 import org.diachron.detection.utils.ChangesDetector;
-import org.diachron.detection.utils.ChangesManager;
 
 public class SCDUtils {
 
@@ -64,13 +61,11 @@ public class SCDUtils {
      * @throws Exception general exception
      */
     public void customCompareVersions(String oldV, String newV, String[] simpleChanges, String[] complexChanges) throws Exception {
-        ChangesDetector detector = new ChangesDetector(propFile, changesOntology, changesOntologySchema);
+        ChangesDetector detector = new ChangesDetector(propFile, changesOntology, changesOntologySchema,associations);
         detector.detectSimpleChanges(oldV, newV, simpleChanges);
-        detector.detectAssociations(oldV, newV, associations);
+        detector.detectAssociations(oldV, newV);
         detector.detectComplexChanges(oldV, newV, complexChanges);
         detector.terminate();
     }
-
-    
 
 }

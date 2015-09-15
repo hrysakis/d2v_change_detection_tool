@@ -11,6 +11,9 @@ FILTER NOT EXISTS { GRAPH <v2> {
 ?a rdfs:domain ?b.
 }
 }
+FILTER NOT EXISTS { GRAPH <assoc> {
+{?assoc1 co:new_value ?a.} UNION {?assoc2 co:new_value ?b.}
+} }
 #
 BIND(IRI('v1') as ?v1).
 BIND(IRI('v2') as ?v2).

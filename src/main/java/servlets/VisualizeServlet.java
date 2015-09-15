@@ -4,7 +4,6 @@
  */
 package servlets;
 
-import store.Analysis;
 import com.google.visualization.datasource.DataSourceServlet;
 import com.google.visualization.datasource.base.TypeMismatchException;
 import com.google.visualization.datasource.datatable.ColumnDescription;
@@ -20,9 +19,11 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import store.QueryUtils;
@@ -117,18 +118,33 @@ public class VisualizeServlet extends DataSourceServlet {
                     vset = v1.substring(v1.lastIndexOf("/") + 1) + "-" + v2.substring(v2.lastIndexOf("/") + 1);
 
                     cd.add(new ColumnDescription(vset, ValueType.NUMBER, "Number of occurences"));
-
+                    Set<String> versionset = new LinkedHashSet<>();
+                    Set<String> changeset = new LinkedHashSet<>();
+                    changeset.add("ALL");
                     //MAP example: MAP{ADD_LABEL=69, ADD_SUPERCLASS=95, DELETE_LABEL=15, DELETE_TYPE_CLASS=14, DELETE_SUPERCLASS=47, DELETE_PROPERTY_INSTANCE=20, ADD_TYPE_CLASS=68, ADD_PROPERTY_INSTANCE=87}
                     // overwrite case (no need for further detection)
                     if (tempontology != null && tempontology.equals("no")) {
                         tempOntology = false;
+                        versionset.add(v2);
+                    } else {
+                        try {
+                            versionset.add(OntologyQueryServlet.getTempOntology(prop, datasetUri, v1, v2));
+                        } catch (Exception ex) {
+                            System.out.println("Cannot found temp ontology " + ex.getMessage());
+                        }
                     }
+                    
+                    
+                    
+                    
+                    LinkedHashMap<String, Long> mappair = (LinkedHashMap<String, Long>) fur.fetchChangesForVersions(versionset, changeset, tempOntology);
 
-                    LinkedHashMap mappair = Analysis.analyzeChanges(jdbc, changesOntologySchema, datasetUri, v1, v2, viewtype, tempOntology);
+                    //OLD-APPROACH BEFORE V3.1 
+                    //LinkedHashMap mappair = Analysis.analyzeChanges(jdbc, changesOntologySchema, datasetUri, v1, v2, viewtype, tempOntology);
                     allResults = fetchMapResults(mappair, allResults, v2);
-                    System.out.println("ALL-RESULTS:" + allResults.toString());
+                    //System.out.println("ALL-RESULTS:" + allResults.toString());
                     //ChangesManager cManager = new ChangesManager(configPath, datasetUri, v1, v2, true);
-                    //  cManager.deleteChangesOntology();//moved to the initvision option of ActionsServlet
+                    // cManager.deleteChangesOntology();//moved to the initvision option of ActionsServlet
                     //cManager.terminate();
 
                 } else { //evolution history (all versions) 
@@ -164,9 +180,15 @@ public class VisualizeServlet extends DataSourceServlet {
                                     vdisplay = v2.substring(v2.lastIndexOf("/") + 1); //previous apprioch
                                 }
 
-                                //System.out.println("VDISPLAY:"+vdisplay);                 
-                                LinkedHashMap mappair = Analysis.analyzeChanges(jdbc, changesOntologySchema, datasetUri, v1, v2, viewtype, tempOntology);
+                              //OLD-APPROACH BEFORE V3.1     
+                                //LinkedHashMap mappair = Analysis.analyzeChanges(jdbc, changesOntologySchema, datasetUri, v1, v2, viewtype, tempOntology);
                                 //System.out.println("ANALYZEEEEEEEEEEEEEEEEEEEE" +mappair.toString());
+                                Set<String> versionset = new LinkedHashSet<>();
+                                versionset.add(v2);
+                                Set<String> changeset = new LinkedHashSet<>();
+                                changeset.add("ALL");
+                                LinkedHashMap<String, Long> mappair = (LinkedHashMap<String, Long>) fur.fetchChangesForVersions(versionset, changeset, tempOntology);
+
                                 allResults = fetchMapResults(mappair, allResults, v2);
 
                                 //Add column for each comparing vset of versions

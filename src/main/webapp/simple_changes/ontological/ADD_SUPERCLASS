@@ -1,20 +1,23 @@
 INSERT INTO <changesOntology> {
 ?asc a co:Add_Superclass;
-     co:asc_p1 ?a;
-     co:asc_p2 ?b.
+     co:asc_p1 ?sub;
+     co:asc_p2 ?sup.
 }
 WHERE {
 GRAPH <v2> { 
-?a rdfs:subClassOf ?b.
+?sub rdfs:subClassOf ?sup.
 }
 FILTER NOT EXISTS { GRAPH <v1> {
-?a rdfs:subClassOf ?b.
+?sub rdfs:subClassOf ?sup.
 }
 }
+FILTER NOT EXISTS { GRAPH <assoc> {
+{?assoc1 co:new_value ?sup.} UNION {?assoc2 co:new_value ?sub.}
+} }
 #
 BIND(IRI('v1') as ?v1).
 BIND(IRI('v2') as ?v2).
-BIND(concat(str(?a), str(?b), str(?v1), str(?v2)) as ?url) .
+BIND(concat(str(?sub), str(?sup), str(?v1), str(?v2)) as ?url) .
 #
 BIND(IRI(CONCAT('http://asc/',SHA1(?url))) AS ?asc).
 }

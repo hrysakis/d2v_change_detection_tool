@@ -8,9 +8,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import org.diachron.detection.repositories.JDBCVirtuosoRep;
 import org.diachron.detection.utils.DatasetsManager;
+import org.openrdf.repository.RepositoryException;
 
 /**
  * This class used to handle users  
@@ -93,36 +96,98 @@ public class User {
     public void terminate() {
         jdbc.terminate();
     }
+    
+    /**
+    *  Used to initialize e dataset for D2V tool users
+    */
+    private static void initDataset(String configPath, String datasetURI) throws ClassNotFoundException, SQLException, RepositoryException{
+        Properties prop = new Properties();
+        InputStream inputStream;
+        String username;
+        User user;
+        try {
+            //config.properties
+            inputStream = new FileInputStream(configPath);
+            prop.load(inputStream);
+            
+             //JCH: Coukld get Dataset all URIS from config file
+            
+            List<String> changesList = new ArrayList<>();
+            if (!datasetURI.endsWith("/")){
+                datasetURI = datasetURI +"/";
+            }
+            
+            //Create guest account
+            username = "guest";
+            user = new User(prop, username, datasetURI);
+            user.terminate();
+            
+            //Create user1 account
+            username = "user1";
+            user = new User(prop, username, datasetURI);
+            user.terminate();
+            
+            //Create clean account
+            username = "clean";
+            user = new User(prop, username, datasetURI);
+            user.terminate();
+            
+            //Clear potential complex changes in clean
+            String cleanURI = datasetURI +"clean";
+            String changesOntologySchema = cleanURI + "/changes/schema";
+            QueryUtils qul = new QueryUtils(prop, cleanURI, changesOntologySchema);
+            changesList.addAll(qul.fetchChangesNames("Complex_Change"));
+            qul.terminate();
+            
+            MCDUtils mcduls = new MCDUtils(configPath, changesOntologySchema, cleanURI, null);
+            if (!changesList.isEmpty()){
+            mcduls.deleteMultipleCC(changesList);
+            }
+            mcduls.terminate();
+            
+            //Create user1clean
+            username = "user1clean";
+            user = new User(prop, username, cleanURI);
+            user.terminate();
+            
+            
+        } catch (IOException ex) {
+            System.out.println("Exception: " + ex.getMessage() + " occured .");
+            return;
+        }
+    }
 
     public static void main(String[] args) throws Exception {
         String efoDataset = "http://www.ebi.ac.uk/efo/";
+        initDataset("config.properties",efoDataset);
+        
+   /*     String goDataset = "http://geneontology.org/";
         String ideaDataset = "http://idea-garden.org";
-        String goDataset = "http://geneontology.org/";
         Properties prop = new Properties();
         InputStream inputStream;
         try {
             inputStream = new FileInputStream("config.properties");
             prop.load(inputStream);
+            
+           
+            
         } catch (IOException ex) {
             System.out.println("Exception: " + ex.getMessage() + " occured .");
             return;
         }
-        ///user1clean, /user3clean
-        //for(int i=1; i<=8; i++)
-        //{
-        //String username ="user"+i;
-        String username = "user4";
+        
+        String username = "user1clean";
         User user = new User(prop, username, efoDataset);
-        user.deleteUser();
+        //user.deleteUser();
         user.terminate();
 
-        user = new User(prop, username, ideaDataset);
+        /*user = new User(prop, username, ideaDataset);
         user.deleteUser();
         user.terminate();
 
         user = new User(prop, username, goDataset);
         user.deleteUser();
-        user.terminate();
+        user.terminate();*/
         // }
 
 //        String uri = user.getUserDatasetUri();

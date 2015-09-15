@@ -1,5 +1,5 @@
  /*
- *@author: Yannis Roussakis, Ioannis Chrysakis
+ *@author: Yannis Roussakis
  */
 package store;
 
@@ -21,8 +21,9 @@ import org.diachron.detection.exploit.Parameter;
 import org.diachron.detection.repositories.JDBCVirtuosoRep;
 
 /**
- * This class contains various methods that retrieve information from Virtuoso RDF store
- * including changes definitions, changes templates, changes ontology information etc.  
+ * This class contains various methods that retrieve information from Virtuoso
+ * RDF store including changes definitions, changes templates, changes ontology
+ * information etc.
  */
 public class QueryUtils {
 
@@ -34,7 +35,9 @@ public class QueryUtils {
 
     /**
      * Constructor of FetchUris
-     * @param propFile the properties file containing Virtuoso credentials etc. information
+     *
+     * @param propFile the properties file containing Virtuoso credentials etc.
+     * information
      * @param datasetUri the selected dataset URI
      * @param changesOntologySchema the selected changes ontology schema
      * @throws ClassNotFoundException in case of internal problem with the store
@@ -49,7 +52,7 @@ public class QueryUtils {
         if (datasetUri.endsWith("/")) {
             datasetUri = datasetUri.substring(0, datasetUri.length() - 1);
         }
-        String query = "select ?ontol from <"+datasetsGraph+"> where {\n"
+        String query = "select ?ontol from <" + datasetsGraph + "> where {\n"
                 + "<" + datasetUri + "/changes> rdfs:member ?ontol.\n"
                 + "?ontol co:old_version ?v1.\n"
                 + "filter(!regex(?ontol,'/temp')).\n"
@@ -65,8 +68,10 @@ public class QueryUtils {
             System.out.println("Exception: " + ex.getMessage() + " occured .");
         }
     }
+
     /**
      * Returns a list of top-added types
+     *
      * @param topK an integer that denotes the top-k limit
      * @return a list of top-k added types
      */
@@ -100,9 +105,10 @@ public class QueryUtils {
         }
         return types;
     }
-    
+
     /**
      * Returns a list of top-deleted types
+     *
      * @param topK an integer that denotes the top-k limit
      * @return a list of top-k-deleted types
      */
@@ -137,10 +143,11 @@ public class QueryUtils {
         return types;
     }
 
-     /**
-     * Returns a list of top-added super classes 
+    /**
+     * Returns a list of top-added super classes
+     *
      * @param topK an integer that denotes the top-k limit
-     * @return a list of top-k added super classes 
+     * @return a list of top-k added super classes
      */
     public List<String> fetchTopAddedSuperclasses(int topK) {
         ArrayList<String> types = new ArrayList<>();
@@ -173,10 +180,11 @@ public class QueryUtils {
         return types;
     }
 
-     /**
-     * Returns a list of top-deleted super classes 
+    /**
+     * Returns a list of top-deleted super classes
+     *
      * @param topK an integer that denotes the top-k limit
-     * @return a list of top-k deleted super classes 
+     * @return a list of top-k deleted super classes
      */
     public List<String> fetchTopDeletedSuperclasses(int topK) {
         ArrayList<String> types = new ArrayList<>();
@@ -209,10 +217,11 @@ public class QueryUtils {
         return types;
     }
 
-     /**
+    /**
      * Returns a list of top-updated labels
+     *
      * @param topK an integer that denotes the top-k limit
-     * @return a list of top-k updated labels 
+     * @return a list of top-k updated labels
      */
     public List<String> fetchTopUpdatedLabels(int topK) {
         ArrayList<String> types = new ArrayList<>();
@@ -250,9 +259,10 @@ public class QueryUtils {
         return types;
     }
 
-     /**
+    /**
      * Returns a list of top-updated comments
-     * @param topK  an integer that denotes the top-k limit
+     *
+     * @param topK an integer that denotes the top-k limit
      * @return a list of top-k updated comments
      */
     public List<String> fetchTopUpdatedComments(int topK) {
@@ -291,9 +301,10 @@ public class QueryUtils {
         return types;
     }
 
-     /**
+    /**
      * Returns a list of top-updated domains
-     * @param topK  an integer that denotes the top-k limit
+     *
+     * @param topK an integer that denotes the top-k limit
      * @return a list of top-k updated domains
      */
     public List<String> fetchTopUpdatedDomains(int topK) {
@@ -334,7 +345,8 @@ public class QueryUtils {
 
     /**
      * Returns a list of top-updated ranges
-     * @param topK  an integer that denotes the top-k limit
+     *
+     * @param topK an integer that denotes the top-k limit
      * @return a list of top-k updated ranges
      */
     public List<String> fetchTopUpdatedRanges(int topK) {
@@ -375,6 +387,7 @@ public class QueryUtils {
 
     /**
      * Returns a list of top-updated properties
+     *
      * @param topK an integer that denotes the top-k limit
      * @return a list of top-k updated properties
      */
@@ -424,8 +437,9 @@ public class QueryUtils {
         return types;
     }
 
-     /**
+    /**
      * Returns a list of top-added subclasses
+     *
      * @param topK an integer that denotes the top-k limit
      * @return a list of top-k added subclasses
      */
@@ -462,10 +476,11 @@ public class QueryUtils {
     }
 
     /**
-    * Returns a list of top-deleted subclasses
-    * @param topK  an integer that denotes the top-k limit
-    * @return a list of top-k deleted subclasses
-    */
+     * Returns a list of top-deleted subclasses
+     *
+     * @param topK an integer that denotes the top-k limit
+     * @return a list of top-k deleted subclasses
+     */
     public List<String> fetchTopDeletedSubclasses(int topK) {
         ArrayList<String> types = new ArrayList<>();
         StringBuilder query = new StringBuilder();
@@ -497,8 +512,9 @@ public class QueryUtils {
         return types;
     }
 
-     /**
+    /**
      * Returns a list of top-added properties
+     *
      * @param topK an integer that denotes the top-k limit
      * @return a list of top-k added properties
      */
@@ -535,6 +551,7 @@ public class QueryUtils {
 
     /**
      * Returns a list of top-deleted properties
+     *
      * @param topK an integer that denotes the top-k limit
      * @return a list of top-k deleted properties
      */
@@ -571,9 +588,10 @@ public class QueryUtils {
 
     /**
      * Returns a list of URIs that correspond to the selected change template
+     *
      * @param change_template the selected change template
      * @param limitResults the limit (top-k) for the results
-     * @return  a list of URIs that correspond to the selected change template
+     * @return a list of URIs that correspond to the selected change template
      */
     public List<String> fetchURIsByChangeType(String change_template, int limitResults) {
         List<String> uris = null;
@@ -626,8 +644,10 @@ public class QueryUtils {
         }
         return uris;
     }
+
     /**
      * Returns a list of change names according to selected change type
+     *
      * @param changeType the selected change type
      * @return a list of change names according to selected change type
      */
@@ -658,8 +678,10 @@ public class QueryUtils {
         }
         return names;
     }
+
     /**
      * Returns a list of parameter names of a selected change
+     *
      * @param scName the name of the selected change
      * @return a list of parameter names of a selected change
      */
@@ -687,6 +709,7 @@ public class QueryUtils {
 
     /**
      * Returns a list of assigned simple changes parameters
+     *
      * @param manager this object determines the assigned simple changes
      * @return a list of assigned simple changes parameters
      */
@@ -701,7 +724,7 @@ public class QueryUtils {
         }
         return params;
     }
-    
+
     /**
      * Terminates connection to the Virtuoso RDF store.
      */
@@ -710,13 +733,16 @@ public class QueryUtils {
     }
 
     /**
-     * Returns a map of all assigned dataset versions (URIs) for a selected changes ontology
+     * Returns a map of all assigned dataset versions (URIs) for a selected
+     * changes ontology
+     *
      * @param changesOntology the selected changes ontology
-     * @return a map of all assigned dataset versions for a selected changes ontology
+     * @return a map of all assigned dataset versions for a selected changes
+     * ontology
      */
     public Map<String, String> fetchChangeOntologyVersions(String changesOntology) {
         Map<String, String> result = new HashMap<>();
-        String query = "select ?v1 ?v2 from <"+datasetsGraph+"> where {\n"
+        String query = "select ?v1 ?v2 from <" + datasetsGraph + "> where {\n"
                 + "<" + changesOntology + "> co:old_version ?v1.\n"
                 + "<" + changesOntology + "> co:new_version ?v2.\n"
                 + "}";
@@ -736,13 +762,16 @@ public class QueryUtils {
     }
 
     /**
-     * Returns a map of all assigned dataset labels for a selected changes ontology
+     * Returns a map of all assigned dataset labels for a selected changes
+     * ontology
+     *
      * @param changesOntology the selected changes ontology
-     * @return a map of all assigned dataset labels for a selected changes ontology
+     * @return a map of all assigned dataset labels for a selected changes
+     * ontology
      */
     public Map<String, String> fetchVersionLabels(String changesOntology) {
         Map<String, String> result = new HashMap<>();
-        String query = "select ?v1 ?v2 from <"+datasetsGraph+"> where {\n"
+        String query = "select ?v1 ?v2 from <" + datasetsGraph + "> where {\n"
                 + "<" + changesOntology + "> co:old_version [rdfs:label ?v1].\n"
                 + "<" + changesOntology + "> co:new_version [rdfs:label ?v2].\n"
                 + "}";
@@ -763,6 +792,7 @@ public class QueryUtils {
 
     /**
      * Returns the changes ontology based on the old and new version
+     *
      * @param oldVersion the selected old version
      * @param newVersion the selected new version
      * @return the changes ontology based on the old and new version
@@ -775,7 +805,7 @@ public class QueryUtils {
             changesUri = datasetUri + "/changes";
         }
         StringBuilder query = new StringBuilder();
-        query.append("select ?ontology from <"+datasetsGraph+"> where {\n");
+        query.append("select ?ontology from <" + datasetsGraph + "> where {\n");
         if (oldVersion != null) {
             query.append("?ontology co:old_version <" + oldVersion + ">.");
         }
@@ -798,17 +828,21 @@ public class QueryUtils {
     }
 
     /**
-     * Returns the JDBCRepository connection object 
-     * @return the JDBCRepository connection object 
+     * Returns the JDBCRepository connection object
+     *
+     * @return the JDBCRepository connection object
      */
     public JDBCVirtuosoRep getJDBCRepository() {
         return rep;
     }
 
     /**
-     * Returns the JSON as a string which contains the selected complex change definition
+     * Returns the JSON as a string which contains the selected complex change
+     * definition
+     *
      * @param ccName the name of the selected complex change
-     * @return the JSON as a string which contains the selected complex change definition
+     * @return the JSON as a string which contains the selected complex change
+     * definition
      */
     public String fetchCCJson(String ccName) {
         String query = "select ?json from <" + changesOntologySchema + "> where {\n"
@@ -828,7 +862,6 @@ public class QueryUtils {
         return null;
     }
 
-   
     private Map<String, Long> fetchVersionsForValue(String value) {
         LinkedHashMap<String, Long> result = new LinkedHashMap<>();
         String query;
@@ -946,14 +979,18 @@ public class QueryUtils {
         return result;
     }
 
-  
     /**
-     * Used in VERSION-centric view to return a map which contains as key the change ontology
-     * that contains the respective version pair and as value the total number of selected changes.
-     * @param versions a set of selected versions (URIs as string or "ALL" for all versions)
-     * @param changes a set of selected changes (change names, "Simple_Change" for only simple changes, 
-     * "Complex_Change" for only complex changes, "ALL" for all changes)
-     * @return a map containing information about each version pair and the total number of changes
+     * Used in VERSION-centric view to return a map which contains as key the
+     * change ontology that contains the respective version pair and as value
+     * the total number of selected changes.
+     *
+     * @param versions a set of selected versions (URIs as string or "ALL" for
+     * all versions)
+     * @param changes a set of selected changes (change names, "Simple_Change"
+     * for only simple changes, "Complex_Change" for only complex changes, "ALL"
+     * for all changes)
+     * @return a map containing information about each version pair and the
+     * total number of changes
      */
     public Map<String, Long> fetchVersionsForChanges(Set<String> versions, Set<String> changes) {
         LinkedHashMap<String, Long> result = new LinkedHashMap<>();
@@ -976,6 +1013,8 @@ public class QueryUtils {
                     cnt2++;
                 }
                 query.append("filter (?change_name in ( " + changesString.toString() + " )).\n");
+            } else {
+                return result;
             }
             query.append("} \n"
                     + "graph <" + ontology + "> { \n"
@@ -998,17 +1037,21 @@ public class QueryUtils {
         return result;
     }
 
-   
-   /**
-    * Used in CHANGE-centric view to return a map which contains as key a change name and 
-    * as value the respective change occurrences appeared in the selected versions.
-    * @param versions a set of selected versions (URIs as string or "ALL" for all versions)
-    * @param changes a set of changes (change names, "Simple_Change" for only simple changes, 
-    * "Complex_Change" for only complex changes, "ALL" for all changes)
-    * @param tempOntology denotes whether we give a set of version URIs, (tempOntology=false) or 
-     the temp changes ontology URI (tempOntology=true)
-    * @return a map containing information about each change name and the number of respective occurrences
-    */
+    /**
+     * Used in CHANGE-centric view to return a map which contains as key a
+     * change name and as value the respective change occurrences appeared in
+     * the selected versions.
+     *
+     * @param versions a set of selected versions (URIs as string or "ALL" for
+     * all versions)
+     * @param changes a set of changes (change names, "Simple_Change" for only
+     * simple changes, "Complex_Change" for only complex changes, "ALL" for all
+     * changes)
+     * @param tempOntology denotes whether we give a set of version URIs,
+     * (tempOntology=false) or the temp changes ontology URI (tempOntology=true)
+     * @return a map containing information about each change name and the
+     * number of respective occurrences
+     */
     public Map<String, Long> fetchChangesForVersions(Set<String> versions, Set<String> changes, boolean tempOntology) {
         LinkedHashMap<String, Long> result = new LinkedHashMap<>();
         List<String> ontologiesList;
@@ -1035,6 +1078,8 @@ public class QueryUtils {
                 cnt2++;
             }
             query.append("filter (?change_name in ( " + changesString.toString() + " )).\n");
+        } else {
+            return result;
         }
         query.append("} \n"
                 + "graph ?ontol { \n"
@@ -1066,19 +1111,23 @@ public class QueryUtils {
         }
         return result;
     }
-    
+
     /**
-    * Used in TERM-centric view to return a map which contains as key a change name and 
-    * as value the respective change occurrences appeared in the selected versions.
-    * @param value the value that denotes the selected term
-    * @param versions a set of selected versions (URIs as string or "ALL" for all versions)
-    * @param changes a set of changes (change names, "Simple_Change" for only simple changes, 
-    * "Complex_Change" for only complex changes, "ALL" for all changes)
-    * @param tempOntology denotes whether we give a set of version URIs, (tempOntology=false) or 
-     the temp changes ontology URI (tempOntology=true)
-    * @return a map containing information about each version pair and the total number of changes 
-    * where the selected term appeared.
-    */
+     * Used in TERM-centric view to return a map which contains as key a change
+     * name and as value the respective change occurrences appeared in the
+     * selected versions.
+     *
+     * @param value the value that denotes the selected term
+     * @param versions a set of selected versions (URIs as string or "ALL" for
+     * all versions)
+     * @param changes a set of changes (change names, "Simple_Change" for only
+     * simple changes, "Complex_Change" for only complex changes, "ALL" for all
+     * changes)
+     * @param tempOntology denotes whether we give a set of version URIs,
+     * (tempOntology=false) or the temp changes ontology URI (tempOntology=true)
+     * @return a map containing information about each version pair and the
+     * total number of changes where the selected term appeared.
+     */
     public Set<DetChange> fetchDetChangesContainValue(String value, Set<String> versions, Set<String> changes, boolean tempOntology) {
         Set<DetChange> detChanges = new TreeSet<>();
         List<String> ontologiesList;
@@ -1091,9 +1140,10 @@ public class QueryUtils {
         List<String> changesList = createChangesSublist(changes);
         for (String changesOntology : ontologiesList) {
             StringBuilder query = new StringBuilder();
-            query.append("select ?dc ?change_name ?param_name ?param_value ?param where { \n").
+            query.append("select ?dc ?change_name ?param_name ?param_value ?param ?description where { \n").
                     append("graph <" + changesOntologySchema + "> { \n").
-                    append("?ch co:name ?change_name. \n");
+                    append("?ch co:name ?change_name. \n").
+                    append("optional {?ch co:description ?description.}. \n");
             if (!changesList.isEmpty()) {
                 StringBuilder changesString = new StringBuilder();
                 int cnt2 = 0;
@@ -1134,7 +1184,8 @@ public class QueryUtils {
                         }
                         dch = results.getString(1);
                         String chName = results.getString(2);
-                        change = new DetChange(dch, chName, oldVersion, newVersion);
+                        String chDescr = results.getString(6);
+                        change = new DetChange(dch, chName, chDescr, oldVersion, newVersion);
                     }
                     String parName = results.getString(3);
                     String parValue = results.getString(4);
@@ -1149,15 +1200,22 @@ public class QueryUtils {
         }
         return detChanges;
     }
+
     /**
-     * Returns a set of DetChange objects which denotes detected changes with their respective information
-     * @param versions a set of selected versions (URIs as string or "ALL" for all versions)
-     * @param changes a set of changes (change names, "Simple_Change" for only simple changes, 
-     * "Complex_Change" for only complex changes, "ALL" for all changes)
-     * @param tempOntology denotes whether we give a set of version URIs, (tempOntology=false) or 
-     * the temp changes ontology URI (tempOntology=true)
-     * @param limitPerChange an integer that limits results per version pair and per change.
-     * @return a set of DetChange objects which denote detected changes with their respective information
+     * Returns a set of DetChange objects which denotes detected changes with
+     * their respective information
+     *
+     * @param versions a set of selected versions (URIs as string or "ALL" for
+     * all versions)
+     * @param changes a set of changes (change names, "Simple_Change" for only
+     * simple changes, "Complex_Change" for only complex changes, "ALL" for all
+     * changes)
+     * @param tempOntology denotes whether we give a set of version URIs,
+     * (tempOntology=false) or the temp changes ontology URI (tempOntology=true)
+     * @param limitPerChange an integer that limits results per version pair and
+     * per change.
+     * @return a set of DetChange objects which denote detected changes with
+     * their respective information
      */
     public Set<DetChange> fetchDetChangesForVersions(Set<String> versions, Set<String> changes, boolean tempOntology, int limitPerChange) {
         Set<DetChange> detChanges = new TreeSet<>();
@@ -1178,10 +1236,11 @@ public class QueryUtils {
             Map<String, String> ontolVersions = fetchChangeOntologyVersions(changesOntology);
             String oldVersion = ontolVersions.keySet().iterator().next();
             String newVersion = ontolVersions.get(oldVersion);
-            query.append("select ?dc ?change_name ?param_name ?param_value ?param where { \n").
+            query.append("select ?dc ?change_name ?param_name ?param_value ?param ?description where { \n").
                     append("graph <" + changesOntologySchema + "> { \n").
+                    append("?param co:name ?param_name. \n").
                     append("?ch co:name ?change_name. \n").
-                    append("?param co:name ?param_name. \n");
+                    append("optional {?ch co:description ?description.}. \n");
             if (!changesList.isEmpty()) {
                 StringBuilder changesString = new StringBuilder();
                 int cnt2 = 0;
@@ -1224,7 +1283,8 @@ public class QueryUtils {
                             }
                         }
                         dch = results.getString(1);
-                        change = new DetChange(dch, chName, oldVersion, newVersion);
+                        String chDescr = results.getString(6);
+                        change = new DetChange(dch, chName, chDescr, oldVersion, newVersion);
                     }
                     String parName = results.getString(3);
                     String parValue = results.getString(4);
