@@ -1,6 +1,31 @@
+V3.2
+Style improvements
+Hover on change in table results displays its description if exists
+handleEmptyResults added in vision.js
+Backend libs updated (V10-9-15)
+normalizeFilter method updated
+fetchVersionsForChanges method updated
+getConfigFilePath method updated to include MD configuration (datamarket)
+Multidimensional simple changes (+default schema) updated
+=========================================================
+V3.1
+Custom compare with associations enabled (EFO)
+Simple changes folders updated (associations)
+Translation mechanism for table results supports partial substitution
+Analysis class deleted 
+Potential path problems examined
+=========================================================
+V3.0
+Visualization JS code placed in vision.js 
+============================================================================
+V2.9
+VirtuosoUploader added in utils package as complementary for datasets management
+Show all results for changes without limit (partial list per change/version) 
+=============================================================
 V2.8
 Manage datasets functionality added. (Available for specific configuration)
 LIBS Updated and reduced
+Latest upload at MAVEN
 =============================================================
 V2.7
 Reorganization of packages (disable changedetectiondemo.jar)
@@ -62,4 +87,4 @@ Complex change definition with only join filters is now supported
 ================================================
 V1.0
 Stable release, presented in DIACHRON (EMBL) and IDEAGARDEN (forth)
-Map label mechanism is now supported for table results elements
+Translation mechanism is now supported for table results elements

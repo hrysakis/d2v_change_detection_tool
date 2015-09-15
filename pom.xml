@@ -157,7 +157,7 @@
         <dependency>
             <groupId>DiachronForth</groupId>
             <artifactId>DiachronForth</artifactId>
-            <version>090715</version>
+            <version>Latest</version>
         </dependency>
         <dependency>
             <groupId>javax</groupId>

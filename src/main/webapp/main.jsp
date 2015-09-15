@@ -67,7 +67,7 @@
     <a class="logo_idea" href="http://idea-garden.org/" target="_blank"><img src="images/ideagarden.png" width="100"></a> 
 
 
-    <br><br><p class="powered"> <a href="#" onclick="showCredits()"> <img src="images/copyright.png" width="30" height="30">Copyright</a>,<a href="changeLOG.txt" target="_blank"> V2.8, </a><a href="http://www.ics.forth.gr" target="_blank">FORTH-ICS</a> </p>
+    <br><br><p class="powered"> <a href="#" onclick="showCredits()"> <img src="images/copyright.png" width="30" height="30">Copyright</a>,<a href="changeLOG.txt" target="_blank"> V3.2, </a><a href="http://www.ics.forth.gr" target="_blank">FORTH-ICS</a> </p>
 </div>   
     
 

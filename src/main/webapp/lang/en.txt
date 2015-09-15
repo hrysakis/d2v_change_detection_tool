@@ -1,2 +1,2 @@
-http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/has_size=SIZE
-http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/ongoing_at=ONGOING AT
+http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/=SSIS:
+http://www.iana.org/assignments/media-types/=

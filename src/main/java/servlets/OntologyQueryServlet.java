@@ -40,7 +40,8 @@ public class OntologyQueryServlet extends HttpServlet {
 
     public static String configPath = "";
     public static String contextPath = "";
-    private int limitPerChange = 100000; //JCH:big limit to retrieve them all
+    private int initLimit = 3; //JCH:big limit to retrieve them all
+    int largeLimit = 1000000; //In practise means retrieve them all
 
     /**
      * Processes query requests for both HTTP <code>GET</code> and
@@ -70,7 +71,7 @@ public class OntologyQueryServlet extends HttpServlet {
         boolean activeConnection = false;
 
         ServletContext servletContext = getServletContext();
-        //contextPath = servletContext.getRealPath("/"); //File.separator
+        contextPath = servletContext.getRealPath("/"); //File.separator
         configPath = OntologyQueryServlet.getConfigFilePath(servletContext, changesOntology);
         System.out.println("config_path _______________________->" + configPath);
         Properties prop = new Properties();
@@ -157,7 +158,7 @@ public class OntologyQueryServlet extends HttpServlet {
             String dlabel = request.getParameter("dslabel");
             try {
                 if (dlabel != null && !dlabel.equals("")) {
-                    dmgr1 = new DatasetsManager(prop);
+                    dmgr1 = new DatasetsManager(prop,null);
                     selected_dataset_uri = dmgr1.fetchDatasetUri(dlabel);
                     System.out.println("DATASET_URI is:" + selected_dataset_uri);
                     out.print(selected_dataset_uri);
@@ -254,7 +255,7 @@ public class OntologyQueryServlet extends HttpServlet {
             }
             //////////////////////////////////////////////////////////////////    
 
-            System.out.println("CONNECTIONNNNNNNNNNNNNNNNNNNNNNNN:[" + activeConnection + "]");
+            //System.out.println("CONNECTIONNNNNNNNNNNNNNNNNNNNNNNN:[" + activeConnection + "]");
             //different html results depending on the query_type    
             try {
 
@@ -267,7 +268,13 @@ public class OntologyQueryServlet extends HttpServlet {
                         String changename = request.getParameter("changename");
                         String sradio = request.getParameter("sradio");
                         String groupby = request.getParameter("groupby");
-
+                        String limit = request.getParameter("limit");
+                        
+                        int limitPerChange = initLimit;
+                        if (limit != null && limit.equals("unlimited")){
+                           limitPerChange = largeLimit;
+                        }
+                        
                         //Necessary for custom compare
                         System.out.println("oldversion:" + oldversion);
                         System.out.println("newversion(label):" + nversion);
@@ -501,7 +508,7 @@ public class OntologyQueryServlet extends HttpServlet {
                         String json_str = "";
                         if (selected_change != null) {
                             json_str = fur.fetchCCJson(selected_change);
-                            System.out.println("json_str:" + json_str);
+                            //System.out.println("json_str:" + json_str);
                             out.print(json_str);
                         }
 
@@ -551,12 +558,12 @@ public class OntologyQueryServlet extends HttpServlet {
         if (fur != null /*&& expl != null*/) {
             //expl.terminate();
             fur.terminate(); //CLOSES CONNECTION  
-            System.out.println("fur terminated...CLOSED connection");
+            //System.out.println("fur terminated...CLOSED connection");
 
         }
         if (dmgr1 != null) { //CLOSES CONNECTION
             dmgr1.terminate();
-            System.out.println("dmgr terminated...CLOSED connection");
+            //System.out.println("dmgr terminated...CLOSED connection");
         } else { //NO-CONNECTION
 
             if (dmgr1 == null || fur == null) { //no any connection through DatasetsManager/FetchUris
@@ -763,10 +770,14 @@ public class OntologyQueryServlet extends HttpServlet {
         String vnew = "";
         String cutoversion = "";
         String cutnversion = "";
-        TranslationUtils trutils = null;
+        String change_description ="";
+        String change_name ="";
+        TranslationUtils trutils = null; //JCH: if null translations are disabled
+        boolean exactMatchTranslation = false; //JCH: if true only the exact matching terms should be translated
 
         try {
-            trutils = new TranslationUtils(null);
+            String translations_path = contextPath + "lang/en.txt";
+            trutils = new TranslationUtils(translations_path, exactMatchTranslation);
 
         } catch (IOException ex) {
             System.out.println("Could not read translations!");
@@ -778,12 +789,19 @@ public class OntologyQueryServlet extends HttpServlet {
 
             vold = cur_change.getOldVersion();
             vnew = cur_change.getNewVersion();
+            change_description = cur_change.getChangeDescription();
+            change_name = cur_change.getChangeName();
+            if (change_description == null || change_description.equals("")){
+                change_description = change_name;
+            }
             cutoversion = vold.substring(vold.lastIndexOf("/") + 1);
             cutnversion = vnew.substring(vnew.lastIndexOf("/") + 1);
             cur_params = cur_change.getParameters();
             paramnum = cur_params.size();
             int cnt = 0;
-            String param_names_row = "<tr><th colspan=\"" + "100%" + "\" style=\"text-align:left;\">" + "<font color=\"green\">" + "[" + vold + "-" + vnew + "] " + cur_change.getChangeName() + "</font></th></tr>";
+            String param_names_row = "<tr><th colspan=\"" + "100%" + "\" style=\"text-align:left;\">" + "<font color=\"green\">" +"<span title=\""+change_description+"\"</span>"+
+            "[" + vold + "-" + vnew + "] " + change_name + "</font></th></tr>";
+            
             String param_values_row = "";
             String param_value_ns = "";
             String param_value_special = "";
@@ -805,7 +823,7 @@ public class OntologyQueryServlet extends HttpServlet {
                     System.out.println("UnsupportedEncodingException:" + ex.getMessage());
                 }
 
-                if (trutils != null) {
+                if (trutils != null && exactMatchTranslation) {
                     transl_param_value = trutils.getTranslation(param_value_ns);
                 } else {
                     transl_param_value = param_value_ns;
@@ -842,6 +860,12 @@ public class OntologyQueryServlet extends HttpServlet {
             html_str = "<table id=\"resultstable\" class=\"resultstable\">" + html_str + "</table>";
         }
         //html_str = "<table class=\"resultstable\">" + html_str + "</table>";
+        //System.out.println("********CHECK**************"+html_str.replaceAll("http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/", "SSIS:"));
+        //http://www.iana.org/assignments/media-types/=PIOU
+        //html_str = html_str.replaceAll("http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/", "SSIS:");s
+        if(trutils!=null && !exactMatchTranslation){
+            html_str = trutils.getTranslatedHTML(html_str);
+        }
         return html_str;
     }
 
@@ -913,9 +937,15 @@ public class OntologyQueryServlet extends HttpServlet {
         String contextpath = servletContext.getRealPath("/"); //File.separator
         String filepath;
         if (changesOntology != null && changesOntology.contains("efo")) {
-            filepath = contextpath + "\\config\\" + "config_diachron.properties";
-        } else {
-            filepath = contextpath + "\\config\\" + "config_generic.properties";
+            filepath = contextpath + "config/" + "config_diachron.properties";
+        } 
+        /*else  if (changesOntology != null && changesOntology.contains("datamarket")) {
+            filepath = contextpath + "config/" + "md_config.properties";
+        } */
+        
+     else {
+        
+            filepath = contextpath + "config/" + "config_generic.properties";
         }
 
         return filepath;

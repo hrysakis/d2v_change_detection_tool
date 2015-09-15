@@ -21,6 +21,9 @@ FILTER(?p!=rdfs:subClassOf && ?p!=rdfs:subPropertyOf && ?p!=rdf:type && ?p!=rdfs
 ?p!=rdfs:label && ?p!=rdfs:domain && ?p!=rdfs:range)  
 }
 }
+FILTER NOT EXISTS { GRAPH <assoc> {
+{?assoc1 co:old_value ?a.} UNION {?assoc2 co:old_value ?b.} UNION {?assoc3 co:old_value ?p.}
+} }
 #
 BIND(IRI('v1') as ?v1).
 BIND(IRI('v2') as ?v2).

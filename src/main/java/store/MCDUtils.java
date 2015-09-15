@@ -1,7 +1,6 @@
 /*
  *@author: Yannis Roussakis, Ioannis Chrysakis
  */
-
 package store;
 
 import java.io.FileInputStream;
@@ -24,7 +23,6 @@ import org.diachron.detection.utils.DatasetsManager;
 import org.diachron.detection.utils.JSONMessagesParser;
 import org.openrdf.repository.RepositoryException;
 
-
 public class MCDUtils {
 
     private Properties propFile;
@@ -36,7 +34,9 @@ public class MCDUtils {
 
     /**
      * Constructor of MCDUtils. Always use terminate after the usage.
-     * @param prop the properties file that includes connection's credentials to the store
+     *
+     * @param prop the properties file that includes connection's credentials to
+     * the store
      * @param changesOntologySchema the changes ontology schema
      * @param datasetUri the selected dataset URI
      * @param assoc the named graph which contains optionally associations
@@ -53,20 +53,22 @@ public class MCDUtils {
         inputStream.close();
         this.changesOntologySchema = changesOntologySchema;
         this.datasetUri = datasetUri;
-        this.detector = new ChangesDetector(prop, null, changesOntologySchema);  //the changes ontology is null initially
+        this.detector = new ChangesDetector(prop, null, changesOntologySchema, assoc);  //the changes ontology is null initially
         initChangesOntologies();
         associations = assoc;
     }
 
-
     /**
      * Saves a complex change definition based on a template
+     *
      * @param ccName the complex change name
      * @param ccPriority the complex change priority
-     * @param ccJson the complex change definition in a JSON string representation
-     * @param selectedURI a selected URI to be included in the internal selection filter of definition
-     * @return a CCDefinitionError object which contains an enumeration of error codes in the case of error,
-     * otherwise the error code returned as null
+     * @param ccJson the complex change definition in a JSON string
+     * representation
+     * @param selectedURI a selected URI to be included in the internal
+     * selection filter of definition
+     * @return a CCDefinitionError object which contains an enumeration of error
+     * codes in the case of error, otherwise the error code returned as null
      */
     public CCDefinitionError saveTemplateCCDefinition(String ccName, double ccPriority, String ccJson, String selectedURI) {
         ccJson = ccJson.replace("[cc_name]", ccName);
@@ -111,16 +113,18 @@ public class MCDUtils {
         }
         return result;
     }
+
     /**
      * Saves a complex change definition including all extended functionalities
+     *
      * @param name the complex change name
      * @param priority the complex change priority
      * @param description the complex change description
-     * @param scDefinitions a list of simple change definitions 
+     * @param scDefinitions a list of simple change definitions
      * @param ccParameters a list of the complex change parameters
      * @param vFilters a list of version filter definitions
-     * @return a CCDefinitionError object which contains an enumeration of error codes in the case of error,
-     *  otherwise the error code returned as null.
+     * @return a CCDefinitionError object which contains an enumeration of error
+     * codes in the case of error, otherwise the error code returned as null.
      */
     public CCDefinitionError saveCCExtendedDefinition(String name, Double priority, String description, List<SCDefinition> scDefinitions, Map<String, String> ccParameters, List<VersionFilter> vFilters) {
         CCManager ccDef = null;
@@ -155,7 +159,8 @@ public class MCDUtils {
                 String changesOntology = cManager.getChangesOntology();
                 detector.setChangesOntology(changesOntology);
                 if (!complexOnly) {
-                    detector.detectAssociations(v1, v2, associations);
+                    detector.detectAssociations(v1, v2);
+                    
                     detector.detectSimpleChanges(v1, v2, null);
                 }
                 detector.detectComplexChanges(v1, v2, null);
@@ -169,6 +174,7 @@ public class MCDUtils {
 
     /**
      * Deletes one or more complex change(s)
+     *
      * @param names a list of complex change name(s) to be deleted
      * @return true on successful deletion
      */
@@ -201,7 +207,8 @@ public class MCDUtils {
     }
 
     /**
-     * Deletes one  more complex change based on its name
+     * Deletes one more complex change based on its name
+     *
      * @param name the complex change name to be deleted
      * @return true on successful deletion
      */
@@ -234,7 +241,9 @@ public class MCDUtils {
     }
 
     /**
-     * Returns true if the selected string corresponds to valid URI based on its prefix
+     * Returns true if the selected string corresponds to valid URI based on its
+     * prefix
+     *
      * @param s the selected string
      * @return true if the string corresponds to valid URI based on its prefix
      */
@@ -243,9 +252,12 @@ public class MCDUtils {
     }
 
     /**
-     * Returns true if the selected string corresponds to a valid complex change parameter
+     * Returns true if the selected string corresponds to a valid complex change
+     * parameter
+     *
      * @param s the selected string
-     * @return true if the selected string corresponds to a valid complex change parameter
+     * @return true if the selected string corresponds to a valid complex change
+     * parameter
      */
     public boolean isValidCCParam(String s) {
         if (s.contains(":-") || s.startsWith("<") || !s.startsWith("'")) {
@@ -284,10 +296,11 @@ public class MCDUtils {
     private List<String> getChangesOntologies() {
         return this.changesOntologies;
     }
-    
+
     /**
-     * Returns the JDBCRepository connection object 
-     * @return the JDBCRepository connection object 
+     * Returns the JDBCRepository connection object
+     *
+     * @return the JDBCRepository connection object
      */
     public JDBCVirtuosoRep getJDBCRepository() {
         return detector.getJdbc();

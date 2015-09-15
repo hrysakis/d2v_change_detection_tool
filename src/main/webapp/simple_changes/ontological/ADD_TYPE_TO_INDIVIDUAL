@@ -15,6 +15,9 @@ FILTER (?b != owl:Class && ?b != owl:Property && ?b != owl:Resource).
 FILTER (?b != rdfs:Class && ?b != rdfs:Property && ?b != rdfs:Resource).
 }
 }
+FILTER NOT EXISTS { GRAPH <assoc> {
+{?assoc1 co:new_value ?a.} UNION {?assoc2 co:new_value ?b.}
+} }
 #
 BIND(concat(str(?a), str(?b), str(?v1), str(?v2)) as ?url) .
 BIND(IRI('v1') as ?v1).

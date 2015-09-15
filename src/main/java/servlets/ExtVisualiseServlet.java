@@ -127,7 +127,7 @@ public class ExtVisualiseServlet extends DataSourceServlet {
                 cd.add(new ColumnDescription("vset", ValueType.TEXT, "Versions"));
                 cd.add(new ColumnDescription("changetimes", ValueType.NUMBER, "Number of occurences"));
                 data.addColumns(cd);
-                System.out.println(">>fetchVersionsForChanges" + fur.fetchVersionsForChanges(versions, changes));
+
                 LinkedHashMap<String, Long> results = (LinkedHashMap<String, Long>) fur.fetchVersionsForChanges(versions, changes);
                 for (String key : results.keySet()) {
 
@@ -162,7 +162,7 @@ public class ExtVisualiseServlet extends DataSourceServlet {
                 data.addColumns(cd);
 
                 LinkedHashMap<String, Long> results = (LinkedHashMap<String, Long>) fur.fetchChangesForVersions(versions, changes, tempOntology);
-                System.out.println(">>fetchChangesForVersions" + fur.fetchChangesForVersions(versions, changes, tempOntology));
+
                 for (String key : results.keySet()) {
 
                     occurences = results.get(key).toString();

@@ -1,7 +1,7 @@
 INSERT INTO <changesOntology> {
-?detft a co:Detach_Observation_To_DS;
+?detft a co:Detach_Observation_From_DS;
     co:detObFromDS_p1 ?o;
-	co:detObFromDS_p2 ?ft.
+	co:detObFromDS_p2 ?ds.
 }
 WHERE {
 GRAPH <v1> { 
@@ -14,7 +14,7 @@ FILTER NOT EXISTS { GRAPH <v2> {
 #
 BIND(IRI('v1') as ?v1).
 BIND(IRI('v2') as ?v2).
-BIND(concat("detObFromDS",str(?o), str(?ft), str(?v1), str(?v2)) as ?url) .
+BIND(concat("detObFromDS",str(?o), str(?ds), str(?v1), str(?v2)) as ?url) .
 #
 BIND(IRI(CONCAT('http://detObFromDS/',SHA1(?url))) AS ?detft).
 }

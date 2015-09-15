@@ -1,15 +1,20 @@
 INSERT INTO <changesOntology> {
 ?al a co:Add_Label;
-    co:al_p1 ?a;
-    co:al_p2 ?b.
+    co:al_p1 ?subj;
+    co:al_p2 ?label.
 }
 WHERE {
-GRAPH <v2> { ?a rdfs:label ?b }
-FILTER NOT EXISTS { GRAPH <v1> { ?a rdfs:label ?b } }
+GRAPH <v2> { ?subj rdfs:label ?label }
+FILTER NOT EXISTS { GRAPH <v1> { 
+?subj rdfs:label ?label. 
+} }
+FILTER NOT EXISTS { GRAPH <assoc> {
+?assoc co:new_value ?subj.
+} }
 #
 BIND(IRI('v1') as ?v1).
 BIND(IRI('v2') as ?v2).
-BIND(concat(str(?a), str(?b), str(?v1), str(?v2)) as ?url) .
+BIND(concat(str(?subj), str(?label), str(?v1), str(?v2)) as ?url) .
 #
 BIND(IRI(CONCAT('http://al/',SHA1(?url))) AS ?al).
 }

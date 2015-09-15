@@ -1,6 +1,7 @@
 /**
  *
  * @author Ioannis Chrysakis (hrysakis@ics.forth.gr)
+ * This javascript file contains the main logic to build the core D2V layout.
  */
 var selected_change; //keeps the just added selected_change name
 var scno = 0;  //keeps the number of assigned simple changes
@@ -750,7 +751,7 @@ function includeUploadScripts() {
 
 function retrieveDatasetOptions(value) {
 
- var up_str = includeUploadScripts();
+    var up_str = includeUploadScripts();
     var html_str = "";
     var html_ds = " <p>Choose dataset*:</p><select name=\"choose_dataset\" id=\"choose_dataset\">\n" + " </select>";
 
@@ -791,7 +792,7 @@ function retrieveDatasetOptions(value) {
                 upload_str +
                 // "<p>Load dataset version from disk:</p><input name=\"browse\" id=\"filebrowse\" type=\"file\"/>" +
 
-               /// "<input type=\"button\" class=\"Button\" value=\"Add\" onclick=\"alert($('#filebrowse').val())\">\n";
+                /// "<input type=\"button\" class=\"Button\" value=\"Add\" onclick=\"alert($('#filebrowse').val())\">\n";
                 "<input type=\"button\" class=\"Button\" value=\"Add\" onclick=\"addDataset(false);\">\n";
         getDatasetsCombo('choose_dataset');
         $('#dsmore').html(html_str + up_str);
@@ -817,67 +818,67 @@ function retrieveDatasetOptions(value) {
 
 }
 
-function delVersionDataset(){
-   var nowchangesontology = $('#choose_dataset').val();
-   var nowdatasetURI = getDatasetURI(nowchangesontology); 
-   var message = "The selected dataset version has been erased from the selected dataset.";
-   var versionURI = $('input[name=version]:radio:checked').val();
-   var msg = 'Please a select a version via a specified radio button, in order this version to be deleted';
-  
-   if (versionURI === undefined || versionURI === 'undefined' ){
-       showDialog('dialogmsg', msg);
-   }
-   else{
-   startAction(true,"actions");
-   
-   $.get('ActionServlet', {action: "ds_delversion", versionURI:versionURI, selectedDatasetURI:nowdatasetURI}).done(function(responseText) {
-        if (responseText === "success")
-        {
-            finishAction();
-            displayMessage(message);
-            
-        }
+function delVersionDataset() {
+    var nowchangesontology = $('#choose_dataset').val();
+    var nowdatasetURI = getDatasetURI(nowchangesontology);
+    var message = "The selected dataset version has been erased from the selected dataset.";
+    var versionURI = $('input[name=version]:radio:checked').val();
+    var msg = 'Please a select a version via a specified radio button, in order this version to be deleted';
 
-        else {
-            showDialog('dialogmsg', "<p>" + responseText + "</p>"); //error-alert on response
-            finishAction();
-        }
-        
+    if (versionURI === undefined || versionURI === 'undefined') {
+        showDialog('dialogmsg', msg);
+    }
+    else {
+        startAction(true, "actions");
 
-    });
-   }
+        $.get('ActionServlet', {action: "ds_delversion", versionURI: versionURI, selectedDatasetURI: nowdatasetURI}).done(function(responseText) {
+            if (responseText === "success")
+            {
+                finishAction();
+                displayMessage(message);
+
+            }
+
+            else {
+                showDialog('dialogmsg', "<p>" + responseText + "</p>"); //error-alert on response
+                finishAction();
+            }
+
+
+        });
+    }
 }
 
-function delDataset(){
+function delDataset() {
     var nowchangesontology = $('#choose_dataset').val();
     var nowdatasetURI = getDatasetURI(nowchangesontology);
     //alert('DEL DATASET::'+nowdatasetURI);
-    
+
     var nowchangesontology = $('#choose_dataset').val();
     var nowdatasetURI = getDatasetURI(nowchangesontology);
-    
+
     var message = "The selected dataset and all its assigned version(s) has been just erased.";
-    startAction(true,"actions");
+    startAction(true, "actions");
 
 
-    $.get('ActionServlet', {action: "ds_del",  selectedDatasetURI:nowdatasetURI }).done(function(responseText) {
+    $.get('ActionServlet', {action: "ds_del", selectedDatasetURI: nowdatasetURI}).done(function(responseText) {
         if (responseText === "success")
         {
             finishAction();
             displayMessage(message);
             getDatasetsCombo('sel_dataset');
             enableDatasetOption('sel_dataset');
-            
+
         }
 
         else {
             showDialog('dialogmsg', "<p>" + responseText + "</p>"); //error-alert on response
-             finishAction();
+            finishAction();
         }
-       
+
 
     });
-    
+
 }
 
 function addDataset(newdataset) {
@@ -885,38 +886,38 @@ function addDataset(newdataset) {
     var dlabel = $('#dlabel').val();
     var dvlabel = $('#dvlabel').val();
     var versionfile = $('#myfile').val();
-    
-    if (newdataset){
+
+    if (newdataset) {
         action = "ds_add";
     }
-    else{
+    else {
         action = "ds_addversion";
         dlabel = dvlabel;
     }
-    
+
     var nowchangesontology = $('#choose_dataset').val();
     var nowdatasetURI = getDatasetURI(nowchangesontology);
-    
+
     var message = "The new dataset with label " + dlabel + " has just been added.";
 
-    startAction(true,"actions");
+    startAction(true, "actions");
     var intuser = getURLParameters("intenrnaluser");
 
-    $.get('ActionServlet', {action: action, dslabel: dlabel, dvlabel: dvlabel, versionFilename:versionfile, intuser:intuser, selectedDatasetURI:nowdatasetURI}).done(function(responseText) {
+    $.get('ActionServlet', {action: action, dslabel: dlabel, dvlabel: dvlabel, versionFilename: versionfile, intuser: intuser, selectedDatasetURI: nowdatasetURI}).done(function(responseText) {
         if (responseText === "success")
         {
             finishAction();
             displayMessage(message);
             getDatasetsCombo('sel_dataset');
             enableDatasetOption('sel_dataset');
-            
+
         }
 
         else {
             finishAction();
             showDialog('dialogmsg', "<p>" + responseText + "</p>"); //error-alert on response
         }
-        
+
 
     });
 }
@@ -924,10 +925,10 @@ function addDataset(newdataset) {
 function fetchDSVersions() {
     var OKButton = "<br>\n" + "<input type=\"button\" class=\"Button\" value=\"OK\" onclick=\"delVersionDataset();\">\n";
     var changesontology = $('#choose_dataset').val();
-    
+
     var datasetURI = getDatasetURI(changesontology);
     $.get('OntologyQueryServlet', {qtype: 'versions', datasetversions: datasetURI, dataset: changesontology, valuestype: "radio"}, function(responseText) {
- 
+
         $('#dsversions').html(responseText);
         $('#dsversions').append(OKButton);
     });
@@ -1273,12 +1274,11 @@ function initAndDetectVisualizations(v1, v2, temp_frame, display_frame, sclist, 
             startAction(false, "actions");
             // alert('No need for live detection....'); //TO-CHECK THIS if we have users
             finishAction();
+         
             $('#cc_menu').append(display_frame);
         }
-        else {
+      else {
             {
-
-
                 startAction(true, "cc_menu"); //cc_menu previously
                 $.get('ActionServlet', {action: "initvision", userDatasetURI: datasetURI, userChangesOntology: changesontology, sclist: sclist, cclist: cclist, changetype: changetype, vold: v1, vnew: v2}).done(function(data) {
                     //alert( "New Detection Completed!" + data ); //JCH: load after servlet finishes
@@ -1289,7 +1289,7 @@ function initAndDetectVisualizations(v1, v2, temp_frame, display_frame, sclist, 
                 });
 
             }
-        }
+       }
     });
 
 
@@ -1317,7 +1317,7 @@ function resetTables() {
 
 }
 
-function enableDatasetOption(){
+function enableDatasetOption() {
     $('#sel_dataset').prop('disabled', false);
 }
 
@@ -1870,8 +1870,8 @@ function saveExtCCDef(on_edit, prev_ccname) {
         } //For all blocks
         );
 
-    //alert('SELECTS:' + selects);
-    //alert('JOINS:'+joins);
+        //alert('SELECTS:' + selects);
+        //alert('JOINS:'+joins);
 
         $('.optionalclass:checked').each(function() {  //JCH: For all checked checkboxes of a class:
 
@@ -2157,14 +2157,14 @@ function getDatasetsCombo(divID) {//sel_dataset
 }
 
 //checks if datasets options should be enabled via the "Options" button
-function checkDatasetOptions(){
+function checkDatasetOptions() {
     var options_button = "<input class=\"OptionsButton\" type=\"button\" value=\"Options\" onclick=\"showDatasetOptions();\">";
-     $.get('OntologyQueryServlet', {qtype: 'dsoptions'}, function(responseText) {
+    $.get('OntologyQueryServlet', {qtype: 'dsoptions'}, function(responseText) {
         //alert(responseText);
-        if (responseText === 'enabled'){
+        if (responseText === 'enabled') {
             $('#dsoptions').html(options_button);
         }
-       
+
     });
-    
+
 }

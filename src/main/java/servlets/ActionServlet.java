@@ -1,13 +1,15 @@
+/**
+ *
+ * @author Ioannis Chrysakis (hrysakis@ics.forth.gr)
+ */
 package servlets;
 
-import info.aduna.lang.FileFormat;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.LineNumberReader;
 import java.io.PrintWriter;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
@@ -36,6 +38,7 @@ import store.MCDUtils;
 import store.SCDUtils;
 import store.User;
 import utils.SortBasedOnName;
+import utils.VirtuosoUploader;
 
 /**
  * This servlet used to process requests that perform actions (i.e save
@@ -71,8 +74,8 @@ public class ActionServlet extends HttpServlet {
 
             ServletContext servletContext = getServletContext();
             contextPath = servletContext.getRealPath("/");
-            defaultuserspath = contextPath + "\\config\\" + "\\users_predefined.properties";
-            defaultuserscleanpath = contextPath + "\\config\\" + "\\users_clean.properties";
+            defaultuserspath = contextPath + "/config/" + "users_predefined.properties";
+            defaultuserscleanpath = contextPath + "/config/" + "users_clean.properties";
             changes_ontology = request.getParameter("userChangesOntology");
             String configPath = OntologyQueryServlet.getConfigFilePath(servletContext, changes_ontology);
 
@@ -115,113 +118,99 @@ public class ActionServlet extends HttpServlet {
                     String datasetVersionLabel = request.getParameter("dvlabel");
                     RDFFormat defaultSchemaFileFormat = null;
                     RDFFormat versionFileFormat = null;
-         
+
                     String graphDest = "";
                     String versionFilename = request.getParameter("versionFilename");
 
- 
-                    String constructed_versionNamedgraph = ""; 
+                    String constructed_versionNamedgraph = "";
                     String dsfiles = OntologyQueryServlet.getPropertyFromFile(configPath, "Dataset_Files_Folder");
                     String defaultSchemafilename = OntologyQueryServlet.getPropertyFromFile(configPath, "Dataset_Default_Schema");
-                    defaultSchemaFileFormat = (RDFFormat) this.getFileFormatByFilename(defaultSchemafilename);
-                    versionFileFormat = (RDFFormat) this.getFileFormatByFilename(versionFilename); 
-          
+                    defaultSchemaFileFormat = (RDFFormat) VirtuosoUploader.getFileFormatByFilename(defaultSchemafilename);
+                    versionFileFormat = (RDFFormat) VirtuosoUploader.getFileFormatByFilename(versionFilename);
+
                     if (!username.equals("guest")) { //Fetch the appropriate named graphs according to internal users
                         username = internaluser;
                     }
 
-                    if (dsfiles == null || defaultSchemafilename == null){
-                        getOutputError("Error in the properties file. Please check the properties: 'Dataset_Files_Folder' and 'Dataset_Default_Schema'.",out);
-                    }
-                  
-                    else if (defaultSchemaFileFormat == null){
-                        getOutputError("Invalid file format for default schema. Please check again the properties file and retry.",out);
-                    }
-                    
-                    else if (versionFileFormat == null){
-                         getOutputError("Invalid file format for version. Please select another format or check your file extension.",out);
-                    }
-                    else {
-                    
-                    if (datasetLabel != null || !newDataset) {
-                        try {
+                    if (dsfiles == null || defaultSchemafilename == null) {
+                        getOutputError("Error in the properties file. Please check the properties: 'Dataset_Files_Folder' and 'Dataset_Default_Schema'.", out);
+                    } else if (defaultSchemaFileFormat == null) {
+                        getOutputError("Invalid file format for default schema. Please check again the properties file and retry.", out);
+                    } else if (versionFileFormat == null) {
+                        getOutputError("Invalid file format for version. Please select another format or check your file extension.", out);
+                    } else {
 
-                            if (action.equals("ds_addversion")) {
-                                String selectedDatasetURI = request.getParameter("selectedDatasetURI");
-                                constructed_datasetURI = selectedDatasetURI;
-                            } else {
+                        if (datasetLabel != null || !newDataset) {
+                            try {
 
-                                constructed_datasetURI = "http://" + datasetLabel.replaceAll(" ", "-") + "/" + username;
-                            }
-                            dmgr = new DatasetsManager(prop, constructed_datasetURI);
-                            constructed_versionNamedgraph = constructed_datasetURI + "/" + OntologyQueryServlet.getNextVersionNumber(dmgr); // check slash
-                            System.out.println("constructed_versionNamedgraph:::" + constructed_versionNamedgraph);
-                            versionFilename = dsfiles + versionFilename;
-                            
-             
-                            if (newDataset) { //adds the dataset if it does not exist
+                                if (action.equals("ds_addversion")) {
+                                    String selectedDatasetURI = request.getParameter("selectedDatasetURI");
+                                    constructed_datasetURI = selectedDatasetURI;
+                                } else {
 
-                                
-                                //1. associate dataset through generic named graph
-                                dmgr.insertDataset(constructed_datasetURI, datasetLabel);
-                                //2. loads a default RDF schema
-                                SesameVirtRep sesame = new SesameVirtRep(prop);
-                                graphDest = constructed_datasetURI + "/changes/schema";
-                                sesame.importFile(defaultSchemafilename, defaultSchemaFileFormat, graphDest);
-                                sesame.terminate();
+                                    constructed_datasetURI = "http://" + datasetLabel.replaceAll(" ", "-") + "/" + username;
+                                }
+                                dmgr = new DatasetsManager(prop, constructed_datasetURI);
+                                constructed_versionNamedgraph = constructed_datasetURI + "/" + OntologyQueryServlet.getNextVersionNumber(dmgr); // check slash
+                                System.out.println("constructed_versionNamedgraph:::" + constructed_versionNamedgraph);
+                                versionFilename = dsfiles + versionFilename;
 
-                            }
-                            //ADDS one version assigned to the selected/constructed dataset URI   
-                            dmgr.insertDatasetVersion(versionFilename, versionFileFormat, constructed_versionNamedgraph, datasetVersionLabel, constructed_datasetURI);
-                            Map prev_version_map = dmgr.fetchDatasetPrevVersion(constructed_versionNamedgraph);
-                            String prev_version = null;
+                                if (newDataset) { //adds the dataset if it does not exist
 
-                            //3. custom compare of added version with the previous one if exists
-                            if (prev_version_map != null) {
-                                for (Object key : prev_version_map.keySet()) {
-                                   
-                                      prev_version = (String) key;
-                                      break;
-                                    
+                                    //1. associate dataset through generic named graph
+                                    dmgr.insertDataset(constructed_datasetURI, datasetLabel);
+                                    //2. loads a default RDF schema
+                                    SesameVirtRep sesame = new SesameVirtRep(prop);
+                                    graphDest = constructed_datasetURI + "/changes/schema";
+                                    sesame.importFile(defaultSchemafilename, defaultSchemaFileFormat, graphDest);
+                                    sesame.terminate();
 
                                 }
-                                graphDest = constructed_datasetURI + "/changes/schema";
-                                customCompare(prop, constructed_datasetURI, graphDest, null, null, prev_version, constructed_versionNamedgraph,false);
+                                //ADDS one version assigned to the selected/constructed dataset URI   
+                                dmgr.insertDatasetVersion(versionFilename, versionFileFormat, constructed_versionNamedgraph, datasetVersionLabel, constructed_datasetURI);
+                                Map prev_version_map = dmgr.fetchDatasetPrevVersion(constructed_versionNamedgraph);
+                                String prev_version = null;
+
+                                //3. custom compare of added version with the previous one if exists
+                                if (prev_version_map != null) {
+                                    for (Object key : prev_version_map.keySet()) {
+
+                                        prev_version = (String) key;
+                                        break;
+
+                                    }
+                                    graphDest = constructed_datasetURI + "/changes/schema";
+                                    customCompare(prop, constructed_datasetURI, graphDest, null, null, prev_version, constructed_versionNamedgraph, false);
+                                }
+                                dmgr.terminate();
+                                out.print("success");
+
+                            } catch (Exception ex) {
+                                getOutputError("Cannot add dataset:" + ex.getMessage(), out);
                             }
-                            dmgr.terminate();
-                            out.print("success");
-                            
-                        } catch (Exception ex) {
-                            getOutputError("Cannot add dataset:" + ex.getMessage(), out);
                         }
                     }
-                }
-                }
-                else if (action.equals("ds_del") ) {
-                    try{
-                    String selectedDatasetURI = request.getParameter("selectedDatasetURI");
-                    DatasetsManager dmgr = new DatasetsManager(prop, selectedDatasetURI);
-                    dmgr.deleteDataset(false, true); // JCH:Do not delete version contents because this would be result in deleting of
-                                                    //shared versions that are described in properties files for each new user
-                    out.print("success");
-                                                   
+                } else if (action.equals("ds_del")) {
+                    try {
+                        String selectedDatasetURI = request.getParameter("selectedDatasetURI");
+                        DatasetsManager dmgr = new DatasetsManager(prop, selectedDatasetURI);
+                        dmgr.deleteDataset(false, true); // JCH:Do not delete version contents because this would be result in deleting of
+                        //shared versions that are described in properties files for each new user
+                        out.print("success");
+
+                    } catch (Exception ex) {
+                        getOutputError("Cannot delete dataset:" + ex.getMessage(), out);
                     }
-                    catch (Exception ex) {
-                            getOutputError("Cannot delete dataset:" + ex.getMessage(), out);
-                        }
-                }
-                
-                 else if (action.equals("ds_delversion")) {
-                try{
-                    String selectedDatasetURI = request.getParameter("selectedDatasetURI");
-                    String versionURI = request.getParameter("versionURI");
-                    DatasetsManager dmgr = new DatasetsManager(prop, selectedDatasetURI);
-                    dmgr.deleteDatasetVersion(versionURI, false, true); //JCH-similarly to above comment 
-                    out.print("success");
-                }
-                    catch (Exception ex) {
-                            getOutputError("Cannot delete version:" + ex.getMessage(), out);
-                        }
+                } else if (action.equals("ds_delversion")) {
+                    try {
+                        String selectedDatasetURI = request.getParameter("selectedDatasetURI");
+                        String versionURI = request.getParameter("versionURI");
+                        DatasetsManager dmgr = new DatasetsManager(prop, selectedDatasetURI);
+                        dmgr.deleteDatasetVersion(versionURI, false, true); //JCH-similarly to above comment 
+                        out.print("success");
+                    } catch (Exception ex) {
+                        getOutputError("Cannot delete version:" + ex.getMessage(), out);
+                    }
                 }
 
             } else if (action.equals("getInternalUserName")) {
@@ -352,7 +341,7 @@ public class ActionServlet extends HttpServlet {
                         System.out.println("SCLIST:" + sclist);
                         System.out.println("CCLIST:" + cclist);
                     }
-                    customCompare(prop,datasetURI, changes_ontology_schema, scarray, ccarray, vold, vnew,true);
+                    customCompare(prop, datasetURI, changes_ontology_schema, scarray, ccarray, vold, vnew, true);
                 } //SAVING (TEMPLATE) DEFINITION
                 else if (action.equals("save")) {
 
@@ -621,6 +610,7 @@ public class ActionServlet extends HttpServlet {
                                 //
                                 if (update && prevname != null && !prevname.equals("") && !prevname.equals("undefined")) { //delete previous version
                                     boolean success = cul.deleteCC(prevname);
+                                  
                                     if (!success) {
                                         getOutputError("Edit of complex change failed: Cannot delete previous version of complex change!", out);
                                         return;
@@ -691,7 +681,7 @@ public class ActionServlet extends HttpServlet {
         return scDefs;
     }
 
-//used to create empty sc defs (withous any sel filter, join_filter TOTEST
+    //used to create empty sc defs (withous any sel filter, join_filter 
     private List<SCDefinition> createEmptySCDef(String schange) {
         String clearchangename = "";
         List<SCDefinition> scDefs = new ArrayList<>();
@@ -708,10 +698,10 @@ public class ActionServlet extends HttpServlet {
         return scDefs;
     }
 
-    private void customCompare(Properties prop, String datasetURI, String changes_ontology_schema, String[] scarray, String[] ccarray, String vold, String vnew,boolean tempOntology) {
+    private void customCompare(Properties prop, String datasetURI, String changes_ontology_schema, String[] scarray, String[] ccarray, String vold, String vnew, boolean tempOntology) {
         ChangesManager cManager;
         String changesOntology;
-        
+
         try {
             cManager = new ChangesManager(prop, datasetURI, vold, vnew, tempOntology);
             changesOntology = cManager.getChangesOntology();
@@ -719,13 +709,13 @@ public class ActionServlet extends HttpServlet {
             System.out.println("custom---changesOntology-----------" + changesOntology);
             //cul.getJDBCRepository()
             boolean tempgraph_exists = OntologyQueryServlet.namedGraphExists(cManager.getJDBC(), changesOntology);
-            if (tempgraph_exists) { //JCH: could be moved this at logout 
+          if (tempgraph_exists) { //JCH: could be moved this at logout 
                 cManager.deleteChangesOntology();
                 //cManager.getJDBC().clearGraph(changesOntology, true);
             }
             cManager.terminate();
             SCDUtils scd = new SCDUtils(prop, changesOntology, changes_ontology_schema, datasetURI, null);
-            scd.customCompareVersions(vold ,vnew, scarray, ccarray);
+            scd.customCompareVersions(vold, vnew, scarray, ccarray);
         } catch (Exception ex) {
 
             System.out.println("customCompare Exception:" + ex.getMessage());
@@ -745,6 +735,8 @@ public class ActionServlet extends HttpServlet {
         return null; // den prepei na symbei auto giati ena version filter panta prepei na efarmozetai se mia v1 h' v2
     }
 
+    
+    
     private String normalizeVerFilter(Map paramsMap, String sfilter) {
         if (!nameBelongsToParameter(paramsMap, sfilter) && !sfilter.contains(":-")) {// <uri>, 'user_defined_value' case{
             sfilter = normalizeFilter(sfilter);
@@ -754,6 +746,23 @@ public class ActionServlet extends HttpServlet {
         }
 
     }
+    
+    /*private String normalizeVerFilter(Map paramsMap, String sfilter) {
+        String clean_filter ="";
+        if (!nameBelongsToParameter(paramsMap, sfilter) && !sfilter.contains(":-")) {// <uri>, 'user_defined_value' case{
+            
+           
+            clean_filter = sfilter.substring(1, sfilter.length() - 1); //removes ' '
+            if (MCDUtils.isURI(clean_filter)){
+                sfilter = clean_filter;
+            }
+            //sfilter = normalizeFilter(sfilter);
+            return sfilter;
+        } else {
+            return sfilter;
+        }
+
+    }*/
 
     private boolean nameBelongsToParameter(Map ccParams, String name) {
         return ccParams.containsKey(name);
@@ -769,8 +778,16 @@ public class ActionServlet extends HttpServlet {
     }
 
     private String normalizeFilter(String sfilter) {
-        if (MCDUtils.isURI(sfilter)) {
-            sfilter = "<" + sfilter + ">";
+       
+        //patch for already inserted the symbols of uri (Ideagarden)
+       if(sfilter.startsWith("<") && sfilter.endsWith(">")){
+           return sfilter;
+       } 
+        
+       else if (MCDUtils.isURI(sfilter)) {
+           
+           sfilter = "<" + sfilter + ">";
+            
         } else {
             sfilter = "'" + sfilter + "'";
         }
@@ -864,27 +881,6 @@ public class ActionServlet extends HttpServlet {
         }
     }
 
-    private FileFormat getFileFormatByFilename(String filename){
-        if (filename !=null){
-            String ext = filename.substring(filename.lastIndexOf(".")+1);
-            switch (ext) {
-                case "rdf":
-                case "xml":
-                case "rdfs":
-                    return RDFFormat.RDFXML;
-                case "n3":
-                    return RDFFormat.N3;
-                case "nt":
-                    return RDFFormat.NTRIPLES;
-                case "nq":
-                    return RDFFormat.NQUADS;
-                case "ttl":
-                    return RDFFormat.TURTLE;
-            }
-        }
-        
-        return null;
-    }
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

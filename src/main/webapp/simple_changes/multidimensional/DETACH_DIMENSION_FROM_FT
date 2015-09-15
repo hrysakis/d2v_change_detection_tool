@@ -1,7 +1,7 @@
 INSERT INTO <changesOntology> {
 ?ddfft a co:Detach_Dimension_From_FT;
-    co:ddfft_p1 ?d;
-	co:ddfft_p2 ?ft.
+    co:detDimFromFT_p1 ?d;
+	co:detDimFromFT_p2 ?ft.
 }
 WHERE {
 GRAPH <deletedLowLevelChanges> { 

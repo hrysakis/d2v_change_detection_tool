@@ -4,12 +4,15 @@ INSERT INTO <changesOntology> {
 }
 WHERE {
 GRAPH <v2> { 
-{ ?a rdf:type rdf:Property. } UNION { ?a rdf:type owl:Property. } 
+?a rdf:type owl:Property. 
 }
 FILTER NOT EXISTS { GRAPH <v1> {
-{ ?a rdf:type rdf:Property. } UNION { ?a rdf:type owl:Property. } 
+?a rdf:type owl:Property. 
 }
 }
+FILTER NOT EXISTS { GRAPH <assoc> {
+?assoc co:new_value ?a.
+} }
 #
 BIND(IRI('v1') as ?v1).
 BIND(IRI('v2') as ?v2).

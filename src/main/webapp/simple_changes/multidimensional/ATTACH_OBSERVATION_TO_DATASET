@@ -1,0 +1,20 @@
+INSERT INTO <changesOntology> {
+?detft a co:Attach_Observation_To_DS;
+    co:attObToDS_p1 ?o;
+	co:attObToDS_p2 ?ds.
+}
+WHERE {
+GRAPH <v2> { 
+?o qb:dataSet ?ds.
+}
+FILTER NOT EXISTS { GRAPH <v1> {
+?o qb:dataSet ?ds.
+}
+}
+#
+BIND(IRI('v1') as ?v1).
+BIND(IRI('v2') as ?v2).
+BIND(concat("attObToDS",str(?o), str(?ds), str(?v1), str(?v2)) as ?url) .
+#
+BIND(IRI(CONCAT('http://attObToDS/',SHA1(?url))) AS ?detft).
+}

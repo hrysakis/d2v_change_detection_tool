@@ -1,8 +1,8 @@
 INSERT INTO <changesOntology> {
 ?dgvfo a co:Delete_Generic_Value_From_Observation;
-    co:addGenVFromOb_p1 ?o;
-	co:addGenVFromOb_p2 ?p;
-	co:addGenVFromOb_p3 ?v.
+    co:delGenVFromOb_p1 ?o;
+	co:delGenVFromOb_p2 ?p;
+	co:delGenVFromOb_p3 ?v.
 }
 WHERE {
 GRAPH <v1> { 
@@ -26,7 +26,7 @@ FILTER NOT EXISTS { GRAPH <v2> {
 #
 BIND(IRI('v1') as ?v1).
 BIND(IRI('v2') as ?v2).
-BIND(concat("addGenVFromOb",str(?o), str(?p), str(?v), str(?v1), str(?v2)) as ?url) .
+BIND(concat("deleteGenVFromOb",str(?o), str(?p), str(?v), str(?v1), str(?v2)) as ?url) .
 #
-BIND(IRI(CONCAT('http://addGenVFromOb/',SHA1(?url))) AS ?dgvfo).
+BIND(IRI(CONCAT('http://deleteGenVFromOb/',SHA1(?url))) AS ?dgvfo).
 }
