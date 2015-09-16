@@ -5,7 +5,6 @@ handleEmptyResults added in vision.js
 Backend libs updated (V10-9-15)
 normalizeFilter method updated
 fetchVersionsForChanges method updated
-getConfigFilePath method updated to include MD configuration (datamarket)
 Multidimensional simple changes (+default schema) updated
 =========================================================
 V3.1
