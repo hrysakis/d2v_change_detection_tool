@@ -30,11 +30,11 @@ c. Edit config_generic.properties (for generic RDF model usage) or config_EFO.pr
 - ii)'Simple_Changes' denotes the list of considered Simple Changes to be detected
 - iii) 'Dataset_URIs' which denotes namedgraphs associated with the corresponding dataset versions within virtuoso, used optionally in a new user assignment
 
-#DEMO VIDEO
+# DEMO VIDEO
 
 You can found a demo video showing the basic functionalities. You can view it by open the video.html file which is located in src/main/webapp/ folder.
 
-#COPYRIGHT
+# COPYRIGHT
 Copyright 2015-16, FORTH-ICS, All Rights Reserved.
 Yannis Roussakis, Ioannis Chrysakis, Kostas Stefanidis and Giorgos Flouris.
 Foundation for Research and Technology Hellas, Institute of Computer Science.
@@ -42,5 +42,7 @@ Foundation for Research and Technology Hellas, Institute of Computer Science.
 #INFO
 For any information about the D2V system please contact Ioannis Chrysakis via e-mail: hrysakis@ics.forth.gr
 More details can be found at the following publications: 
-1.Yannis Roussakis, Ioannis Chrysakis, Kostas Stefanidis, Giorgos Flouris, Yannis Stavrakas. "A Flexible Framework for Understanding the Dynamics of Evolving RDF Datasets". In Proceedings of the 14th International Semantic Web Conference (ISWC-15), 2015. Best Student Research Paper Award.    
+
+1.Yannis Roussakis, Ioannis Chrysakis, Kostas Stefanidis, Giorgos Flouris, Yannis Stavrakas. "A Flexible Framework for Understanding the Dynamics of Evolving RDF Datasets". In Proceedings of the 14th International Semantic Web Conference (ISWC-15), 2015. Best Student Research Paper Award.  
+
 2.Yannis Roussakis, Ioannis Chrysakis, Kostas Stefanidis, Giorgos Flouris. "D2V: A Tool for Defining, Detecting and Visualizing Changes on the Data Web". In Proceedings of the 14th International Semantic Web Conference, Posters and Demonstrations Track (ISWC-15), 2015. 
