@@ -25,11 +25,19 @@ Note that the datasetURI should have the form datasetURI/guest to formulate that
 
 b. Upload the corresponding war file which is located inside target folder in a webserver (Tomcat, Glassfish, etc)
 
-c. Edit config_generic.properties (for generic RDF model usage) or config_diachron.properties file (for DIACHRON model usage) from Config folder. This file contains Virtuoso credentials information plus the following properties:
-- i)'Dataset_URIs' which denotes namedgraphs associated with the corresponding dataset versions within virtuoso
-- ii)'Simple_Changes_Folder' denotes the folder which contains the SPARQL update queries for the detection of Simple Changes. This is an essestial update at the properties file that requires from user to set the actual full file path of this folder, which is by default inside the webapp folder.
-- iii)'Simple_Changes' denotes the list of considered Simple Changes to be detected
+c. Edit config_generic.properties (for generic RDF model usage) or config_EFO.properties file (for DIACHRON model usage) from Config folder. This file contains Virtuoso credentials information plus the following properties:
+- i)'Simple_Changes_Folder' denotes the folder which contains the SPARQL update queries for the detection of Simple Changes. This is an essestial update at the properties file that requires from user to set the actual full file path of this folder, which is by default inside the webapp folder.
+- ii)'Simple_Changes' denotes the list of considered Simple Changes to be detected
+- iii) 'Dataset_URIs' which denotes namedgraphs associated with the corresponding dataset versions within virtuoso, used optionally in a new user assignment
 
 #DEMO VIDEO
 
 You can found a demo video showing the basic functionalities. You can view it by open the video.html file which is located in src/main/webapp/ folder.
+
+#COPYRIGHT
+Copyright 2015-16, FORTH-ICS, All Rights Reserved.
+Yannis Roussakis, Ioannis Chrysakis, Kostas Stefanidis and Giorgos Flouris.
+Foundation for Research and Technology Hellas, Institute of Computer Science.
+
+#INFO
+For any information about the D2V system please contact Ioannis Chrysakis via e-mail: hrysakis@ics.forth.gr
