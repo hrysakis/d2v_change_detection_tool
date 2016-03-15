@@ -12,6 +12,9 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,11 +29,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import store.QueryUtils;
 import org.diachron.detection.exploit.DetChange;
 import org.diachron.detection.repositories.JDBCVirtuosoRep;
 import org.diachron.detection.utils.ChangesManager;
 import org.diachron.detection.utils.DatasetsManager;
+import store.QueryUtils;
 import utils.TranslationUtils;
 
 /**
@@ -38,7 +41,7 @@ import utils.TranslationUtils;
  */
 public class OntologyQueryServlet extends HttpServlet {
 
-    public static String configPath = "";
+    //public static String configPath = "";
     public static String contextPath = "";
     private int initLimit = 3; //JCH:big limit to retrieve them all
     int largeLimit = 1000000; //In practise means retrieve them all
@@ -72,13 +75,17 @@ public class OntologyQueryServlet extends HttpServlet {
 
         ServletContext servletContext = getServletContext();
         contextPath = servletContext.getRealPath("/"); //File.separator
-        configPath = OntologyQueryServlet.getConfigFilePath(servletContext, changesOntology);
-        System.out.println("config_path _______________________->" + configPath);
+
+        //String dataset_label = request.getParameter("datasetLabel");
+        //String configFilePath = OntologyQueryServlet.getConfigFilePath(servletContext, dataset_label);
+        String genericConfigFilePath = OntologyQueryServlet.getConfigFilePath(servletContext, null);
+
         Properties prop = new Properties();
         InputStream inputStream;
         try {
-            inputStream = new FileInputStream(configPath);
+            inputStream = new FileInputStream(genericConfigFilePath);
             prop.load(inputStream);
+            inputStream.close();
         } catch (IOException ex) {
             System.out.println("Exception with prop file: " + ex.getMessage() + " occured .");
             //return;
@@ -137,28 +144,23 @@ public class OntologyQueryServlet extends HttpServlet {
                 dmgr1 = null;
             }
 
-        } 
-
-        
-        else  if (query_type != null && query_type.equals("dsoptions")) {
+        } else if (query_type != null && query_type.equals("dsoptions")) {
             // checks for existing properties at config file
-            
-          String ds_files_folder = OntologyQueryServlet.getPropertyFromFile(configPath, "Dataset_Files_Folder");
-          String ds_default_schema = OntologyQueryServlet.getPropertyFromFile(configPath, "Dataset_Default_Schema");
-          if (ds_files_folder != null && ds_default_schema != null){
-              out.print("enabled");
-          }
-          else{
-              out.print("disabled");
-          }
-        
-        }
-        else if (query_type != null && query_type.equals("dataseturi")) {
+
+            String ds_files_folder = OntologyQueryServlet.getPropertyFromFile(genericConfigFilePath, "Dataset_Files_Folder");
+            String ds_default_schema = OntologyQueryServlet.getPropertyFromFile(genericConfigFilePath, "Dataset_Default_Schema");
+            if (ds_files_folder != null && ds_default_schema != null) {
+                out.print("enabled");
+            } else {
+                out.print("disabled");
+            }
+
+        } else if (query_type != null && query_type.equals("dataseturi")) {
             String selected_dataset_uri = "";
             String dlabel = request.getParameter("dslabel");
             try {
                 if (dlabel != null && !dlabel.equals("")) {
-                    dmgr1 = new DatasetsManager(prop,null);
+                    dmgr1 = new DatasetsManager(prop, null);
                     selected_dataset_uri = dmgr1.fetchDatasetUri(dlabel);
                     System.out.println("DATASET_URI is:" + selected_dataset_uri);
                     out.print(selected_dataset_uri);
@@ -191,8 +193,8 @@ public class OntologyQueryServlet extends HttpServlet {
         //search in config file for changesontologies and build the left combo dataset
         else if (query_type != null && query_type.equals("changesontologies_fromfile")) {
 
-            String chontologies = OntologyQueryServlet.getPropertyFromFile(configPath, "Ontologies");
-            String datasetlabels = OntologyQueryServlet.getPropertyFromFile(configPath, "Dataset_labels");
+            String chontologies = OntologyQueryServlet.getPropertyFromFile(genericConfigFilePath, "Ontologies");
+            String datasetlabels = OntologyQueryServlet.getPropertyFromFile(genericConfigFilePath, "Dataset_labels");
 
             if (chontologies == null || datasetlabels == null) {
                 out.print("ConfigFileError");
@@ -212,8 +214,8 @@ public class OntologyQueryServlet extends HttpServlet {
             }
         } //search in config file for datasetversion uri 
         else if (query_type != null && query_type.equals("dataseturi_fromfile")) {
-            String dataseturis = OntologyQueryServlet.getPropertyFromFile(configPath, "Dataset_URIs");
-            String chontologies = OntologyQueryServlet.getPropertyFromFile(configPath, "Ontologies");
+            String dataseturis = OntologyQueryServlet.getPropertyFromFile(genericConfigFilePath, "Dataset_URIs");
+            String chontologies = OntologyQueryServlet.getPropertyFromFile(genericConfigFilePath, "Ontologies");
 
             if (chontologies == null || dataseturis == null) {
                 out.print("ConfigFileError");
@@ -269,12 +271,12 @@ public class OntologyQueryServlet extends HttpServlet {
                         String sradio = request.getParameter("sradio");
                         String groupby = request.getParameter("groupby");
                         String limit = request.getParameter("limit");
-                        
+
                         int limitPerChange = initLimit;
-                        if (limit != null && limit.equals("unlimited")){
-                           limitPerChange = largeLimit;
+                        if (limit != null && limit.equals("unlimited")) {
+                            limitPerChange = largeLimit;
                         }
-                        
+
                         //Necessary for custom compare
                         System.out.println("oldversion:" + oldversion);
                         System.out.println("newversion(label):" + nversion);
@@ -352,6 +354,11 @@ public class OntologyQueryServlet extends HttpServlet {
 
                         String sclist = request.getParameter("sclist"); // "null" or comma string simple changes
                         String cclist = request.getParameter("cclist"); // "null" or comma string complex changes
+
+                        //V4.4 Force return information about all changes for term evolution
+                        sclist = "null";
+                        cclist = "null";
+
                         String vlist = request.getParameter("vlist"); //ALL or comma string newversions
                         String tempontology = request.getParameter("tempontology");
                         boolean tempOntology = false;
@@ -372,7 +379,7 @@ public class OntologyQueryServlet extends HttpServlet {
                             String new_html_str = this.displayTableResults(changes, changesOntology, datasetURI, uriORliteral, sclist, cclist, vlist, true, tempontology);
 
                             out.println("<!DOCTYPE html>");
-                            out.println("<html>");
+                            out.println("<html lang=\"en\">");
                             out.println("<head>");
                             out.println("<title>A Tool for Defining, Detecting and Visualizing Changes on the Data Web</title>");
                             out.println("<link href=\"css/mainstyle.css\" rel=\"stylesheet\" type=\"text/css\"> \n"
@@ -390,11 +397,11 @@ public class OntologyQueryServlet extends HttpServlet {
                             out.println("<!DOCTYPE html>");
                             out.println("<html>");
                             out.println("<head>");
-                            out.println("<script src=\"//code.jquery.com/jquery-1.11.2.min.js\"></script>\n"
-                                    + "<script src=\"//code.jquery.com/ui/1.11.2/jquery-ui.js\"></script>");
+                            out.println("<script type=\"text/javascript\" src=\"//code.jquery.com/jquery-1.11.2.min.js\"></script>\n"
+                                    + "<script type=\"text/javascript\" src=\"//code.jquery.com/ui/1.11.2/jquery-ui.js\"></script>");
                             out.println("<link href=\"css/mainstyle.css\" rel=\"stylesheet\" type=\"text/css\"> \n"
                                     + "<link href=\"http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css\" rel=\"stylesheet\" type=\"text/css\">");
-                            out.println("<script src=\"js/generic.js\"></script>");
+                            out.println("<script type=\"text/javascript\" src=\"js/generic.js\"></script>");
                             //out.print("<script language='JavaScript'>alert('Hello');</script>");
                             out.println("</head>");
                             out.println("<body>");
@@ -431,7 +438,7 @@ public class OntologyQueryServlet extends HttpServlet {
                         }
 
                         if (selected_change_template != null /*&& !selected_change_template.startsWith("Update")*/) { // claims for Add_XXX and Delete_XXX
-                            param_value_str = "Choose " + paramvaltype + ": [Most popular list]</p>\n"
+                            param_value_str = "<label for=\"param_val\">Choose " + paramvaltype + ": [Most popular list]</label></p>\n"
                                     + "<p>\n"
                                     + select_def_str
                                     + "<option value=\"\"></option>"
@@ -440,7 +447,7 @@ public class OntologyQueryServlet extends HttpServlet {
                                     + enter_value
                                     + " </select>\n"
                                     + "</p>\n"
-                                    + "<p>User defined\n"
+                                    + "<p><label for=\"user_param_value\">User defined</label>\n"
                                     + paramvaltype + ":\n"
                                     //+ " parameter value:\n"
                                     + "<input disabled type=\"text\" name=\"user_param_value\" id=\"user_param_value\" />\n"
@@ -454,11 +461,11 @@ public class OntologyQueryServlet extends HttpServlet {
                                 + "<tr>\n"
                                 + "<td width=\"150\"><p>\n"
                                 + param_value_str
-                                + "<p>Complex change name*:\n"
+                                + "<p><label for=\"cc_name\">Complex change name*:</label>\n"
                                 + "\n"
                                 + "<input type=\"text\" name=\"cc_name\" id=\"cc_name\" />\n"
-                                + " </p>\n"
-                                + "<p>Priority*:</p>\n"
+                                + "</p>\n"
+                                + "<p><label for=\"priority\">Priority*:</label></p>\n"
                                 + "<p>\n"
                                 + "\n"
                                 + "<input type=\"text\" name=\"priority\" id=\"priority\" />\n"
@@ -480,7 +487,6 @@ public class OntologyQueryServlet extends HttpServlet {
 
                         String valuesType = request.getParameter("valuestype");
                         String version_combos = buildVersionCombos(dmgr1, valuesType);
-
                         out.println(version_combos);
 
                     } else if (query_type.equals("evoversions")) {
@@ -508,7 +514,7 @@ public class OntologyQueryServlet extends HttpServlet {
                         String json_str = "";
                         if (selected_change != null) {
                             json_str = fur.fetchCCJson(selected_change);
-                            //System.out.println("json_str:" + json_str);
+                            System.out.println("json_str:" + json_str);
                             out.print(json_str);
                         }
 
@@ -555,15 +561,12 @@ public class OntologyQueryServlet extends HttpServlet {
             }
         }
 
-        if (fur != null /*&& expl != null*/) {
-            //expl.terminate();
+        if (fur != null) {
             fur.terminate(); //CLOSES CONNECTION  
-            //System.out.println("fur terminated...CLOSED connection");
 
         }
         if (dmgr1 != null) { //CLOSES CONNECTION
             dmgr1.terminate();
-            //System.out.println("dmgr terminated...CLOSED connection");
         } else { //NO-CONNECTION
 
             if (dmgr1 == null || fur == null) { //no any connection through DatasetsManager/FetchUris
@@ -587,7 +590,7 @@ public class OntologyQueryServlet extends HttpServlet {
                     //System.out.println("CCNAME:"+ccname);
                     if (deleteaction) {
 
-                        cc_checkboxes = cc_checkboxes.trim() + "<input name=\"" + "samename" + "\" type=\"radio\" class=\"cc_checkbox\"/ value=\"" + ccname + "\">" + ccname + "<br><br>";
+                        cc_checkboxes = cc_checkboxes.trim() + "<input id=\"" + ccname + "\" name=\"" + "samename" + "\" type=\"radio\" class=\"cc_checkbox\"/ value=\"" + ccname + "\"><label for=\"" + ccname + "\">" + ccname + "</label><br><br>";
                     } /*else { //periptwsh vision fere ta xwris na einai mesa se td
 
                      }*/
@@ -744,7 +747,7 @@ public class OntologyQueryServlet extends HttpServlet {
                     if (valuesType.equals("option")) {
                         version_ret_val = version_ret_val.trim() + "<option value=\"" + version + "\">" + version_label + "</option>\n";
                     } else if (valuesType.equals("radio")) {
-                        version_ret_val = version_ret_val.trim() + "<input name=\"" + "version" + "\" type=\"radio\" value=\"" + version + "\">" + version_label + "<br><br>";
+                        version_ret_val = version_ret_val.trim() + "<input id=\"" + version + "\"  name=\"" + "version" + "\" type=\"radio\" value=\"" + version + "\"><label for=\"" + version + "\">" + version_label + "</label><br><br>";
                     }
                 }
             }
@@ -770,8 +773,8 @@ public class OntologyQueryServlet extends HttpServlet {
         String vnew = "";
         String cutoversion = "";
         String cutnversion = "";
-        String change_description ="";
-        String change_name ="";
+        String change_description = "";
+        String change_name = "";
         TranslationUtils trutils = null; //JCH: if null translations are disabled
         boolean exactMatchTranslation = false; //JCH: if true only the exact matching terms should be translated
 
@@ -791,7 +794,7 @@ public class OntologyQueryServlet extends HttpServlet {
             vnew = cur_change.getNewVersion();
             change_description = cur_change.getChangeDescription();
             change_name = cur_change.getChangeName();
-            if (change_description == null || change_description.equals("")){
+            if (change_description == null || change_description.equals("")) {
                 change_description = change_name;
             }
             cutoversion = vold.substring(vold.lastIndexOf("/") + 1);
@@ -799,9 +802,9 @@ public class OntologyQueryServlet extends HttpServlet {
             cur_params = cur_change.getParameters();
             paramnum = cur_params.size();
             int cnt = 0;
-            String param_names_row = "<tr><th colspan=\"" + "100%" + "\" style=\"text-align:left;\">" + "<font color=\"green\">" +"<span title=\""+change_description+"\"</span>"+
-            "[" + vold + "-" + vnew + "] " + change_name + "</font></th></tr>";
-            
+            String param_names_row = "<tr><th colspan=\"" + "100%" + "\" style=\"text-align:left;\">" + "<p style=\"color:green;\">" + "<span title=\"" + change_description + "\"</span>"
+                    + "[" + vold + "-" + vnew + "] " + change_name + "</p></th></tr>";
+
             String param_values_row = "";
             String param_value_ns = "";
             String param_value_special = "";
@@ -832,14 +835,14 @@ public class OntologyQueryServlet extends HttpServlet {
                 param_value = "<a target=\"_blank\" class=\"bluelink\" href=\"OntologyQueryServlet?uri=" + param_value_enc + "&tempontology=" + tempontology + "&qtype=termevolution&sclist=" + sclist + "&cclist=" + cclist + "&vlist=" + vlist + "&dataset=" + dataset_uri + "&datasetversions=" + dataset_versions_uri + "\"" + "title=\"" + key + "\">" + transl_param_value + "</a>";
                 //}
                 if (multiplechanges) { //case of termevolution
-                    param_names_row = param_names_row.trim() + "<td><b>" + key + "</b></td>";
+                    param_names_row = param_names_row.trim() + "<td><strong>" + key + "</strong></td>";
                     if (param_value_ns.equals(uriORliteral)) {
-                        param_values_row = param_values_row.trim() + "<td class=\"fillmarktd\"><b>" + param_value + "</b></td>";
+                        param_values_row = param_values_row.trim() + "<td class=\"fillmarktd\"><strong>" + param_value + "</strong></td>";
                     } else {
-                        param_values_row = param_values_row.trim() + "<td><b>" + param_value + "</b></td>";
+                        param_values_row = param_values_row.trim() + "<td><strong>" + param_value + "</strong></td>";
                     }
                 } else { //per change view
-                    param_names_row = param_names_row.trim() + "<td><b>" + key + "</b></td>";
+                    param_names_row = param_names_row.trim() + "<td><strong>" + key + "</strong></td>";
                     param_values_row = param_values_row.trim() + "<td>" + param_value + "</td>";
                 }
                 //colspan=\"100%
@@ -863,7 +866,7 @@ public class OntologyQueryServlet extends HttpServlet {
         //System.out.println("********CHECK**************"+html_str.replaceAll("http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/", "SSIS:"));
         //http://www.iana.org/assignments/media-types/=PIOU
         //html_str = html_str.replaceAll("http://www.ics.forth.gr/Ontology/IdeaGarden/SSIS/", "SSIS:");s
-        if(trutils!=null && !exactMatchTranslation){
+        if (trutils != null && !exactMatchTranslation) {
             html_str = trutils.getTranslatedHTML(html_str);
         }
         return html_str;
@@ -912,7 +915,7 @@ public class OntologyQueryServlet extends HttpServlet {
     private static List getVersions(DatasetsManager dmgr) {
         Map versions_map = null;
         versions_map = dmgr.fetchDatasetVersions();
-        
+
         //dmgr.terminate();
         List versions = new ArrayList(versions_map.keySet()); //YR new
         return versions;
@@ -922,37 +925,36 @@ public class OntologyQueryServlet extends HttpServlet {
     private String getVersionByIndex(DatasetsManager dmgr, int index) {
         List versions = OntologyQueryServlet.getVersions(dmgr);
         return (String) versions.get(index);
+
     }
 
     /**
      * Returns the configuration filepath based on the changes Ontology
      *
      * @param servletContext the servlet's context
-     * @param changesOntology the selected changes Ontology
+     * @param datasetLabel the selected dataset's label
      * @return the configuration filepath based on the changes Ontology
      */
     //JCH-Note:We had different configuration paths for non-diachron rdf gereric approach
-    public static String getConfigFilePath(ServletContext servletContext, String changesOntology) {
+    public static String getConfigFilePath(ServletContext servletContext, String datasetLabel) {
 
         String contextpath = servletContext.getRealPath("/"); //File.separator
+        String destPath = contextPath + "config/" + "config_" + datasetLabel + ".properties";
+        Path path = Paths.get(destPath);
         String filepath;
-        if (changesOntology != null && changesOntology.contains("efo")) {
-            filepath = contextpath + "config/" + "config_diachron.properties";
-        } 
-        /*else  if (changesOntology != null && changesOntology.contains("datamarket")) {
-            filepath = contextpath + "config/" + "md_config.properties";
-        } */
-        
-     else {
-        
+        if (datasetLabel != null && Files.exists(path)) {
+            filepath = destPath;
+        } else { //default RDF-generic path
+
             filepath = contextpath + "config/" + "config_generic.properties";
         }
-
+        System.out.println("######### config path ###############" + filepath);
         return filepath;
     }
 
     /**
-     * Returns the next number of a version to be created for selected dataset URI
+     * Returns the next number of a version to be created for selected dataset
+     * URI
      *
      * @param dmgr the DatasetsManager object that has set the dataset URI
      * @return the last number of a version for the selected dataset URI
@@ -960,10 +962,10 @@ public class OntologyQueryServlet extends HttpServlet {
     public static int getNextVersionNumber(DatasetsManager dmgr) {
         List versions = OntologyQueryServlet.getVersions(dmgr);
         int lastno = 1;
-        if (!versions.isEmpty()){
-        
-            String version = (String)versions.get(versions.size()-1);
-            String versionNO = version.substring(version.lastIndexOf("/")+1);
+        if (!versions.isEmpty()) {
+
+            String version = (String) versions.get(versions.size() - 1);
+            String versionNO = version.substring(version.lastIndexOf("/") + 1);
             lastno = Integer.parseInt(versionNO);
             lastno++;
         }
@@ -986,7 +988,7 @@ public class OntologyQueryServlet extends HttpServlet {
     }
 
     private void showErrorMessage(PrintWriter out, String message) {
-        out.print("<script language='JavaScript'>showDialog('dialogmsg'," + "'" + message + "'" + ");</script>");
+        out.print("<script language='JavaScript' type='text/javascript'>showDialog('dialogmsg'," + "'" + message + "'" + ");</script>");
         //out.println("<script type=\"text/javascript\" src=\"js/generic.js\">showDialog('dialogmsg',"+"'"+message+"'"+");");
         //out.print("<script language='JavaScript'>alert('Hello');</script>");
         //out.println("</script>");
@@ -1024,12 +1026,13 @@ public class OntologyQueryServlet extends HttpServlet {
      */
     public static String getPropertyFromFile(String propertiesFilePath, String propertyName) {
         Properties prop = new Properties();
-        InputStream inputStream;
+
         String propvalue = "";
         try {
-            inputStream = new FileInputStream(propertiesFilePath);
+            InputStream inputStream = new FileInputStream(propertiesFilePath);
             prop.load(inputStream);
             propvalue = prop.getProperty(propertyName);
+            inputStream.close();
         } catch (IOException ex) {
             System.out.println("Exception: " + ex.getMessage() + " occured .");
 

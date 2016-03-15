@@ -4,10 +4,10 @@ INSERT INTO <changesOntology> {
 }
 WHERE {
 GRAPH <v1> { 
-{ ?a rdf:type rdf:Property. } UNION { ?a rdf:type owl:Property. } 
+{{ ?a rdf:type rdf:Property. } UNION { ?a rdf:type owl:Property. } UNION {?a rdf:type owl:DatatypeProperty} UNION {?a rdf:type owl:ObjectProperty}}
 }
 FILTER NOT EXISTS { GRAPH <v2> {
-{ ?a rdf:type rdf:Property. } UNION { ?a rdf:type owl:Property. } 
+{{ ?a rdf:type rdf:Property. } UNION { ?a rdf:type owl:Property. } UNION {?a rdf:type owl:DatatypeProperty} UNION {?a rdf:type owl:ObjectProperty}}
 }
 }
 FILTER NOT EXISTS { GRAPH <assoc> {

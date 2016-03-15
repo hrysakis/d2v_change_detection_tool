@@ -53,14 +53,15 @@ public class VisualizeServlet extends DataSourceServlet {
             String changesOntologySchema = changesOntology + "/schema";
 
             ServletContext servletContext = getServletContext();
-            String configPath = OntologyQueryServlet.getConfigFilePath(servletContext, changesOntology);
-
-            System.out.println("config_path:::::::::::::::::::::::::::::>" + configPath);
+            //String configPath = OntologyQueryServlet.getConfigFilePath(servletContext, changesOntology);
+            String genericConfigFilePath = OntologyQueryServlet.getConfigFilePath(servletContext, null);
+            //System.out.println("config_path:::::::::::::::::::::::::::::>" + genericConfigFilePath);
             Properties prop = new Properties();
             InputStream inputStream;
             try {
-                inputStream = new FileInputStream(configPath);
+                inputStream = new FileInputStream(genericConfigFilePath);
                 prop.load(inputStream);
+                inputStream.close();
             } catch (IOException ex) {
                 System.out.println("Exception with prop file: " + ex.getMessage() + " occured .");
                 //return;
@@ -138,14 +139,8 @@ public class VisualizeServlet extends DataSourceServlet {
                     
                     
                     LinkedHashMap<String, Long> mappair = (LinkedHashMap<String, Long>) fur.fetchChangesForVersions(versionset, changeset, tempOntology);
-
-                    //OLD-APPROACH BEFORE V3.1 
-                    //LinkedHashMap mappair = Analysis.analyzeChanges(jdbc, changesOntologySchema, datasetUri, v1, v2, viewtype, tempOntology);
                     allResults = fetchMapResults(mappair, allResults, v2);
-                    //System.out.println("ALL-RESULTS:" + allResults.toString());
-                    //ChangesManager cManager = new ChangesManager(configPath, datasetUri, v1, v2, true);
-                    // cManager.deleteChangesOntology();//moved to the initvision option of ActionsServlet
-                    //cManager.terminate();
+          
 
                 } else { //evolution history (all versions) 
 
@@ -180,9 +175,6 @@ public class VisualizeServlet extends DataSourceServlet {
                                     vdisplay = v2.substring(v2.lastIndexOf("/") + 1); //previous apprioch
                                 }
 
-                              //OLD-APPROACH BEFORE V3.1     
-                                //LinkedHashMap mappair = Analysis.analyzeChanges(jdbc, changesOntologySchema, datasetUri, v1, v2, viewtype, tempOntology);
-                                //System.out.println("ANALYZEEEEEEEEEEEEEEEEEEEE" +mappair.toString());
                                 Set<String> versionset = new LinkedHashSet<>();
                                 versionset.add(v2);
                                 Set<String> changeset = new LinkedHashSet<>();

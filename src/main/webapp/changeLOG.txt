@@ -1,11 +1,65 @@
+V6.0
+Follow W3C WCAG 2.0 (Level AA)
+checked by achecker tool
+=============================
+V5.1
+Code clearance, updated Javadocs, minor improvements
+=========================================================
+V5.0
+Local folders are now supported at the configuration properties files.
+=========================================================
+V4.7
+Improved define change by either upload/enter json representation
+=========================================================
+V4.6
+Loosing-Fix on sel/join filters
+=========================================================
+V4.5
+JSON utils:
+-Define change by using a JSON file/representation in the basic mode
+-View json button added in edit for viewing JSON representation of SPARQL query
+-saveJSONCCDefinition added as a public method
+=========================================================
+V4.4
+Term evolution now shows all related changes (not the selected ones from previous step(s))
+=========================================================
+V4.3
+Remote admin uploading bug-fixed
+=========================================================
+V4.2
+Library updated (V3-11-15)
+deleteUser method improved
+Associations considered in custom compare and in management of users/datasets
+=========================================================
+V4.1
+Add specific configuration file per importing dataset
+-getConfigFilePath updated
+-ds options improved
+-seperate datasets/versions/schema per user
+-common datasets can be inserted to Dataset_URIs property (manual insertion)
+Upload servlet updated
+Delete version with/without deleting version contents
+Copyright info updated
+=========================================================
+V4.0
+Update parameters for version filters supported to prevent construction of misleading SPARQLs
+Supports four user options (guest,registered,new-clean,new-predefined)
+resizeIframe method updates
+All buttons included the basic class "button" to inherit hover style
+=========================================================
+V3.3
+fetchSCParameterNames (new schema)
+Backend libs updated (V16-9-15)
+Legend font size reduced for barchart
+=========================================================
 V3.2
 Style improvements
 Hover on change in table results displays its description if exists
 handleEmptyResults added in vision.js
-Backend libs updated (V10-9-15)
 normalizeFilter method updated
 fetchVersionsForChanges method updated
 Multidimensional simple changes (+default schema) updated
+Backend libs updated (V10-9-15)
 =========================================================
 V3.1
 Custom compare with associations enabled (EFO)

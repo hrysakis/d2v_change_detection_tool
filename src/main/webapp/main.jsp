@@ -1,10 +1,11 @@
-<html>
-   
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN""http://www.w3.org/TR/REC-html40/loose.dtd">
+<html lang="en">
 <head>
 <meta name="description" content="FORTH-ICS">
 <meta name="keywords" content="change detection tool, change detection, evolution, change management">
 <meta name="author" content="Ioannis Chrysakis">    
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 <title>D2V:A Tool for Defining, Detecting and Visualizing Changes on the Data Web</title>
 
@@ -12,11 +13,11 @@
 
 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css">
 <!--script src="http://code.jquery.com/jquery-latest.min.js"></script-->
-<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
 
-<script src="js/d2v.js"></script>
-<script src="js/generic.js"></script>
+<script type="text/javascript" src="js/d2v.js"></script>
+<script type="text/javascript" src="js/generic.js"></script>
 
 
 </head>
@@ -29,45 +30,41 @@
     <p class="userinfo">Welcome
     <%=request.getParameter("username")%>
     !</p> 
-    <a class="logout" href="index.html"><img src="images/Logout-icon-01.png" height="25" width="25"></a>
+    <a class="logout" href="index.html"><img alt="Logout" src="images/Logout-icon-01.png" height="25" width="25"></a>
     
-<table width="178" cellspacing='0'> <!-- cellspacing='0' is important, must stay -->
+<table style="width:178px; border-spacing:0px;"> <!-- cellspacing='0' is important,and equivalent to border-spacing-->
     <tr>
-	  <th width="174">Menu</th></tr>
+	  <th style="width:174px;">Menu</th></tr>
   <tr>
-              <td><p>Select dataset:</p><select name="sel_dataset" id="sel_dataset" class="select-menu">
-                      <option value="nop"> </option>
-                      <!--option value="http://www.ebi.ac.uk/efo-test/changes">EFO</option-->
-                      <!--option value="http://geneontology.org/changes">GO</option-->
-                      <!--option value="http://idea-garden.org/changes">Ideagarden</option-->
-                      
-          </select>
+              <td><label for="sel_dataset">Select dataset:</label><select name="sel_dataset" id="sel_dataset" class="select-menu">
+ </select> 
                   <br><br>
-              <input class="ChangeButton" type="button" value="Change dataset" onclick="changeDataset();">
+              <input class="ChangeButton button" type="button" value="Change dataset" onclick="changeDataset();">
               <div id="dsoptions"></div>
               </td></tr> 
 <tr>
-    <td class="clickable clickbuttons1" onclick="buildCCTypeMenu(this)"><a href="#"><div class="menu">Define complex change</div><img class="menu_img" src="images/add.png" width="27" height="27" /></a></td></tr>  
+    <td class="clickable clickbuttons1" onclick="buildCCTypeMenu(this)"><a href="#"><div class="menu">Define complex change</div><img alt="add" class="menu_img" src="images/add.png" width="27" height="27"></a></td></tr>  
 <tr>
-    <td class="clickable clickbuttons1" onclick="createCCTables(false,'',this)"><a href="#"><div class="menu">Define complex change (advanced)</div><img class="menu_img" src="images/add_plus.png" width="27" height="27" /></a></td></tr>
+    <td class="clickable clickbuttons1" onclick="createCCTables(false,'',this)"><a href="#"><div class="menu">Define complex change (advanced)</div><img alt="addplus" class="menu_img" src="images/add_plus.png" width="27" height="27"></a></td></tr>
 <tr>
-    <td class="clickable clickbuttons1" onclick="getDefinedCC('edit',this)"><a href="#"><div class="menu">Edit complex change</div><img class="menu_img" src="images/edit.png" width="27" height="27" /></a></td>
+    <td class="clickable clickbuttons1" onclick="getDefinedCC('edit',this)"><a href="#"><div class="menu">Edit complex change</div><img class="menu_img" alt="edit" src="images/edit.png" width="27" height="27"></a></td>
 </tr> 
 <tr>
-    <td class="clickable clickbuttons1" onclick="getDefinedCC('del',this)"><a href="#"><div class="menu">Delete complex change</div><img class="menu_img" src="images/delete.png" width="27" height="27" /></a></td></tr> 
+    <td class="clickable clickbuttons1" onclick="getDefinedCC('del',this)"><a href="#"><div class="menu">Delete complex change</div><img class="menu_img" alt="delete" src="images/delete.png" width="27" height="27"></a></td></tr> 
 
 
-
-    <td class="clickable clickbuttons1" onclick="showVisionOptions(this)"><a href="#"><div class="menu">Visualize changes</div><img class="menu_img" src="images/chart.png" width="25" height="25" /></a></td></tr>
+<tr>
+    <td class="clickable clickbuttons1" onclick="showVisionOptions(this)"><a href="#"><div class="menu">Visualize changes</div><img class="menu_img" alt="visualisation" src="images/chart.png" width="25" height="25"></a></td></tr>
 
 </table> 
     <p class="powered"> Powered and sponsored by:</p>
-    <a class="logos" href="http://www.diachron-fp7.eu" target="_blank"><img src="images/diachron_small.png"></a>
+    <a class="logos" href="http://www.diachron-fp7.eu" target="_blank"><img alt="diachron" src="images/diachron_small.png"></a>
     <br>
-    <a class="logo_idea" href="http://idea-garden.org/" target="_blank"><img src="images/ideagarden.png" width="100"></a> 
+    <a class="logo_idea" href="http://idea-garden.org/" target="_blank"><img alt="ideagarden" src="images/ideagarden.png" width="100"></a> 
 
 
-    <br><br><p class="powered"> <a href="#" onclick="showCredits()"> <img src="images/copyright.png" width="30" height="30">Copyright</a>,<a href="changeLOG.txt" target="_blank"> V3.2, </a><a href="http://www.ics.forth.gr" target="_blank">FORTH-ICS</a> </p>
+    <br><br><p class="powered"> <a href="#" onclick="showCredits()"> <img alt="copyright" src="images/copyright.png" width="30" height="30">Copyright</a>,<a href="changeLOG.txt" target="_blank"> V6.0, </a><a href="http://www.ics.forth.gr" target="_blank">FORTH-ICS</a> </p>
+    <br><p><a href="https://www.w3.org/TR/WCAG20/#a" target="_blank"><img alt="WCAG" src="images/w3c.png" style="margin-left:45px;"></a></p>
 </div>   
     
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html >
+<html lang="en">
   <head>
     <meta charset="UTF-8">
     <title>Login options</title>
@@ -10,10 +10,10 @@
 <link rel="stylesheet" href="css/login.css">
    <link href="css/mainstyle.css" rel="stylesheet" type="text/css"> 
 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css">
-<script src="js/d2v.js"></script>
-<script src="js/generic.js"></script>
-<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script type="text/javascript" src="js/d2v.js"></script>
+<script type="text/javascript" src="js/generic.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
     
     
     
@@ -32,19 +32,34 @@
 
       <form method="post">
     <p class="radiotext">
-        <input type="radio" name="useroptions" value="guest" class="loginopt" checked>
-        <span>
-            Login as a <b>guest user</b> with predefined complex changes in shared space.</span>
+        
+        <input type="radio" name="useroptions" id="useroptions_guest"  value="guest" class="loginopt" checked>
+        
+        <label for="useroptions_guest"><span>
+            Login as a <strong>guest user</strong> with predefined complex changes in shared space.</span></label>
         </p>
    <br>
       <p class="radiotext">
-        <input type="radio" name="useroptions" value="user" class="loginopt">
-Login as a <b>registered user</b> with personal alias and space with predefined complex changes.</p>
+         
+        <input type="radio" name="useroptions" id="useroptions_user" value="user" class="loginopt">
+        
+         <label for="useroptions_user">
+Login as a <strong>new user</strong> with personal alias and space with predefined complex changes.</label></p>
       <br>
+      <p class="radiotext">     
+        <input type="radio" name="useroptions" id="useroptions_clean" value="user-clean" class="loginopt">
+        <label for="useroptions_clean">
+        Login as a <strong>new user</strong> with personal alias and totally clean space. </label></p>
+      <br>
+      
       <p class="radiotext">
-        <input type="radio" name="useroptions" value="user-clean" class="loginopt">
-        Login as a <b>registered user</b> with personal alias and totally clean space.</p>
+         
+        <input type="radio" name="useroptions" id="useroptions_registered" value="reg-user" class="loginopt">
+        <label for="useroptions_registered">
+        Login as a <strong>registered user</strong>.</label></p>
+         
       <br>
+      
         <div id="user_text"></div>
  
         <input type="button" value="Login" onclick="checkUser($('#username').val(),$('input[name=useroptions]:checked').val());">

@@ -2,8 +2,8 @@
  *
  * @author Ioannis Chrysakis (hrysakis@ics.forth.gr)
  */
-var loadingimg = "<center><img id=\"loading\" src=\"images/loadingAnimation.gif\"></center>";
-var loadingimg = "<center><img id=\"loading\" src=\"images/loadingAnimation.gif\"></center>";
+var loadingimg = "<center><img id=\"loading\" alt=\"loading\" src=\"images/loadingAnimation.gif\"></center>";
+
 
 //Retrieve parameters from url when passed through iframe
 function getURLParameters(paramName) {
@@ -29,23 +29,39 @@ function getContextPath() {
 
 
 //Displays main warnings to the user
-function showDialog(id, msg)
+function showJSON(id, msg)
 
 {
+ 
+    $("#" + id).text(msg.slice(1,-1)); 
+    //JCH-Note: SOS ebala text anti gia html gia na mhn mou xalaei ta URIS
+    // to slice(1,-1) afairei prwto kai telutaio xarakthra (')
+    
+    $("#" + id).dialog(
+    {
+        title: 'JSON Representation',
+        modal: true,
+        width: 600
 
+    });
+}
+
+
+//Displays main warnings to the user
+function showDialog(id, msg)
+{
     $("#" + id).html(msg);
     $("#" + id).dialog(
-            {
-                title: 'Warning',
-//position: ['center', 'right'],
-                modal: true
-//background: '#ff0000'
-//dialogClass: 'ui-dialog-osx'
-//position: ['center', 'right'],
-//height: 150,
-//width: 350
-
-            });
+    {
+        title: 'Warning',
+        //position: ['center', 'right'],
+        modal: true
+        //background: '#ff0000'
+        //dialogClass: 'ui-dialog-osx'
+        //position: ['center', 'right'],
+        //height: 150,
+        //width: 350
+     });
 }
 
 //Displays warnings on top mainly in the case of visualization
@@ -54,12 +70,12 @@ function showTopDialog(id, msg)
 {
     $("#" + id).html(msg);
     $("#" + id).dialog(
-            {
-                title: 'Warning',
-                position: ['top'],
-                of: window,
-                modal: true
-            });
+    {
+        title: 'Warning',
+        position: ['top'],
+        of: window,
+        modal: true
+    });
 }
 
 //Normalizes a javascript array and convert it to string

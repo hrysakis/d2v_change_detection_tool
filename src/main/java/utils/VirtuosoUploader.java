@@ -34,7 +34,7 @@ public class VirtuosoUploader {
      * @param prop the properties file containing configuration parameters
      * @param datasetURI the specified dataset URI
      * @param user the username used for creating separate names graphs inside store
-     * @throws Exception 
+     * @throws Exception in case of a generic exception
      */
     public VirtuosoUploader(Properties prop, String datasetURI, String user) throws Exception {
         if(datasetURI.endsWith("/")){ //removes last slash
@@ -69,9 +69,9 @@ public class VirtuosoUploader {
 
     /**
      * Ingests a dataset version to Virtuoso from a file path with specified label and version number.
-     * @param datasetVersionFilePath
-     * @param versionNumber
-     * @param datasetVersionLabel
+     * @param datasetVersionFilePath the dataset version filepath
+     * @param versionNumber the version number
+     * @param datasetVersionLabel the version label
      * @return true on successful ingest otherwise it returns false
      */
     public boolean insertDatasetVersion(String datasetVersionFilePath, String versionNumber, String datasetVersionLabel) {
@@ -128,13 +128,14 @@ public class VirtuosoUploader {
     private void customCompare(Properties prop, String datasetURI, String changes_ontology_schema, String[] scarray, String[] ccarray, String vold, String vnew, boolean tempOntology) {
         ChangesManager cManager;
         String changesOntology;
+        String simpleChangesFolder = prop.getProperty("Simple_Changes_Folder");
 
         try {
             cManager = new ChangesManager(prop, datasetURI, vold, vnew, tempOntology);
             changesOntology = cManager.getChangesOntology();
             cManager.terminate();
             SCDUtils scd = new SCDUtils(prop, changesOntology, changes_ontology_schema, datasetURI, null);
-            scd.customCompareVersions(vold, vnew, scarray, ccarray);
+            scd.customCompareVersions(simpleChangesFolder,vold, vnew, scarray, ccarray);
         } catch (Exception ex) {
             System.out.println("customCompare Exception:"+ex.getMessage());
         }
@@ -203,6 +204,7 @@ public class VirtuosoUploader {
             Properties  propertiesFile = new Properties();
             InputStream inputStream = new FileInputStream(propertiesFilepath);
             propertiesFile.load(inputStream);
+            inputStream.close();
             String dataset ="http://DataMarkNS"; //without username (guest,user1 etc)
             VirtuosoUploader virtuosoUploader = new VirtuosoUploader(propertiesFile,datasetURI, "guest");
             virtuosoUploader.deleteDataset(propertiesFile,datasetURI,true,true);

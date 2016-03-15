@@ -3,6 +3,7 @@ package servlets;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import javax.servlet.ServletContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,13 +22,18 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 public class UploadFile extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    //private final String UPLOAD_DIRECTORY = "C:/Files/";
-    private final String UPLOAD_DIRECTORY = "C:/Users/hrysakis/WORK/DIACHRON/DEV/D2VBeta/web/Files";
+    private String UPLOAD_DIRECTORY = "";
 
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-
+        
+        ServletContext servletContext = getServletContext();
+        
+        String genericConfigFilePath = OntologyQueryServlet.getConfigFilePath(servletContext, null);
+        UPLOAD_DIRECTORY = OntologyQueryServlet.getPropertyFromFile(genericConfigFilePath, "Dataset_Files_Folder");
+        String filePathname = "";
+        String contextPath = servletContext.getRealPath("/");
         // process only if its multipart content
         if (isMultipart) {
             // Create a factory for disk-based file items
@@ -42,11 +48,13 @@ public class UploadFile extends HttpServlet {
                 for (FileItem item : multiparts) {
                     if (!item.isFormField()) {
                         String name = new File(item.getName()).getName();
-                        item.write(new File(UPLOAD_DIRECTORY + File.separator + name));
+                        //Since I use contextPath in file local paths are supported
+                        filePathname = contextPath + UPLOAD_DIRECTORY + File.separator + name;
+                        item.write(new File(filePathname));
                     }
                 }
             } catch (Exception e) {
-                System.out.println("File upload failed");
+                System.out.println("File upload failed!");
             }
         }
     }

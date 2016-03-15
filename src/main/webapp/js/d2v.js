@@ -16,6 +16,8 @@ var cclist = ''; //keeps the list of selected complex changes
 var username; //keeps the username
 var userDatasetURI; //keeps the specified dataset URI for a user
 var userChangesOntology;//keeps the specified changes ontology for a user
+var paramNames = [];   //keeps a list of complex change parameter names
+var json_string; //keeps the json string that represents the sparql query for each complex change 
 
 function createCCTables(on_edit, prev_ccname, selectedtd) {//called on save advanced definition option (link) or on edit advanced definition
     resetTables();
@@ -32,29 +34,29 @@ function createCCTables(on_edit, prev_ccname, selectedtd) {//called on save adva
                 "<td width=\"236\">\n" +
                 "\n" +
                 "\n" +
-                "<p>Name*:</p>\n" +
+                "<p><label for=\"cc_name\">Name*:</label></p>\n" +
                 "<p>\n" +
                 " <input class=\"input-ext\" name=\"cc_name\" id=\"cc_name\" type=\"text\">\n" +
                 "</p>\n" +
-                "<p>Priority*:</p>\n" +
+                "<label for=\"priority\"><p>Priority*:</label></p>\n" +
                 "<p>\n" +
                 "\n" +
                 "<input class=\"input-ext\" name=\"priority\" id=\"priority\" type=\"text\">\n" +
                 "</p> \n" +
                 "<div id=\"sc-combo\">\n" +
-                "<p>\n" +
-                "Assign Simple Change</p>\n" +
+                "<p><label for=\"assigned_sc\">\n" +
+                "Assign Simple Change</label></p>\n" +
                 "<select class=\"select-ext\" name=\"assigned_sc\" id=\"assigned_sc\">\n" +
                 "</select>\n" +
                 "<input class=\"AddRemoveButton\" type=\"button\" onclick=\"addSCBlock(false,'')\" name=\"addSC\" value=\"+\">\n" +
                 "</div>\n" +
                 "<div id=\"cc-param\">" +
-                "<p>Parameter*:\n" +
-                "</p> \n" +
+                "<p><label for=\"ccparam\">Parameter*:\n" +
+                "</label></p> \n" +
                 "<input class=\"input-ext\" name=\"ccparam\" id=\"ccparam\" type=\"text\">\n" +
                 "<input id=\"addparambutton\" class=\"AddRemoveButton\" type=\"button\" onclick=\"addExtCCParams(false)\" name=\"add\" value=\"+\">\n" +
-                "<p>Description:\n" +
-                "</p> \n" +
+                "<label for=\"cc_desc\"><p>Description:\n" +
+                "</label></p> \n" +
                 "<textarea rows=\"4\" class=\"input-ext\" id=\"cc_desc\" name=\"cc_desc\" cols=\"50\"></textarea>\n" +
                 "</div>\n" +
                 "</tr>\n" +
@@ -71,7 +73,9 @@ function createCCTables(on_edit, prev_ccname, selectedtd) {//called on save adva
                 "<tbody><tr>\n" +
                 "<th>Parameters</th></tr><tr>\n" +
                 "<td>\n" +
-                "<div id=\"params-filters\">\n" + // edw tha mpei o kwdikas gia to - paramaters
+                "<div id=\"params-filters\">\n" +
+                "</div>" +
+                "<div id=\"update-params-btn\">\n" +
                 "</div>" +
                 "</tr>\n" +
                 "<tr>\n" +
@@ -101,10 +105,12 @@ function createCCTables(on_edit, prev_ccname, selectedtd) {//called on save adva
                 "</tr>\n" +
                 "</tbody></table>";
 
-        var sbutton = "<input name=\"saveExtButton\" id=\"saveExtButton\" class=\"largebutton\" value=\"Save\" onclick=\"saveExtCCDef(" + on_edit + "," + "'" + prev_ccname + "'" + ")\" type=\"submit\">\n";
-        var rbutton = "<input name=\"resetExtButton\" id=\"resetExtButton\" class=\"largebutton\" value=\"Reset\" onclick=\"resetTables()\" type=\"button\">\n";
+        var sbutton = "<input name=\"saveExtButton\" id=\"saveExtButton\" class=\"largebutton button\" value=\"Save\" onclick=\"saveExtCCDef(" + on_edit + "," + "'" + prev_ccname + "'" + ")\" type=\"submit\">\n";
+        var rbutton = "<input name=\"resetExtButton\" id=\"resetExtButton\" class=\"largebutton button\" value=\"Reset\" onclick=\"resetTables()\" type=\"button\">\n";
+        var viewQdiv = "<div id=\"viewQ\" class=\"inside\"></div>";
 
-        var final_html = basics_html + init_param_html + init_vfliters_html + sbutton + rbutton;
+
+        var final_html = basics_html + init_param_html + init_vfliters_html + sbutton + rbutton + viewQdiv;
         resetTables();
         $('#cc_types').html(final_html);
 
@@ -128,7 +134,7 @@ function addVerFilterBlock() {
 function getVerFilterHTML() {
     var html =
             "<div class=\"vfilter\" id=\"vfilter" + vfno + "\">\n" +
-            "<span class=\"span_vf_labels\"> Subject </span> <span class=\"span_vf_labels\"> Predicate </span> <span class=\"span_vf_labels\"> Object </span> <span class=\"span_vf_labels\"> Appearance </span></p>" +
+            "<span class=\"span_vf_labels\"><label for=\"vfilsub" + vfno + "\"> Subject </label> </span> <span class=\"span_vf_labels\"> <label for=\"vfilprop" + vfno + "\"> Predicate </label> </span> <span class=\"span_vf_labels\"> <label for=\"vfilobj" + vfno + "\"> Object </label> </span> <span class=\"span_vf_labels\"> <label for=\"appear" + vfno + "\"> Appearance </label></span></p>" +
             "<select style=\"width:100px; float: left;\" onchange=\"this.nextElementSibling.value=this.value; this.nextElementSibling.title=this.value;\" name=\"vfilsub" + vfno + "\" id=\"vfilsub" + vfno + "\" class=\"dynamic_combo vfilter_row" + "\">" +
             "<input onchange=\"this.title=this.value;\" id=\"vsub_text" + vfno + "\" style=\"width: 80px; margin-left: -99px; margin-top: 1px; border: none; float: left;\" class=\"vfilter_row" + "\"/>" +
             "</select>\n" +
@@ -145,7 +151,7 @@ function getVerFilterHTML() {
             "<option title=\"Not exists in New Version\" value=\"NOT_EXISTS_IN_V2\">Not in Vnew</option>" +
             "<option title=\"Not exists in Old Version\" value=\"NOT_EXISTS_IN_V1\">Not in Vold</option>" +
             "</select>\n" +
-            "<input class=\"AddRemoveButton\" type=\"button\" id=\"vbut" + vfno + "\" value=\"+\" onclick=\"addVerFilterBlock()\">\n";
+            "<label for=\"vsub_text" + vfno + "\" class=\"hidden\">''</label><label for=\"vprop_text" + vfno + "\"class=\"hidden\">''</label><label for=\"vobj_text" + vfno + "\"class=\"hidden\">''</label><input class=\"AddRemoveButton\" type=\"button\" id=\"vbut" + vfno + "\" value=\"+\" onclick=\"addVerFilterBlock()\">\n";
     return html;
 }
 
@@ -176,7 +182,7 @@ function addSCBlock(on_edit, selected_change, sc_uri, sel_filters, join_filters,
 
         selected_change_alt_name = "_" + scno + "_" + selected_change;
         //alert('scno'+scno);
-        var pbuttonID = "plusbutton" + scno + selected_change_alt_name;
+        var pbuttonID = "plusbutton" + sfno + selected_change_alt_name;
         //JCH: div ids cannot contains : for this reason we use the selected_change_alt_name instead of selected_change_full_name
 
 
@@ -197,7 +203,7 @@ function addSCBlock(on_edit, selected_change, sc_uri, sel_filters, join_filters,
         }
 
         var filters_html =
-                "<div class=\"scblock\" id=\"" + selected_change_alt_name + "\"><table border=\"1\" cellpadding=\"10\" width=\"420\">\n" +
+                "<label for=\"" + joinfilterID2 + "\" class=\"hidden\">''</label><div class=\"scblock\" id=\"" + selected_change_alt_name + "\"><table border=\"1\" cellpadding=\"10\" width=\"420\">\n" +
                 " <tbody><tr>\n" +
                 "<th class=\"simplechangeclass\">" + selected_change_full_name + "</th>" +
                 "<input class=\"AddRemoveButton\" type=\"button\" onclick=\"deleteSCBlock('" + selected_change_alt_name + "')\" value=\"-\" style=\"float: right;\">\n" +
@@ -206,7 +212,7 @@ function addSCBlock(on_edit, selected_change, sc_uri, sel_filters, join_filters,
                 "\n" +
                 "<div>\n" +
                 "<div id=\"join_filters" + selected_change_alt_name + "\">" +
-                "<p>Join Filter</p>\n" +
+                "<p><label for=\"" + joinfilterID1 + "\">Join Filter</label></p>\n" +
                 join_combo1 +
                 "    <option value=\"\"></option>\n" +
                 "    <option value=\"Select a parameter\">Select a parameter</option>\n" +
@@ -218,19 +224,19 @@ function addSCBlock(on_edit, selected_change, sc_uri, sel_filters, join_filters,
                 + join_add_button +
                 "</div>\n" +
                 "<div id=\"sel_filters" + selected_change_alt_name + "\">" +
-                "<p>Selection Filter</p>\n" +
+                "<p><label for=\"" + selfilterID + "\">Selection Filter</label></p>\n" +
                 "<select onchange=\"this.title=this.value;\" style=\"width:140px\" name=\"select_combo" + scno + "\" id=\"" + selfilterID + "\" class=\"select_combo" + selected_change_alt_name + "\">\n" +
                 "<option value=\"\"></option>\n" +
                 "<option value=\"Select a parameter\">Select a parameter</option>\n" +
                 "</select>\n" +
-                "<input onchange=\"this.title=this.value;\" style=\"width:180px\" name=\"select_tvalue" + scno + "\" id=\"" + selvalueID + "\" type=\"text\" class=\"smallsize select_combo" + selected_change_alt_name + "\">\n" +
+                "<label for=\"" + selvalueID + "\" class=\"hidden\">''</label><input onchange=\"this.title=this.value;\" style=\"width:180px\" name=\"select_tvalue" + scno + "\" id=\"" + selvalueID + "\" type=\"text\" class=\"smallsize select_combo" + selected_change_alt_name + "\">\n" +
                 "<input class=\"AddRemoveButton\" type=\"button\" value=\"+\" onclick=\"addSelFilterBlock('" + selected_change + "'" + "," + "'" + selected_change_alt_name + "'" + "," + "'" + selected_change_full_name + "'" + ")\">\n" +
                 remove_button +
                 "</div>\n" +
                 "</div>\n" +
                 "<br>" +
                 "<p>" +
-                "<input name=\"" + selected_change_full_name + "\" id=\"" + "" + optionalID + "\" type=\"checkbox\" class=\"optionalclass\">Optional Detection" +
+                "<input name=\"" + selected_change_full_name + "\" id=\"" + "" + optionalID + "\" type=\"checkbox\" class=\"optionalclass\"><label for=\"" + optionalID + "\">Optional Detection</label>" +
                 "</p>" +
                 "</tr>\n" +
                 "<tr>\n" +
@@ -335,7 +341,7 @@ function retrieveSCFilter(selected_change, selected_change_alt_name, selected_ch
                 //JCH: ebal trim giati sto Ideagarden oi times erxotan me kena
 
                 $('#' + comboID).val(combo_val.trim());
-                console.log("Setting to:" + comboORtextID + "|val|" + comboORtext_val + "|");
+                //console.log("Setting to:" + comboORtextID + "|val|" + comboORtext_val + "|");
                 //alert("Setting to:" + comboORtextID + "|val|" + comboORtext_val + "|");
                 //alert( $('#' + comboORtextID).html());
                 $('#' + comboORtextID).val(comboORtext_val.trim());
@@ -362,12 +368,13 @@ function addJoinFilterBlock(selected_change, selected_change_alt_name, selected_
     var joinfilterID1 = "join_combo" + jfno + selected_change_alt_name;
     var joinfilterID2 = "join_combo2" + jfno + selected_change_alt_name;
     var selfilterID = "select_combo" + sfno + selected_change_alt_name;
-    var pbuttonID = "plusbutton" + jfno + selected_change_alt_name;
+    var jpno = jfno + 1;
+    var pbuttonID = "plusbutton" + jpno + selected_change_alt_name;
 
     var remove_button = "<input class=\"AddRemoveButton\" type=\"button\"  name=\"removeSJF\" value=\"-\" onclick=\" $(this).parent().remove(); disableLastJoinFilter();\">";
     var join_add_button = "<input class=\"AddRemoveButton\" type=\"button\" id=\"" + pbuttonID + "\" value=\"+\" onclick=\"addJoinFilterBlock('" + selected_change + "'" + "," + "'" + selected_change_alt_name + "'" + "," + "'" + selected_change_full_name + "'" + ")\">\n" + remove_button;
-    var join_combo_left = "<select onchange=\"this.title=this.value;\" style=\"width:140px\" name=\"join_combo" + jfno + "\" id=\"" + joinfilterID1 + "\" class=\"join_combo" + selected_change_alt_name + "\">\n";
-    var join_combo_right = "<select onchange=\"this.title=this.value;\" style=\"width:180px\" name=\"join_combo2" + jfno + "\" id=\"" + joinfilterID2 + "\" class=\"join_combo" + selected_change_alt_name + " dynamic_combo" + "\">\n";
+    var join_combo_left = "<label for=\"" + joinfilterID1 + "\" class=\"hidden\">''</label><select onchange=\"this.title=this.value;\" style=\"width:140px\" name=\"join_combo" + jfno + "\" id=\"" + joinfilterID1 + "\" class=\"join_combo" + selected_change_alt_name + "\">\n";
+    var join_combo_right = "<label for=\"" + joinfilterID2 + "\" class=\"hidden\">''</label><select onchange=\"this.title=this.value;\" style=\"width:180px\" name=\"join_combo2" + jfno + "\" id=\"" + joinfilterID2 + "\" class=\"join_combo" + selected_change_alt_name + " dynamic_combo" + "\">\n";
     var join_filter_html = "<div><p>Join Filter</p>\n" +
             join_combo_left +
             "    <option value=\"\"></option>\n" +
@@ -402,12 +409,12 @@ function addSelFilterBlock(selected_change, selected_change_alt_name, selected_c
     var selTvalueID = "select_tvalue" + sfno + selected_change_alt_name;
 
 
-    var sel_filter_html = "<div><p>Selection Filter</p>\n" +
+    var sel_filter_html = "<div><p><label for=\"" + selfilterID1 + "\">Selection Filter</label></p>\n" +
             "  <select onchange=\"this.title=this.value;\" style=\"width:140px\" name=\"" + selfilterID1 + "\" id=\"" + selfilterID1 + "\" class=\"select_combo" + selected_change_alt_name + "\">\n" +
             "    <option value=\"\"></option>\n" +
             "    <option value=\"Select a parameter\">Select a parameter</option>\n" +
             "  </select>\n" +
-            "<input onchange=\"this.title=this.value;\" style=\"width:180px\" name=\"" + selTvalueID + "\" id=\"" + selTvalueID + "\" type=\"text\" class=\"smallsize select_combo" + selected_change_alt_name + "\">\n" +
+            "<label for=\"" + selTvalueID + "\" class=\"hidden\">''</label><input onchange=\"this.title=this.value;\" style=\"width:180px\" name=\"" + selTvalueID + "\" id=\"" + selTvalueID + "\" type=\"text\" class=\"smallsize select_combo" + selected_change_alt_name + "\">\n" +
             "<input class=\"AddRemoveButton\" type=\"button\" value=\"+\" onclick=\"addSelFilterBlock('" + selected_change + "'" + "," + "'" + selected_change_alt_name + "'" + "," + "'" + selected_change_full_name + "'" + ")\">\n" +
             "<input class=\"AddRemoveButton\" type=\"button\"  name=\"removeSF\" value=\"-\" onclick=\" $(this).parent().remove()\"></div>";
 
@@ -606,6 +613,7 @@ function addExtCCParams(on_edit, param_name, param_value) {
             $('#ccparam').val(''); //clear the new param
             updateDynamicCombos(false, on_edit);
         }
+        addUpdateParamButton();
     }
     else { // on edit
         //alert(param_value);
@@ -620,7 +628,7 @@ function addExtCCParams(on_edit, param_name, param_value) {
     }
 
 //checkExtMandatoryFields (ccName, ccPriority);
-
+    paramNames.push(param_name);
 }
 
 function getParamHTML(schange, param_name, param_value) {
@@ -636,10 +644,10 @@ function getParamHTML(schange, param_name, param_value) {
     //todo check how to set values and to fetch at once all other values
     //console.log("name/value"+param_name+"/"+param_value);
     var param_html =
-            "<div id=\"div_param_" + paramno + "\"><span class=\"span_param_labels\"> Parameter </span>" +
-            "<span class=\"span_param_labels\"> Value:</span>\n" +
+            "<div id=\"div_param_" + paramno + "\"><span class=\"span_param_labels\"><label for=\"param_name" + paramno + "\"> Parameter </label> </span>" +
+            "<span class=\"span_param_labels\"> <label for=\"param_filter" + paramno + "\"> Value:</label></span>\n" +
             "<input style=\"width:200px\" name=\"param_name" + paramno + "\" id=\"param_name" + paramno + "\" type=\"text\" class=\"smallsize paramnames\" value=\"" + param_name + "\">\n" +
-            " <select class=\"dynamic_combo\" style=\"width:200px\" id=\"param_filter" + paramno + "\" name=\"" + schange + "\">\n" +
+            "<select class=\"dynamic_combo\" style=\"width:200px\" id=\"param_filter" + paramno + "\" name=\"" + schange + "\">\n" +
             selected_op_val +
             " </select>\n" +
             removeBtn +
@@ -667,13 +675,15 @@ function checkUniqueParamName(paramname) {
 
 function buildCCTypeMenu(selectedtd) { //called in create change option (link)
     resetTables();
+    var js_json = "<script type=\"text/javascript\" src=\"js/jquery.form.js\" ></script>\n" + "<script src=\"js/jsonFileUploadScript.js\"></script>";
+
     $('.clickbuttons1').removeClass('fillmarktd');
     $(selectedtd).addClass('fillmarktd');
 
     if (checkDataset()) {
         var html_code = "<table width=\"178\" cellspacing='0' class=\"inside\"> <!-- cellspacing='0' is important, must stay -->\n" +
                 "    <tr>\n" +
-                "	  <th width=\"174\">Complex change type</th></tr>\n" +
+                "	  <th width=\"174\">1.Define by using a template of type</th></tr>\n" +
                 "    \n" +
                 "<tr>\n" +
                 "  <td class=\"clickable  clickbuttons2\" onclick=\"getSimpleChangesTemplates('add',this);\"><a href=\"#\"><div class=\"menu\">Addition</div><!--img src=\"images/add.png\" width=\"27\" height=\"27\" /--></a></td></tr>\n" +
@@ -684,26 +694,54 @@ function buildCCTypeMenu(selectedtd) { //called in create change option (link)
                 "  <td class=\"clickable  clickbuttons2\" onclick=\"getSimpleChangesTemplates('edit', this);\"><a href=\"#\"><div class=\"menu\">Update</div><!--img src=\"images/edit.png\" width=\"27\" height=\"27\" /--></a></td></tr>\n" +
                 "\n" +
                 "</table>\n";
-        $('#cc_menu').html(html_code);
+
+
+        var json_code = "<div id=\"jsonf\"><table width=\"178\" cellspacing='0'> <!-- cellspacing='0' is important, must stay -->\n" +
+                "    <tr>\n" +
+                "	  <th width=\"174\">2. Define by using a JSON format</th></tr>\n" +
+                "<tr><td>" +
+                "<label for=\"myfile2\">Upload JSON:</label><form class=\"uploadform2\" id=\"UploadForm2\" action=\"UploadFile\" method=\"post\"\n" +
+                "		enctype=\"multipart/form-data\">\n" +
+                "		<input type=\"file\" size=\"60\" id=\"myfile2\" name=\"myfile2\"> <input\n" +
+                "			type=\"submit\" value=\"Upload\">\n" +
+                "\n" +
+                "		<div id=\"message2\"></div>\n" +
+                "	</form><br>" +
+                "<label for=\"jsonstring\">Or enter the JSON definition here:</label><textarea id=\"jsonstring\" rows=\"8\" cols=\"70\"></textarea>" +
+                "<br><br><input type=\"button\" class=\"Button\" value=\"Save\" onclick=\"saveCCDefByJSON();\">" +
+                "</td></tr>" +
+                "</table>" +
+                "</div>\n";
+
+
+        $('#cc_menu').html(js_json + html_code + json_code);
+
+
+
+
+
     }
 }
 
 function showCredits() {
     var copyright =
-            "<table border=\"1\" cellpadding=\"10\" width=\"500\">\n" +
+            "<table border=\"1\" cellpadding=\"10\" width=\"550\">\n" +
             "<tr>\n" +
-            "<td>\n" +
+            "<td style=\"text-align:justify\">\n" +
             "\n" +
             "\n" +
-            "<p><b>Copyright 2015, FORTH-ICS, All Rights Reserved</b></p>\n" +
-            "<br><p>\n" +
-            "<i>D2V: A Tool for Defining, Detecting and Visualizing Changes on the Data Web</i>" + "<br><br>" +
-            "Yannis Roussakis, Ioannis Chrysakis, Kostas Stefanidis and Giorgos Flouris." + "<br>" +
+            "<img alt=\"forth\" src=\"images/forth_logo.png\" align=\"left\" width=\"60\" height=\"60\">" +
+            "<strong><p align=\"center\">Copyright 2015, FORTH-ICS, All Rights Reserved.<br></p></strong>\n" +
+            "<strong>Yannis Roussakis, Ioannis Chrysakis, Kostas Stefanidis and Giorgos Flouris.</strong>" + "<br>" +
+            "<strong>Foundation for Research and Technology Hellas, Institute of Computer Science.</strong>" +
             "</p>\n" +
-            "<!--img src=\"images/title.png\"-->" +
             "<br>" +
-            "<p><a target=\"blank\" href=\"video.html\">Click here</a> for a click here for a video showing the basic functionalities.</p>" +
-            "<br><p> More information and details can be found at the <a target=\"blank\" href=\"http://arxiv.org/pdf/1501.02652.pdf\">extended paper</a>.</p>" +
+            "<br><p><a target=\"blank\" href=\"video.html\">Click here</a> for a <strong>video</strong> showing the basic functionalities.</p>" +
+            "<br><p> More details can be found at the following <strong>publications</strong>:<br><br>\n\
+            <ul><li>Yannis Roussakis, Ioannis Chrysakis, Kostas Stefanidis, Giorgos Flouris, Yannis Stavrakas. \"A Flexible Framework for Understanding the Dynamics of Evolving RDF Datasets\". In Proceedings of the 14th International Semantic Web Conference (ISWC-15), 2015. Best Student Research Paper Award. <a target=\"blank\" href=\"http://users.ics.forth.gr/~hrysakis/papers/iswc15\">[pdf]</a> </li> \n\
+            <li>Yannis Roussakis, Ioannis Chrysakis, Kostas Stefanidis, Giorgos Flouris. \"D2V: A Tool for Defining, Detecting and Visualizing Changes on the Data Web\". In Proceedings of the 14th International Semantic Web Conference, Posters and Demonstrations Track (ISWC-15), 2015. <a target=\"blank\" href=\"http://users.ics.forth.gr/~hrysakis/papers/iswc15Demo.pdf\">[pdf]</a></li></p>" +
+            "</ul>" +
+            "<br><p>For any information about the D2V system please contact <strong>Ioannis Chrysakis</strong> via e-mail: hrysakis@ics.forth.gr</p>" +
             "</tr>\n" +
             "</tbody></table>\n";
 
@@ -719,9 +757,9 @@ function showDatasetOptions() {
             "      <th width=\"174\">Manage datasets</th>\n" +
             "    </tr>\n" +
             "    <tr>\n" +
-            "      <td width=\"150\"><p>Choose action:</p>\n" +
+            "      <td width=\"150\"><p><label for=\"dsoptions-init" + "\">Choose action:</label></p>\n" +
             "        <div class=\"ds_actions\">\n" +
-            "          <select name=\"dsoptions\" id=\"dsoptions\" onchange=\"retrieveDatasetOptions(this.value);\" >\n" +
+            "          <select name=\"dsoptions\" id=\"dsoptions-init\" onchange=\"retrieveDatasetOptions(this.value);\" >\n" +
             "            <option value=\"nop\"></option>\n" +
             "            <option value=\"add\">Add new dataset</option>\n" +
             "            <option value=\"addversion\">Add version to dataset</option>\n" +
@@ -744,8 +782,9 @@ function showDatasetOptions() {
 
 
 function includeUploadScripts() {
-    var html = "<script src=\"js/jquery.form.js\" ></script>\n" +
-            "<script src=\"js/fileUploadScript.js\" ></script>    ";
+    var html = "<script type=\"text/javascript\" src=\"js/jquery.form.js\" ></script>\n" +
+            "<script type=\"text/javascript\" src=\"js/dsVersionUploadScript.js\"></script>    " +
+            "<script type=\"text/javascript\" src=\"js/configFileUploadScript.js\"></script>    ";
     return html;
 }
 
@@ -753,12 +792,13 @@ function retrieveDatasetOptions(value) {
 
     var up_str = includeUploadScripts();
     var html_str = "";
-    var html_ds = " <p>Choose dataset*:</p><select name=\"choose_dataset\" id=\"choose_dataset\">\n" + " </select>";
+    var html_ds = " <p><label for=\"choose_dataset" + "\">Choose dataset*:</label></p><select name=\"choose_dataset\" id=\"choose_dataset\">\n" + " </select>";
+    var config_str = "";
+    var addbtn_str = "<input type=\"button\" class=\"Button\" value=\"Add\" onclick=\"addDataset(true);\">\n";
 
-
-
-    var upload_str = "<p>Enter dataset version label*:</p><input name=\"dvlabel\" id=\"dvlabel\" type=\"text\"/>" + "<p>\n\
-<br> Upload dataset version from disk*:<form class=\"uploadform\" id=\"UploadForm\" action=\"UploadFile\" method=\"post\"\n" +
+    var upload_str = "<p><label for=\"dvlabel\">Enter dataset version label*:</label></p><input name=\"dvlabel\" id=\"dvlabel\" type=\"text\"/>" + "<p>\n\
+<br> <label for=\"myfile\">Upload dataset version from disk*:</label></p>\n\
+<form class=\"uploadform\" id=\"UploadForm\" action=\"UploadFile\" method=\"post\"\n" +
             "		enctype=\"multipart/form-data\">\n" +
             "		<input type=\"file\" size=\"60\" id=\"myfile\" name=\"myfile\"> <input\n" +
             "			type=\"submit\" value=\"Upload\">\n" +
@@ -772,16 +812,25 @@ function retrieveDatasetOptions(value) {
             "		<div id=\"message\"></div>\n" +
             "	</form>";
 
+
     //alert(value);
     $('#dsmore').html('');
     $('#dsversions').html('');
     if (value === 'add') {
         //JCH:Note to fullpath den douleuei ston Firefox gia input type file (security issue)
         html_str = "<br>\n" +
-                "<p>Enter dataset label*</p><input name=\"dlabel\" id=\"dlabel\" type=\"text\"/>" + "<br><br>" +
-                upload_str +
-                "<input type=\"button\" class=\"Button\" value=\"Add\" onclick=\"addDataset(true);\">\n";
-        $('#dsmore').html(html_str + up_str);
+                "<p><label for=\"dlabel\">Enter dataset label*</label></p><input name=\"dlabel\" id=\"dlabel\" type=\"text\"/>" + "<br><br>" +
+                upload_str;
+        config_str = "<label for=\"myfile2\">Upload custom configuration file for this dataset from disk:</label><br><br>" +
+                //fetch from second form and respective script
+                "<form class=\"uploadform2\" id=\"UploadForm2\" action=\"UploadFile\" method=\"post\"\n" +
+                "		enctype=\"multipart/form-data\">\n" +
+                "		<input type=\"file\" size=\"60\" id=\"myfile2\" name=\"myfile2\"> <input\n" +
+                "			type=\"submit\" value=\"Upload\">\n" +
+                "\n" +
+                "		<div id=\"message2\"></div>\n" +
+                "	</form><br>";
+        $('#dsmore').html(html_str + up_str + config_str + addbtn_str);
 
     }
 
@@ -800,12 +849,14 @@ function retrieveDatasetOptions(value) {
 
     else if (value === 'del') {
         html_str = "<br>\n" + html_ds + "<br><br>\n" +
-                "<input type=\"button\" class=\"Button\" value=\"OK\" onclick=\"delDataset();\">\n";
+                "<input type=\"checkbox\" id=\"delRelatedVersionsInfo\" name=\"delRelatedVersionsInfo\"><label for=\"delRelatedVersionsInfo\">Delete associated version(s) information for this dataset and from ALL users?</label><br>" +
+                "<br><input type=\"button\" class=\"Button\" value=\"OK\" onclick=\"delDataset();\">";
         getDatasetsCombo('choose_dataset');
         $('#dsmore').html(html_str);
     }
 
     else if (value === 'delversion') {
+
         html_str = "<br>\n" + html_ds + "<br><br>\n";
         getDatasetsCombo('choose_dataset');
         $('#dsmore').html(html_str);
@@ -824,14 +875,17 @@ function delVersionDataset() {
     var message = "The selected dataset version has been erased from the selected dataset.";
     var versionURI = $('input[name=version]:radio:checked').val();
     var msg = 'Please a select a version via a specified radio button, in order this version to be deleted';
+    var userDatasetLabel = $('#choose_dataset option:selected').text();
+    var deleteVersions = $("input[name='delRelatedVersionsInfo']:checked").val(); //on if selected
 
     if (versionURI === undefined || versionURI === 'undefined') {
         showDialog('dialogmsg', msg);
     }
+
     else {
         startAction(true, "actions");
 
-        $.get('ActionServlet', {action: "ds_delversion", versionURI: versionURI, selectedDatasetURI: nowdatasetURI}).done(function(responseText) {
+        $.get('ActionServlet', {action: "ds_delversion", versionURI: versionURI, selectedDatasetURI: nowdatasetURI, datasetLabel: userDatasetLabel, deleteVersions: deleteVersions}).done(function(responseText) {
             if (responseText === "success")
             {
                 finishAction();
@@ -856,43 +910,57 @@ function delDataset() {
 
     var nowchangesontology = $('#choose_dataset').val();
     var nowdatasetURI = getDatasetURI(nowchangesontology);
-
+    var userDatasetLabel = $('#choose_dataset option:selected').text();
     var message = "The selected dataset and all its assigned version(s) has been just erased.";
-    startAction(true, "actions");
+    var deleteVersions = $("input[name='delRelatedVersionsInfo']:checked").val(); //on if selected
+
+    if (nowchangesontology === '' || nowchangesontology === 'nop') {
+        showDialog('dialogmsg', "Please select a dataset from the drop down menu!");
+    }
+
+    else {
+        startAction(true, "actions");
 
 
-    $.get('ActionServlet', {action: "ds_del", selectedDatasetURI: nowdatasetURI}).done(function(responseText) {
-        if (responseText === "success")
-        {
-            finishAction();
-            displayMessage(message);
-            getDatasetsCombo('sel_dataset');
-            enableDatasetOption('sel_dataset');
 
-        }
+        $.get('ActionServlet', {action: "ds_del", selectedDatasetURI: nowdatasetURI, datasetLabel: userDatasetLabel, deleteVersions: deleteVersions}).done(function(responseText) {
+            if (responseText === "success")
+            {
+                finishAction();
+                displayMessage(message);
+                getDatasetsCombo('sel_dataset');
+                enableDatasetOption('sel_dataset');
 
-        else {
-            showDialog('dialogmsg', "<p>" + responseText + "</p>"); //error-alert on response
-            finishAction();
-        }
+            }
+
+            else {
+                showDialog('dialogmsg', "<p>" + responseText + "</p>"); //error-alert on response
+                finishAction();
+            }
 
 
-    });
-
+        });
+    }
 }
 
 function addDataset(newdataset) {
     var action = '';
     var dlabel = $('#dlabel').val();
     var dvlabel = $('#dvlabel').val();
-    var versionfile = $('#myfile').val();
+    //$('#myfile').val(); SOS: appears C:\fakepath from value
+    var versionfile = document.getElementById("myfile").files[0].name;
+
+    var configfile = $('#myfile2').val();
+    var userDatasetLabel;
 
     if (newdataset) {
         action = "ds_add";
+        userDatasetLabel = $("#dlabel").val();
     }
     else {
         action = "ds_addversion";
         dlabel = dvlabel;
+        userDatasetLabel = $('#choose_dataset option:selected').text();
     }
 
     var nowchangesontology = $('#choose_dataset').val();
@@ -903,7 +971,7 @@ function addDataset(newdataset) {
     startAction(true, "actions");
     var intuser = getURLParameters("intenrnaluser");
 
-    $.get('ActionServlet', {action: action, dslabel: dlabel, dvlabel: dvlabel, versionFilename: versionfile, intuser: intuser, selectedDatasetURI: nowdatasetURI}).done(function(responseText) {
+    $.get('ActionServlet', {action: action, dslabel: dlabel, dvlabel: dvlabel, datasetLabel: userDatasetLabel, versionFilename: versionfile, configFilename: configfile, username: intuser, intuser: intuser, selectedDatasetURI: nowdatasetURI}).done(function(responseText) {
         if (responseText === "success")
         {
             finishAction();
@@ -925,11 +993,12 @@ function addDataset(newdataset) {
 function fetchDSVersions() {
     var OKButton = "<br>\n" + "<input type=\"button\" class=\"Button\" value=\"OK\" onclick=\"delVersionDataset();\">\n";
     var changesontology = $('#choose_dataset').val();
-
+    var del_versions_box = "<input type=\"checkbox\" id=\"delRelatedVersionsInfo\" name=\"delRelatedVersionsInfo\"> <label for=\"delRelatedVersionsInfo\">Delete associated version's contents for this dataset and potentially assined in other users?</label><br>";
     var datasetURI = getDatasetURI(changesontology);
     $.get('OntologyQueryServlet', {qtype: 'versions', datasetversions: datasetURI, dataset: changesontology, valuestype: "radio"}, function(responseText) {
 
         $('#dsversions').html(responseText);
+        $('#dsversions').append(del_versions_box);
         $('#dsversions').append(OKButton);
     });
 
@@ -954,30 +1023,30 @@ function showVisionOptions(selectedtd) { //called in visualize changes option (l
     var init_buttons = "<input name=\"getvis\" id=\"getvis\" onclick=\"getVisualisations('" + init_selected_radio + "'" + "," + "'" + init_coption + "'" + "," + "'" + init_vfrom + "'" + "," + "'" + init_vto + "'" + "," + "'" + init_sclist + "'" + "," + "'" + init_cclist + "'" + "); return false; \"class=\"Button\" value=\"OK\" type=\"submit\">\n"
             + "<input name=\"clear\" class=\"Button\" value=\"Reset\" onclick=\"resetTables()\" type=\"submit\"></td>\n";
 
-    var version_combos = " <p>From version:</p>\n" +
+    var version_combos = " <p><label for=\"vfrom" + "\">From version:</label></p>\n" +
             "<div class=\"versions_combo\">\n" +
             "<select id=\"vfrom\" class=\"versions_val\">\n" +
             " </select> \n" +
             "</select></div>\n" +
-            "<p>To version:</p>\n" +
+            "<p><label for=\"vfrom" + "\">To version:</label></p>\n" +
             "<div class=\"versions_combo\">\n" +
             " <select id=\"vto\" class=\"versions_val\">\n" +
             " </select>\n" +
             " </div>\n";
 
     if (checkDataset()) {
-        var html_str = "<form id=\"visform\" name=\"visform\" method=\"post\" action=\"\"><table border=\"1\" cellpadding=\"10\" width=\"420\">\n" +
+        var html_str = "<form id=\"visform\" name=\"visform\" method=\"post\" action=\"\"><fieldset><table border=\"1\" cellpadding=\"10\" width=\"420\">\n" +
                 " <tbody><tr>\n" +
                 "<th width=\"174\">Visualization Options</th></tr><tr>\n" +
                 "<td width=\"150\"><p>\n" +
                 "  <input checked name=\"visradio\" value=\"historyradio\" id=\"historyradio\" type=\"radio\" class=\"radioclass\"/>\n" +
-                "  View evolution history\n" +
+                "  <label for=\"historyradio" + "\">View evolution history</label>\n" +
                 "  </p>\n" +
                 "<div><br><p id=\"evobetween\"><p></div>" +
                 "</td></tr><tr><td>" +
                 "  <p>\n" +
                 "  <input name=\"visradio\" value=\"compareradio\" id=\"compareradio\" type=\"radio\" class=\"radioclass\"/>\n" +
-                "  Compare custom versions\n" +
+                "  <label for=\"compareradio" + "\">Compare custom versions</label>\n" +
                 "</p>\n" +
                 "<br>" +
                 "<div id=\"vcombos\"></div>" +
@@ -993,7 +1062,7 @@ function showVisionOptions(selectedtd) { //called in visualize changes option (l
                 "\n" +
                 "</tr>\n" +
                 "</tbody></table>\n" +
-                "</form>";
+                "</fieldset></form>";
 
         resetTables();
         $('#cc_menu').html(html_str);
@@ -1229,6 +1298,7 @@ function getVisualisations(selected_radio, vfrom, vto, clist, sclist, cclist) {
     var userChangesOntology = $('#sel_dataset').val();
     var userDatasetURI = getDatasetURI(userChangesOntology);
 
+
     var display_frame = "<iframe scrolling=\"yes\" style=\"overflow:hidden;height:200%;width:1000px;\"  id=\"iframe2\" src=\"vision.html?userChangesOntology=" + userChangesOntology + "&tempontology=no" + "&sradio=" + selected_radio + "&userDatasetURI=" + userDatasetURI + "&viewtype=" + viewtype + "&vfrom=" + vfrom + "&vto=" + vto + "&clist=" + clist + "&sclist=" + sclist + "&cclist=" + cclist + "\"></iframe>";
     var temp_frame = "<iframe style=\"overflow:hidden;height:200%;width:1000px;\"id=\"iframe2\" src=\"vision.html?userChangesOntology=" + userChangesOntology + "&tempontology=yes" + "&sradio=" + selected_radio + "&userDatasetURI=" + userDatasetURI + "&viewtype=" + viewtype + "&vfrom=" + vfrom + "&vto=" + vto + "&clist=" + clist + "&sclist=" + sclist + "&cclist=" + cclist + "\"></iframe>";
     //identical to display for (evo or cc_seq case)
@@ -1265,6 +1335,8 @@ function getVisualisations(selected_radio, vfrom, vto, clist, sclist, cclist) {
 //called when I want to compare two versions and cleans tmp graph results when they are not sequential
 function initAndDetectVisualizations(v1, v2, temp_frame, display_frame, sclist, cclist, changetype) {
     var changesontology = $('#sel_dataset').val();
+    var userDatasetLabel = $('#sel_dataset option:selected').text();
+    //alert ('userDatasetLabel:'+userDatasetLabel);
     var datasetURI = getDatasetURI(changesontology);
     var vset = v1.substr(v1.lastIndexOf('/') + 1) + "-" + v2.substr(v2.lastIndexOf('/') + 1);
     var changesgraph = changesontology + "/" + vset;
@@ -1274,22 +1346,22 @@ function initAndDetectVisualizations(v1, v2, temp_frame, display_frame, sclist, 
             startAction(false, "actions");
             // alert('No need for live detection....'); //TO-CHECK THIS if we have users
             finishAction();
-         
+
             $('#cc_menu').append(display_frame);
         }
-      else {
+        else {
             {
                 startAction(true, "cc_menu"); //cc_menu previously
-                $.get('ActionServlet', {action: "initvision", userDatasetURI: datasetURI, userChangesOntology: changesontology, sclist: sclist, cclist: cclist, changetype: changetype, vold: v1, vnew: v2}).done(function(data) {
+                $.get('ActionServlet', {action: "initvision", userDatasetURI: datasetURI, datasetLabel: userDatasetLabel, userChangesOntology: changesontology, sclist: sclist, cclist: cclist, changetype: changetype, vold: v1, vnew: v2}).done(function(data) {
                     //alert( "New Detection Completed!" + data ); //JCH: load after servlet finishes
-                    //showDialog('dialogmsg',msg);
+                    //showDialog('dialogmsg',"Warning",msg);
                     finishAction();
                     $('#cc_menu').html(temp_frame);
 
                 });
 
             }
-       }
+        }
     });
 
 
@@ -1451,8 +1523,8 @@ function getDefinedCC(action, selectedtd) {
             + "<th width=\"174\">Defined Complex Changes</th></tr>\n"
             + "<tr>\n"
             + "<td colspan=\"2\">\n"
-            + "<div id=\"chboxes\"></div>"
-            + "<input type=\"submit\" name=\"clear\" class=\"Button\" value=\"Reset\" onclick=\"resetTables()\">"
+            + "<fieldset><div id=\"chboxes\"></div>"
+            + "<input type=\"submit\" name=\"clear\" class=\"Button\" value=\"Reset\" onclick=\"resetTables()\"></fieldset>"
             + "</td></tr>"
             + "</table>"
             + "</form>";
@@ -1501,7 +1573,7 @@ function getDefinedCC(action, selectedtd) {
 function editCC() {
 
     var msg = '<p>No any selected complex change!</p>';
-    var json_string;
+
     var changesontology = $('#sel_dataset').val();
     var datasetURI = getDatasetURI(changesontology);
 
@@ -1522,10 +1594,14 @@ function editCC() {
         //alert(selectedcc);
         createCCTables(true, cc_name);
         $.get('OntologyQueryServlet', {qtype: "ccjson", chname: cc_name, datasetversions: datasetURI, dataset: changesontology}, function(responseText) {
-            //alert("JSON:" + responseText);
+
             json_string = responseText;
+
+
             var obj = jQuery.parseJSON(json_string);
+
             //console.log('JSON OBJ:'+obj);
+
             if (obj !== null) {
                 cc_priority = obj.Priority;
                 cc_params = obj.Complex_Change_Parameters;
@@ -1539,6 +1615,10 @@ function editCC() {
                 retrieveSCInfo(cc_assigned_changes);
                 retrieveParamInfo(cc_params);
                 retrieveVerFilter(ver_filters);
+                //viewJSONButton
+
+                var vsparqlbytton = "<input name=\"viewJSONButton\" id=\"viewJSONButton\" class=\"qvbutton\" value=\"View JSON\" type=\"button\" onclick=\"viewJSON();\">\n";
+                $("#viewQ").append(vsparqlbytton);
             }
             else {
                 showDialog('dialogmsg', "Cannot retrieve any information!");
@@ -1548,6 +1628,13 @@ function editCC() {
 
 }
 
+
+function viewJSON() {
+    //alert(json_string);  
+    showJSON('dialogmsg', "'" + json_string + "'");
+
+
+}
 
 function retrieveSCInfo(cc_assigned_changes) {
 
@@ -1577,15 +1664,75 @@ function retrieveSCInfo(cc_assigned_changes) {
 
 function retrieveParamInfo(cc_params) {
     var param_val;
+
 //console.log(cc_params);
     for (var i = 0; i < cc_params.length; i++) {
         param_val = cc_params[i];
         for (var key in param_val) {
             //console.log(key + ": " + param_val[key]);
             addExtCCParams(true, key, param_val[key]);
+            //// paramNames.push(key);
+
         }
     }
+    addUpdateParamButton();
 
+}
+
+function addUpdateParamButton() {
+    var update_params_button = "<br><input class=\"UpdateVfiltersBtn button\" type=\"button\" onclick=\"updateParamsOnVerFilters();\" value=\"Update version filters\">";
+    $("#update-params-btn").html(update_params_button);
+}
+
+function updateParamsOnVerFilters() {
+    var currentParams = [];
+
+//Retrieving current param names
+    $(".paramnames").each(function() {
+
+        var live_val = $(this).val();
+        currentParams.push(live_val);
+    });
+
+    for (var i = 0; i < currentParams.length; i++) {
+        if (currentParams[i] !== paramNames[i]) {
+            //alert('Must replace:' +paramNames[i].toString()+" with:" +currentParams[i].toString());
+            var old_value = paramNames[i];
+            var new_value = currentParams[i];
+            paramNames[i] = new_value; //hold the newest value of user for future update
+            $('#version-filters option,#version-filters input').each(function() {
+                if (($(this).html() === old_value) || ($(this).val() === old_value)) {
+                    $(this).html(new_value);
+                    $(this).val(new_value);
+                }
+            });
+
+        }
+
+    }
+
+}
+
+function replaceall(str, replace, with_this)
+{
+    var str_hasil = "";
+    var temp;
+
+    for (var i = 0; i < str.length; i++) // not need to be equal. it causes the last change: undefined..
+    {
+        if (str[i] == replace)
+        {
+            temp = with_this;
+        }
+        else
+        {
+            temp = str[i];
+        }
+
+        str_hasil += temp;
+    }
+
+    return str_hasil;
 }
 
 function retrieveCCBasicInfo(cc_name, cc_priority, cc_desc) {
@@ -1600,6 +1747,7 @@ function deleteCC() {
     var todeleteChanges = [];
     var message = '';
     var changesontology = $('#sel_dataset').val();
+    var userDatasetLabel = $('#sel_dataset option:selected').text();
     var datasetURI = getDatasetURI(changesontology);
 
 
@@ -1621,7 +1769,7 @@ function deleteCC() {
 
 
 
-        $.get('ActionServlet', {action: "delete", userDatasetURI: datasetURI, userChangesOntology: changesontology, dellist: array_to_send}).done(function(responseText) {
+        $.get('ActionServlet', {action: "delete", userDatasetURI: datasetURI, datasetLabel: userDatasetLabel, userChangesOntology: changesontology, dellist: array_to_send}).done(function(responseText) {
 
             $('#actions').html(responseText);
             finishAction();
@@ -1649,6 +1797,8 @@ function deleteCC() {
 function getSimpleChangesTemplates(complexChangeType, selectedtd) { //called in each selection of template
     var html_code;
 
+    $('#jsonf').html('');
+
     $('.clickbuttons2').removeClass('fillmarktd');
     $(selectedtd).addClass('fillmarktd');
     if (complexChangeType === 'add') {
@@ -1658,22 +1808,17 @@ function getSimpleChangesTemplates(complexChangeType, selectedtd) { //called in 
                 "	  <th width=\"174\" colspan=\"2\">Template <br><br><p class=\"template_decr\">(The template determines a family of similar complex changes which usually differ on parameter value)</p></th></tr>" +
                 "  <tr class=\"show-option\" title=\"Use this template to define a complex change capturing the addition of a super-class on top of a selected class which is determined through a user-defined value\">\n" +
                 "    <td colspan=\"2\" class=\"clickable clickbuttons3\" onclick=\"getParamChangeVal('Add Generalization Of','subclass','add',this)\">Add Generalization Of</td>\n" +
-//"    <td width=\"20\"><input name=\"Add Generalization Of\" type=\"radio\" class=\"checkboxgroup\" value=\"subclass\"/><img class=\"bot-right\" src=\"images/info.png\" alt=\"details...\" height=\"13\" width=\"13\"></td>\n" +
                 " </tr>\n" +
                 "</a>" +
                 " <tr class=\"show-option\" title=\"Use this template to define a complex change capturing the addition of an instance of a selected property which is determined through a user-defined value\">\n" +
                 " <td colspan=\"2\" class=\"clickable clickbuttons3\" onclick=\"getParamChangeVal('Add Instance Of','property','add',this)\"> Add Property Instance Of</td>\n" +
-//"<td><input name=\"Add Instance Of\" type=\"radio\" class=\"checkboxgroup\" value=\"property\"/></td>\n"
-
                 "</td>\n" +
                 "  </tr>\n" +
                 "  <tr class=\"show-option\" title=\" Use this template to define a complex change capturing the addition of a selected type to a class which is determined through a user-defined value\">\n" +
                 " <td colspan=\"2\" class=\"clickable clickbuttons3\" onclick=\"getParamChangeVal('Add Object Of Type','type','add',this)\">Add Class Instance</td>\n" +
-//"    <td><input name=\"Add Object Of Type\" type=\"radio\" class=\"checkboxgroup\" value=\"type\"/></td>\n" +
                 "  </tr>\n" +
                 " <tr class=\"show-option\" title=\"Use this template to define a complex change capturing the addition of a sub-class on top of a selected class which is determined through a user-defined value\">\n" +
                 " <td colspan=\"2\" class=\"clickable clickbuttons3\"  onclick=\"getParamChangeVal('Add Specialization Of','superclass','add',this)\">Add Specialization Of</td>\n" +
-//"    <td><input name=\"Add Specialization Of\" type=\"radio\" class=\"checkboxgroup\" value=\"superclass\" /></td>\n" +
                 "  </tr>\n" +
                 "  <tr>\n" +
                 "   \n" +
@@ -1690,19 +1835,15 @@ function getSimpleChangesTemplates(complexChangeType, selectedtd) { //called in 
                 "	  <th width=\"174\" colspan=\"2\">Template <br><br><p class=\"template_decr\">(The template determines a family of similar complex changes which usually differ on parameter value)</p></th></tr>" +
                 "  <tr class=\"show-option\" title=\"Use this template to define a complex change capturing the detaching of a super-class from the top of a selected class which is determined through a user-defined value\">\n" +
                 " <td colspan=\"2\" class=\"clickable clickbuttons3\"  onclick=\"getParamChangeVal('Delete Generalization From','subclass','delete',this)\">Delete Generalization From</td>\n" +
-//"    <td width=\"20\"><input name=\"Delete Generalization From\" type=\"radio\" class=\"checkboxgroup\"  value=\"subclass\"/></td>\n" +
                 "  </tr>\n" +
                 "  <tr class=\"show-option\" title=\"Use this template to define a complex change capturing the deletion of an instance of a selected property which is determined through a user-defined value\">\n" +
                 " <td colspan=\"2\" class=\"clickable clickbuttons3\" onclick=\"getParamChangeVal('Delete Instance Of','property','delete',this)\">Delete Property Instance Of</td>\n" +
-//"    <td><input name=\"Delete Instance Of\" type=\"radio\" class=\"checkboxgroup\" value=\"property\"/></td>\n" +
                 "  </tr>\n" +
                 "  <tr class=\"show-option\" title=\"Use this template to define a complex change capturing the deletion of a selected type from a class which is determined through a user-defined value\">\n" +
                 " <td colspan=\"2\" class=\"clickable clickbuttons3\" onclick=\"getParamChangeVal('Delete Object Of Type','type','delete',this)\">Delete Class Instance</td>\n" +
-//"    <td><input name=\"Delete Object Of Type\" type=\"radio\" class=\"checkboxgroup\" value=\"type\"/></td>\n" +
                 "  </tr>\n" +
                 "  <tr class=\"show-option\" title=\"Use this template to define a complex change capturing the detaching of a sub-class from the top of a selected class which is determined through a user-defined value\">\n" +
                 " <td colspan=\"2\" class=\"clickable clickbuttons3\" onclick=\"getParamChangeVal('Delete Specialization From','superclass','delete',this)\">Delete Specialization From</td>\n" +
-//"    <td><input name=\"Delete Specialization From\" type=\"radio\" class=\"checkboxgroup\" value=\"superclass\" /></td>\n" +
                 "  </tr>\n" +
                 "  <tr>\n" +
                 "   \n" +
@@ -1927,11 +2068,12 @@ function saveExtCCDef(on_edit, prev_ccname) {
         var message = "The advanced definition has been saved to the ontology.";
 
         var changesontology = $('#sel_dataset').val();
+        var userDatasetLabel = $('#sel_dataset option:selected').text();
         var datasetURI = getDatasetURI(changesontology);
         startAction(true, "actions");
 
 
-        $.get('ActionServlet', {action: "saveExt", update: on_edit, userDatasetURI: datasetURI, userChangesOntology: changesontology, vfilters: rows, name: ccName, prevname: prev_ccname, schanges: assignedscnames, opt_changes: opt_changes, priority: ccPriority, ccParams: ccParams, ccDescription: ccDescription, selects: selects, joins: joins}).done(function(responseText) {
+        $.get('ActionServlet', {action: "saveExt", update: on_edit, userDatasetURI: datasetURI, datasetLabel: userDatasetLabel, userChangesOntology: changesontology, vfilters: rows, name: ccName, prevname: prev_ccname, schanges: assignedscnames, opt_changes: opt_changes, priority: ccPriority, ccParams: ccParams, ccDescription: ccDescription, selects: selects, joins: joins}).done(function(responseText) {
             if (responseText === "success")
             {
                 displayMessage(message);
@@ -1945,6 +2087,45 @@ function saveExtCCDef(on_edit, prev_ccname) {
         //end-of valid checks         
     }
 }
+
+
+function saveCCDefByJSON() {
+    var message = "The definition has been saved to the ontology.";
+    var json_str = $('#jsonstring').val();
+
+    //How to handle if parsing fails.
+    try {
+        var obj = jQuery.parseJSON(json_str);
+        var ccName = obj.Complex_Change;
+
+    }
+    catch (err) {
+        alert("JSON parsing error. Please check the json format and retry!");
+    }
+
+    //alert('ccName-------------->'+ccName);
+    startAction(true, "actions");
+    var changesontology = $('#sel_dataset').val();
+    var datasetURI = getDatasetURI(changesontology);
+
+    $.get('ActionServlet', {action: "saveByJSON", userDatasetURI: datasetURI, userChangesOntology: changesontology, name: ccName, ccJson: json_str}).done(function(responseText) {
+
+        if (responseText === "success")
+        {
+            displayMessage(message);
+
+        }
+        else {
+            showDialog('dialogmsg', "<p>" + responseText + "</p>"); //error-alert on response
+
+        }
+
+        finishAction();
+    });
+
+}
+
+
 
 //called in add definition of a complex change from template (not advanced)
 function saveCCDef() {
@@ -1961,7 +2142,7 @@ function saveCCDef() {
 
     var ccName = $('#cc_name').val();
     var ccPriority = $('#priority').val();
-
+    var userDatasetLabel = $('#sel_dataset option:selected').text();
 
     if (checkTemplateMandatoryFields(ccName, ccPriority)) {
 
@@ -1970,7 +2151,7 @@ function saveCCDef() {
         var changesontology = $('#sel_dataset').val();
         var datasetURI = getDatasetURI(changesontology);
 
-        $.get('ActionServlet', {action: "save", userDatasetURI: datasetURI, userChangesOntology: changesontology, template: ccTemplate, name: ccName, priority: ccPriority, param_value_uri: selectedURI}).done(function(responseText) {
+        $.get('ActionServlet', {action: "save", userDatasetURI: datasetURI, userChangesOntology: changesontology, datasetLabel: userDatasetLabel, template: ccTemplate, name: ccName, priority: ccPriority, param_value_uri: selectedURI}).done(function(responseText) {
 
             if (responseText === "success")
             {
@@ -1998,24 +2179,6 @@ function checkTemplateMandatoryFields(ccName, ccPriority) {
     }
     return true;
 }
-
-/*function detectCC(){ //Not used in new version
- var v1 = $('#vold').val();
- var v2 = $('#vnew').val();
- var message ="Detection completed. Click <a onclick=\"showVisionOptions()\">here</a> to visualise the results";
- 
- startAction(true); 
- $.get('ActionServlet',{action:"detect",dataset:$('#sel_dataset').val(),vold:v1,vnew:v2}).done(function(responseText) {
- 
- displayMessage(message);
- $('#actions').html(responseText);
- finishAction(); 
- });
- 
- 
- return;
- }*/
-
 
 
 function startAction(requiresDetection, messagedivID /*, optionalmessage*/) {
@@ -2074,7 +2237,7 @@ function addUser() {
 
 function checkUser(user, loginoption) {
     var msg = "Please add an alias which should be used as a username for registered users.";
-    var conflict_msg = "This user has been already registered previously with different setup space.\n Please select the correct setup space or enter a tottaly new alias.";
+    var exists_msg = "This user has been already registered previously.\n Please select a different alias.";
     if (user === '') {
         showDialog('loginmsg', msg);
     }
@@ -2084,22 +2247,21 @@ function checkUser(user, loginoption) {
         }
         username = user;
         $('#loginmsg').html(loadingimg);
-        $.get('ActionServlet', {action: 'userconflict', username: user, loginoption: loginoption}, function(responseText) {
-            //alert('userexistance'+responseText);
-            if (responseText === 'userconflict') {
-                showDialog('loginmsg', conflict_msg);
-                /*var conBox = confirm(conflict_msg+" Continue?");
-                 if(conBox){ 
-                 checkLogin(user,loginoption);
-                 }*/
-                //Set the correct space
-                if (loginoption === "user-clean") {
-                    loginoption = "user";
-                }
-                else if (loginoption === "user") {
-                    loginiption = "user-clean";
-                }
-                checkLogin(user, loginoption);
+
+        if (loginoption === "user-clean") {
+            loginoption = "user";
+        }
+        else if (loginoption === "user") {
+            loginiption = "user-clean";
+        }
+        else if (loginoption === "reg-user") {
+            loginiption = "reg-user";
+        }
+
+        $.get('ActionServlet', {action: 'userexists', username: user, loginoption: loginoption}, function(responseText) {
+
+            if (responseText === 'userexists') {
+                showDialog('loginmsg', exists_msg);
             }
             else {
 
@@ -2110,6 +2272,7 @@ function checkUser(user, loginoption) {
 
     function checkLogin(user, loginoption) {
         console.log('checkLogin user:' + user + " opt:" + loginoption);
+        var no_user_msg = "Cannot found user with this alias. Please retry or create a new one.";
 
         if (username !== "guest") {
 
@@ -2121,14 +2284,19 @@ function checkUser(user, loginoption) {
                 //alert('responseText'+responseText);
                 internal_uname = responseText;
 
-                var url = "main.jsp?username=" + user + "&loginoption=" + loginoption + "&intenrnaluser=" + internal_uname;
-                $(window.location).attr('href', url);
+                if (responseText === 'nouser') {
+                    showDialog('loginmsg', no_user_msg);
+                }
+                else
+                {
+                    var url = "main.jsp?username=" + user + "&loginoption=" + loginoption + "&intenrnaluser=" + internal_uname;
+                    $(window.location).attr('href', url);
 
-                //Adds next user if needed (Asynchronously)
-                $.get('ActionServlet', {action: 'addnextuser', intenrnaluser: internal_uname, loginoption: loginoption}, function(responseText) {
-                    //alert('addnextuser completed.......');
-                });
-
+                    //Adds next user if needed (Asynchronously)
+                    $.get('ActionServlet', {action: 'addnextuser', intenrnaluser: internal_uname, loginoption: loginoption}, function(responseText) {
+                        //alert('addnextuser completed.......');
+                    });
+                }
             });
 
         }
@@ -2158,7 +2326,7 @@ function getDatasetsCombo(divID) {//sel_dataset
 
 //checks if datasets options should be enabled via the "Options" button
 function checkDatasetOptions() {
-    var options_button = "<input class=\"OptionsButton\" type=\"button\" value=\"Options\" onclick=\"showDatasetOptions();\">";
+    var options_button = "<input class=\"OptionsButton button\" type=\"button\" value=\"Options\" onclick=\"showDatasetOptions();\">";
     $.get('OntologyQueryServlet', {qtype: 'dsoptions'}, function(responseText) {
         //alert(responseText);
         if (responseText === 'enabled') {

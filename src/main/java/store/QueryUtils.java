@@ -689,8 +689,8 @@ public class QueryUtils {
         List<String> names = new ArrayList<>();
         String query = "select ?param_name from <" + changesOntologySchema + "> where { \n"
                 + "?sc rdfs:subClassOf co:Simple_Change; \n"
-                + "co:name '" + scName + "';\n"
-                + "?p ?param. \n"
+                + "co:name '" + scName + "'.\n"
+                + "?p rdfs:domain ?sc. \n"
                 + "?p co:name ?param_name.\n"
                 + "}";
         ResultSet results = rep.executeSparqlQuery(query, false);

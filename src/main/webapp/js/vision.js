@@ -18,6 +18,11 @@ var cclist = getURLParameters('cclist');
 var viewtype = getURLParameters('viewtype');
 var tempontology = getURLParameters('tempontology');
 
+var defaultChartWidth = 600;
+var defaultChartHeight = 300;
+var barchart_fixed_width = 900;
+var googlelementsMinHeight = 1250;
+ 
 var vset;
 var data; //used to store query results which are taken as input for displaying the first column chart
 var extdata = null; // used to store query results from extended functionality
@@ -71,7 +76,7 @@ function handleQueryResponse(response) {
             // Draw the visualization of a table
 
             google.visualization.events.addListener(chart, 'error', errorHandler);
-            chart.draw(data, {width: 600, height: 'auto', is3D: true, title: 'Numerical analysis'});
+            chart.draw(data, {width: defaultChartWidth, height: 'auto', is3D: true, title: 'Numerical analysis'});
 
             vset = vold_cut + " vs. " + vnew_cut;
 
@@ -113,6 +118,7 @@ function handleQueryResponse(response) {
                 //hAxis: {textStyle: {fontSize: 11, color: '#00F'} //blue color on axis
                 hAxis: {textStyle: {fontSize: 11, color: '#000000'}
                 },
+                legend: {textStyle: {fontSize: 12}},
                 backgroundColor: 'transparent',
                 /*className:'underline-blue-font',*/
                 chartArea: {left: 100, top: 30},
@@ -219,7 +225,7 @@ function resetVisOptions() {
 function resetVisResults() {
     //$('#pie_title').html('');
     //charttype
-    $('#pie_examplanations').html('');
+    //$('#pie_examplanations').html('');
     $('#pie_view1').html('');
     $('#limit_results').html('');
 }
@@ -441,8 +447,8 @@ function drawChart(divID, chart_type, data) {
     resetVisResults();
     var chart_options = {
          title: chartTitle,
-        'width': 600,
-        'height': 300,
+        'width': defaultChartWidth,
+        'height': defaultChartHeight,
         'backgroundColor': 'transparent',
          chartArea: {left: 40, top: 30},
         'pointSize':12, //megethos koukidas       
@@ -473,8 +479,8 @@ function drawChart(divID, chart_type, data) {
     }); */
 
      chart_options = {
-        'width': 600,
-        'height': 300,
+        'width': defaultChartWidth,
+        'height': defaultChartHeight,
         'backgroundColor': 'transparent',
         chartArea: {left: 40, top: 30},
         title: chartTitle,
@@ -570,8 +576,19 @@ function resizeIframe() {
 
     var myself = getMySelfFrame();
     var table = document.getElementById("resultstable");
+    var evocriteria = document.getElementById("evotable_criteria");
+    var evocriteria_width = evocriteria.offsetWidth;
+    //alert('evocriteria_width:'+evocriteria.offsetWidth);
+    var pie_view1_fixed_width = defaultChartWidth;
+    var pie_view1_fixed_height = defaultChartHeight;
+   
+  
+    if ((evocriteria_width + pie_view1_fixed_width) > barchart_fixed_width ){
+        googlelementsMinHeight = googlelementsMinHeight + pie_view1_fixed_height;
+    }
     //setting frame according to resultstable height
-    myself.style.height = 1250 + table.offsetHeight;
+    
+    myself.style.height = googlelementsMinHeight + table.offsetHeight; //1250 +300(pie_view
     myself.style.width = '400%';
     console.log('table.offsetHeight:' + table.offsetHeight);
     console.log('table.offsetWidth;:' + table.offsetWidth);
@@ -625,6 +642,7 @@ function handleEmptyResults(){
     
     showTopDialog('vision_examplanations', 'No results to show!');
     resetVisResults();
+    $('#pie_examplanations').html('');
 }
 
 function errorHandler(errorMessage) {

@@ -45,6 +45,7 @@ public class User {
             dManager = new DatasetsManager(jdbc, defaultDatasetUri);
             dManager.copyVersionsToDataset(userDatasetUri);
             dManager.copyChangeOntologies(defaultDatasetUri, userDatasetUri);
+            
         } catch (Exception ex) {
             System.out.println("Exception: " + ex.getMessage());
         }
@@ -60,6 +61,7 @@ public class User {
     public void deleteUser() {
         jdbc.clearGraph(this.userOntologySchema, false);
         try {
+            dManager.setDatasetURI(userDatasetUri);
             dManager.deleteDataset(false, true);
         } catch (SQLException ex) {
             System.out.println("Exception: " + ex.getMessage());
@@ -109,7 +111,7 @@ public class User {
             //config.properties
             inputStream = new FileInputStream(configPath);
             prop.load(inputStream);
-            
+            inputStream.close();
              //JCH: Coukld get Dataset all URIS from config file
             
             List<String> changesList = new ArrayList<>();
@@ -159,26 +161,23 @@ public class User {
 
     public static void main(String[] args) throws Exception {
         String efoDataset = "http://www.ebi.ac.uk/efo/";
-        initDataset("config.properties",efoDataset);
+        String userDataset ="http://DataMkt/guest";
+    ///    initDataset("config.properties",efoDataset);
         
-   /*     String goDataset = "http://geneontology.org/";
-        String ideaDataset = "http://idea-garden.org";
+     //   String goDataset = "http://geneontology.org/";
+      //  String ideaDataset = "http://idea-garden.org";
         Properties prop = new Properties();
         InputStream inputStream;
         try {
-            inputStream = new FileInputStream("config.properties");
+            inputStream = new FileInputStream("config_generic.properties");
             prop.load(inputStream);
-            
-           
-            
         } catch (IOException ex) {
             System.out.println("Exception: " + ex.getMessage() + " occured .");
             return;
         }
-        
-        String username = "user1clean";
+        String username = "user3";
         User user = new User(prop, username, efoDataset);
-        //user.deleteUser();
+        user.deleteUser();
         user.terminate();
 
         /*user = new User(prop, username, ideaDataset);
@@ -187,8 +186,8 @@ public class User {
 
         user = new User(prop, username, goDataset);
         user.deleteUser();
-        user.terminate();*/
-        // }
+        user.terminate();
+        // }*/
 
 //        String uri = user.getUserDatasetUri();
 //        String schema = user.getUserOntologySchema();

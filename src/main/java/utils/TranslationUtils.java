@@ -27,6 +27,7 @@ public class TranslationUtils {
     /**
     *Default constructor for TranslationUtils object
     *@param path the file path where the translations are located 
+     * @param exactMatch To be used for exact matching
     *@throws java.io.IOException when path not found
     */
     public TranslationUtils(String path, boolean exactMatch) throws IOException {

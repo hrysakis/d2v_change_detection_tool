@@ -19,7 +19,9 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 body { line-height: 1; 
        min-width: 1100px;
 }
-ol, ul { list-style: none; }
+//ol, ul { list-style: none; }
+
+
 blockquote, q { quotes: none; }
 blockquote:before, blockquote:after, q:before, q:after { content: ''; content: none; }
 :focus { outline: 0; }
@@ -56,6 +58,10 @@ overflow-y:auto;
     
 }
 
+.hidden {
+  display: none !important;
+  visibility: hidden !important; /* Prevent element from affecting the box model, e.g. whitespace between visible, surrounding elements  */
+}
 /*
 Table Style
 ------------------------------------------------------------------ */
@@ -193,6 +199,18 @@ table tr:hover td{
     margin-top:5px;
 }
 
+
+.qvbutton {
+    border: 1px solid #7c7c7c;
+    border-radius: 0;
+    font: 14px arial,sans-serif;
+    height: 30px;
+    margin-bottom: 20px;
+    margin-left: 5px;
+    margin-top: 5px;
+    width: 90px;
+}
+
 .largebutton { 
     -moz-border-radius: 0px;
     border-radius: 0px;
@@ -229,6 +247,8 @@ table tr:hover td{
     border:1px #7c7c7c solid;
     text-align:center;
     font:10px arial,sans-serif;
+    margin-bottom:0px;
+    margin-top:0px;
 
 }
 
@@ -241,8 +261,23 @@ table tr:hover td{
     text-align:center;
     padding: 0;
     font:10px arial,sans-serif;
+    margin-bottom:0px;
+    margin-top:0px;
 
 }
+
+
+
+.UpdateVfiltersBtn {
+    border: 1px solid #7c7c7c;
+    border-radius: 0;
+    font: 10px arial,sans-serif;
+    height: 20px;
+    width: 115px;
+    margin-bottom:0px;
+    margin-top:0px;
+}
+
 
 
 
@@ -284,6 +319,7 @@ table tr:hover td{
 	border: 1px solid #ddd;
 	padding: 1px;
 	border-radius: 3px;
+        margin-left:-10px;
 }
 
 #progressbar {
@@ -299,8 +335,16 @@ table tr:hover td{
 	top: 3px;
 	left: 48%;
 }
+#message2{
+    margin-left: 17px;
+}
 
-
+#myfile{
+    margin-left: -10px;
+}
+#myfile2{
+    margin-left: 4px;
+}
 /* Google Charts user-defined classes
 .bold-green-font {
     font-weight: bold;

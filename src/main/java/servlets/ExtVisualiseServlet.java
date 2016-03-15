@@ -48,14 +48,16 @@ public class ExtVisualiseServlet extends DataSourceServlet {
         String changesOntologySchema = changesOntology + "/schema";
         String datasetURI = request.getParameter("dataseturi");
         ServletContext servletContext = getServletContext();
-        String configPath = OntologyQueryServlet.getConfigFilePath(servletContext, changesOntology);
-        System.out.println("config_path===================>" + configPath);
+        //String configFilePath = OntologyQueryServlet.getConfigFilePath(servletContext, changesOntology);
+        String genericConfigFilePath = OntologyQueryServlet.getConfigFilePath(servletContext, null);
+        System.out.println("config_path===================>" + genericConfigFilePath);
 
         Properties prop = new Properties();
         InputStream inputStream;
         try {
-            inputStream = new FileInputStream(configPath);
+            inputStream = new FileInputStream(genericConfigFilePath);
             prop.load(inputStream);
+            inputStream.close();
         } catch (IOException ex) {
             System.out.println("Exception with prop file: " + ex.getMessage() + " occured .");
             //return;

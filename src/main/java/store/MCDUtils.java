@@ -57,7 +57,42 @@ public class MCDUtils {
         initChangesOntologies();
         associations = assoc;
     }
-
+/**
+ * 
+ * @param ccJson the json string representation
+ * @param ccName the complex change name
+ * @return a CCDefinitionError object which contains an enumeration of error
+    * codes in the case of error, otherwise the error code returned as null
+ */
+    
+    public CCDefinitionError saveJSONCCDefinition(String ccJson, String ccName){
+        CCManager ccDef = null;
+        CCDefinitionError result;
+        try {
+            System.out.println(ccJson);
+            ccDef = JSONMessagesParser.createCCDefinition(propFile, ccJson, changesOntologySchema);
+        } catch (Exception ex) {
+            System.out.println("Exception: " + ex.getMessage() + " occured .");
+            result = ccDef.getCcDefError();
+        }
+        if (ccDef.getCcDefError().getErrorCode() == null) {
+            ccDef.insertChangeDefinition();
+            System.out.println("Complex Change definition was stored successfully.");
+            result = ccDef.getCcDefError();
+            for (String ontology : getChangesOntologies()) {
+                ccDef.deleteComplexChangeInstWithLessPr(ontology, ccName); //update the changes ontology schema accordingly 
+            }
+        } else {
+            System.out.println("Error: " + ccDef.getCcDefError().getDescription());
+            result = ccDef.getCcDefError();
+        }
+            ccDef.terminate();
+        if (result.getErrorCode() == null) {
+            detectDatasets(true);
+        }
+        return result;
+    }
+    
     /**
      * Saves a complex change definition based on a template
      *
@@ -146,7 +181,10 @@ public class MCDUtils {
         }
         return result;
     }
-
+    /**
+     * Enables a force detection of a dataset
+     * @param complexOnly enables only complex change detection if true
+     */
     public void detectDatasets(boolean complexOnly) {
         try {
             DatasetsManager dManager = new DatasetsManager(getJDBCRepository(), datasetUri);
