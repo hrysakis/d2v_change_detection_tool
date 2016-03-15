@@ -41,3 +41,6 @@ Foundation for Research and Technology Hellas, Institute of Computer Science.
 
 #INFO
 For any information about the D2V system please contact Ioannis Chrysakis via e-mail: hrysakis@ics.forth.gr
+More details can be found at the following publications: 
+1.Yannis Roussakis, Ioannis Chrysakis, Kostas Stefanidis, Giorgos Flouris, Yannis Stavrakas. "A Flexible Framework for Understanding the Dynamics of Evolving RDF Datasets". In Proceedings of the 14th International Semantic Web Conference (ISWC-15), 2015. Best Student Research Paper Award.    
+2.Yannis Roussakis, Ioannis Chrysakis, Kostas Stefanidis, Giorgos Flouris. "D2V: A Tool for Defining, Detecting and Visualizing Changes on the Data Web". In Proceedings of the 14th International Semantic Web Conference, Posters and Demonstrations Track (ISWC-15), 2015. 
