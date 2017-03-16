@@ -21,7 +21,7 @@ In general the management of datasets within Virtuoso includes the creation of o
 For instance, consider the EFO datasets. It holds that the dataset URI is http://www.ebi.ac.uk/efo/ and we can find the triples:
 -http://www.ebi.ac.uk/efo/ rdfs:member http://www.diachron-fp7.eu/resource/recordset/efo/2.34     -http://www.ebi.ac.uk/efo/ rdfs:member http://www.diachron-fp7.eu/resource/recordset/efo/2.35 
 
-Note that the datasetURI should have the form datasetURI/guest to formulate that it is assinged to the default guest user. D2V can support multiple users; each own could have it's own datasetURI i.e http://www.ebi.ac.uk/efo/user1, http://www.ebi.ac.uk/efo/user2 etc.
+Note that the initial datasetURI should have the form datasetURI/guest to formulate that it is assinged to the default guest user. If you don't want to use the guest user, you can enable dataset options from config_generic.properties (see below). D2V can support multiple users; each own could have it's own datasetURI i.e http://www.ebi.ac.uk/efo/user1, http://www.ebi.ac.uk/efo/user2 etc.
 
 b. Upload the corresponding war file which is located inside target folder in a webserver (Tomcat, Glassfish, etc)
 
@@ -29,6 +29,8 @@ c. Edit config_generic.properties (for generic RDF model usage) or config_EFO.pr
 - i)'Simple_Changes_Folder' denotes the folder which contains the SPARQL update queries for the detection of Simple Changes. This is an essestial update at the properties file that requires from user to set the actual full file path of this folder, which is by default inside the webapp folder.
 - ii)'Simple_Changes' denotes the list of considered Simple Changes to be detected
 - iii) 'Dataset_URIs' which denotes namedgraphs associated with the corresponding dataset versions within virtuoso, used optionally in a new user assignment
+- iv) 'Dataset_Files_Folder' 'Dataset_Default_Schema' contain options for enabling the management of datasets for admins. To enable them remove#.
+
 
 # DEMO VIDEO
 
