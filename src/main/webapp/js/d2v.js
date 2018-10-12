@@ -681,7 +681,7 @@ function buildCCTypeMenu(selectedtd) { //called in create change option (link)
     $(selectedtd).addClass('fillmarktd');
 
     if (checkDataset()) {
-        var html_code = "<table width=\"178\" cellspacing='0' class=\"inside\"> <!-- cellspacing='0' is important, must stay -->\n" +
+        var html_code = "<table width=\"180\" cellspacing='0' class=\"inside\"> <!-- cellspacing='0' is important, must stay -->\n" +
                 "    <tr>\n" +
                 "	  <th width=\"174\">1.Define by using a template of type</th></tr>\n" +
                 "    \n" +
@@ -696,7 +696,7 @@ function buildCCTypeMenu(selectedtd) { //called in create change option (link)
                 "</table>\n";
 
 
-        var json_code = "<div id=\"jsonf\"><table width=\"178\" cellspacing='0'> <!-- cellspacing='0' is important, must stay -->\n" +
+        var json_code = "<div id=\"jsonf\"><table width=\"180\" cellspacing='0'> <!-- cellspacing='0' is important, must stay -->\n" +
                 "    <tr>\n" +
                 "	  <th width=\"174\">2. Define by using a JSON format</th></tr>\n" +
                 "<tr><td>" +
@@ -2328,7 +2328,8 @@ function getDatasetsCombo(divID) {//sel_dataset
 function checkDatasetOptions() {
     var options_button = "<input class=\"OptionsButton button\" type=\"button\" value=\"Options\" onclick=\"showDatasetOptions();\">";
     $.get('OntologyQueryServlet', {qtype: 'dsoptions'}, function(responseText) {
-        //alert(responseText);
+        //JCH2018
+       
         if (responseText === 'enabled') {
             $('#dsoptions').html(options_button);
         }

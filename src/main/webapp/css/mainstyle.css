@@ -19,7 +19,7 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 body { line-height: 1; 
        min-width: 1100px;
 }
-//ol, ul { list-style: none; }
+/*ol, ul { list-style: none; }*/
 
 
 blockquote, q { quotes: none; }
@@ -74,7 +74,7 @@ Table Style
 }
 
 table a:link {
-    //color: #00F; blue
+    /*color: #00F; blue*/
     color:#595959;
     font-weight: bold;
     text-decoration:none;
@@ -93,7 +93,7 @@ table a:hover {
 }
 table {
     font-family:Arial, Helvetica, sans-serif;
-    //color:#666;
+    /*color:#666;*/
     font-size:12px;
     text-shadow: 1px 1px 0px #fff;
     background:#eaebec;
@@ -192,7 +192,7 @@ table tr:hover td{
     border-radius: 0px;
     height: 30px;
     width: 70px;
-    //webkit-border-radius: 0px;
+    /*webkit-border-radius: 0px;*/
     border:1px #7c7c7c solid;
     font:14px arial,sans-serif;
     margin-bottom:20px;
@@ -216,7 +216,7 @@ table tr:hover td{
     border-radius: 0px;
     height: 30px;
     width: 180px;
-    //webkit-border-radius: 0px;
+    /*webkit-border-radius: 0px;*/
     border:1px #7c7c7c solid;
     font:14px arial,sans-serif;
     margin-bottom:20px;
@@ -410,12 +410,12 @@ Various other elements style
 }
 
 .bluelink{
-   color: #00F !important; //blue
+   color: #00F !important; /*blue*/
    text-decoration:none !important; 
 }
 .inside {
     display: inline-block;
-    //margin: 17px 0px 0px -7px; 
+    /*margin: 17px 0px 0px -7px; */
     vertical-align: top;
 }
 
@@ -423,7 +423,7 @@ Various other elements style
     display: inline-block;
     height:300px;
     overflow: hidden;
-    //vertical-align: top;
+    /*vertical-align: top;*/
 }
 
 
@@ -468,7 +468,7 @@ select {
 input[type="text"] 
 {
     width: 300px;
-    //border: 1px solid #CCC;
+    /*border: 1px solid #CCC;*/
 }
 .input-ext {
     width: 430px !important;
@@ -509,7 +509,7 @@ input[type="text"]
 
 
 .template_decr {
-    //text-align:justify;
+    /*text-align:justify;*/
     font-weight:normal;
     opacity:0.7;
 }  
