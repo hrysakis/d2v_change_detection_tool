@@ -5,7 +5,7 @@
     <groupId>forth.ics</groupId>
     <artifactId>D2VMaven</artifactId>
     <packaging>war</packaging>
-    <version>1.0</version>
+    <version>6.3</version>
     <name>D2VMaven</name>
 
     <properties>

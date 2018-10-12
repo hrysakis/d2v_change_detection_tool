@@ -1,3 +1,13 @@
+V6.3
+Minor layout issues (d2v.js)
+Enable default dataset options (config_generic_files)
+=============================
+V6.2
+Fix css comments
+=============================
+V6.1
+Backend libs updated V29.03.16
+=============================
 V6.0
 Follow W3C WCAG 2.0 (Level AA)
 checked by achecker tool
