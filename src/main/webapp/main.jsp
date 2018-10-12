@@ -32,7 +32,7 @@
     !</p> 
     <a class="logout" href="index.html"><img alt="Logout" src="images/Logout-icon-01.png" height="25" width="25"></a>
     
-<table style="width:178px; border-spacing:0px;"> <!-- cellspacing='0' is important,and equivalent to border-spacing-->
+<table style="width:180px; border-spacing:0px;"> <!-- cellspacing='0' is important,and equivalent to border-spacing-->
     <tr>
 	  <th style="width:174px;">Menu</th></tr>
   <tr>
