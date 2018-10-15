@@ -13,7 +13,7 @@ HTML/CSS technologies in combination with JQuery and Java Servlets which were im
 D2V stores all change definitions and the detected changes in an ontology of changes that is hosted in a Virtuoso Triplestore. In fact, the change definitions are stored in the schema level whereas the detected changes are stored in the instance level of the ontology. All queries are encoded in SPARQL; a query language which has become a standard and one of the key technologies for the semantic web.
 
 
-# INSTALLATION (V 6.3):
+# INSTALLATION (V 6.3)
 
 a.Install and setup Virtuoso Store. 
 Edit the properties file accordingly by placing values for: Repository_IP, Repository_Username, Repository_Password and Repository_Port.
@@ -45,12 +45,12 @@ You can edit config_generic.properties (for generic RDF model usage) located in 
 
 You can found a demo video showing the basic functionalities. You can view it by open the video.html file which is located in src/main/webapp/ folder.
 
-#CONTACT
+# CONTACT
 
 For any information about the D2V system please contact Ioannis Chrysakis via e-mail: hrysakis@ics.forth.gr
 
 
-#INFO
+# INFO
 More details about this work can be found at the following publications: 
 
 -Yannis Roussakis, Ioannis Chrysakis, Kostas Stefanidis, Giorgos Flouris. "D2V: A Tool for Defining, Detecting and Visualizing Changes on the Data Web". In Proceedings of the 14th International Semantic Web Conference, Posters and Demonstrations Track (ISWC-15), 2015. 
