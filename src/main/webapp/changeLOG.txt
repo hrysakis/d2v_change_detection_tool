@@ -1,6 +1,7 @@
 V6.3
 Minor layout issues (d2v.js)
 Enable default dataset options (config_generic_files)
+Tested in both Windows/Linux Virtuoso Servers
 =============================
 V6.2
 Fix css comments
