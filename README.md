@@ -42,8 +42,8 @@ http://dataset1/guest rdfs:label Dataset1
 http://dataset1/guest/ rdfs:member http://dataset1/guest/1 
 http://dataset1/guest/ rdfs:member http://dataset1/guest/2
 http://dataset1/guest/changes rdfs:memmber http://dataset1/guest/changes/1-2
-http://dataset1/guest/changes/1-2  	http://www.diachron-fp7.eu/changes/old_version http://IdeaGarden/guest/1
-http://dataset1/guest/changes/1-2  	http://www.diachron-fp7.eu/changes/new_version http://IdeaGarden/guest/2
+http://dataset1/guest/changes/1-2  	http://www.diachron-fp7.eu/changes/old_version http://dataset1/guest/1
+http://dataset1/guest/changes/1-2  	http://www.diachron-fp7.eu/changes/new_version http://dataset1/guest/2
 
 # DEMO VIDEO
 
