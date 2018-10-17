@@ -13,15 +13,13 @@ HTML/CSS technologies in combination with JQuery and Java Servlets which were im
 D2V stores all change definitions and the detected changes in an ontology of changes that is hosted in a Virtuoso Triplestore. In fact, the change definitions are stored in the schema level whereas the detected changes are stored in the instance level of the ontology. All queries are encoded in SPARQL; a query language which has become a standard and one of the key technologies for the semantic web.
 
 
-# INSTALLATION (V 6.3)
+# INSTALLATION (V 6.3) 
+Note: Just install virtuoso on a linux or a windows host deploy the web application and thats all.
 
 a.Install and setup Virtuoso Store. 
 Edit the properties file accordingly by placing values for: Repository_IP, Repository_Username, Repository_Password and Repository_Port.
 
-b. Create the datasets graph.
-
-You have to create the internal named graph http://datasets  in which the D2V stores the meta-data for both datasets and change detections. Specifically, this named graph contains information about all assigned dataset URIs and their corresponding versions. This can be performed through SPARQL for example CREATE GRAPH <http://datasets>; You can use the Interactive SQL Tool from Virtuoso conductor.
-
+b. Deploy the application in a webserver. Specifically, you have to upload the corresponding war file which is located inside target folder in a webserver (Tomcat, Glassfish, etc).
 
 c. Upload your first dataset [guest user].
 
@@ -31,7 +29,6 @@ d. Optional. Use the multiple-users functionality
 
 From the first screen menu you have three more options to login as a new user that keeps its own set of changes and datasets. In fact D2V can support multiple users; each one could have it's own datasetURI i.e http://default-dataset/user1, http://default-dataset/user2 etc.
 
-
 e. Administration and configuration files.
 
 You can edit config_generic.properties (for generic RDF model usage) located in the config folder. This file contains Virtuoso credentials information plus the following properties:
@@ -40,6 +37,13 @@ You can edit config_generic.properties (for generic RDF model usage) located in 
 - iii) 'Dataset_URIs' which denotes namedgraphs associated with the corresponding dataset versions within virtuoso, used optionally in a new user assignment
 - iv) 'Dataset_Files_Folder' 'Dataset_Default_Schema' contain options for enabling the management of datasets. If you like to disable this feature just put # at these two parameters of the config_generic.properties file.
 
+All datasets and their respective information are associated with the named graph http://datasets. For exaple if we have a dataset with URI http://dataset1 regarding the guest user we could find the following triples for two dataset versions:
+http://dataset1/guest rdfs:label Dataset1
+http://dataset1/guest/ rdfs:member http://dataset1/guest/1 
+http://dataset1/guest/ rdfs:member http://dataset1/guest/2
+http://dataset1/guest/changes rdfs:memmber http://dataset1/guest/changes/1-2
+http://dataset1/guest/changes/1-2  	http://www.diachron-fp7.eu/changes/old_version http://IdeaGarden/guest/1
+http://dataset1/guest/changes/1-2  	http://www.diachron-fp7.eu/changes/new_version http://IdeaGarden/guest/2
 
 # DEMO VIDEO
 
